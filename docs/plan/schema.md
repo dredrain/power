@@ -121,6 +121,7 @@ Offline-first. El historial es la fuente de verdad para la progresión y la adhe
     "post":  { "lumbar": 2, "rodilla": 1, "hombro": 0 },   // al cerrar ESTA sesión
     "h24":   { "lumbar": null, "rodilla": null, "hombro": null } // se rellena al abrir la SIGUIENTE
   },
+  "fatiga": 5,                       // fatiga general 0–10 al cerrar (para la revisión semanal); null si no se registró
   "notas": ""
 }
 ```

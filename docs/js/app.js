@@ -5,6 +5,7 @@ import * as almacen from './almacen.js';
 import * as timer from './temporizador.js';
 import { sugerirCarga, ACCIONES } from './progresion.js';
 import { estadoAdherencia } from './adherencia.js';
+import { resumenSesion, resumenSemana } from './resumen.js';
 
 const ZONAS = [
   { id: 'lumbar', nombre: 'Lumbar' },
@@ -309,12 +310,58 @@ export function finalizarSesion() {
       }))
       .filter((e) => e.series.length),
     dolor: sa.dolor || { post: {}, h24: {} },
+    fatiga: typeof sa.fatiga === 'number' ? sa.fatiga : null,
     notas: sa.notas || '',
   };
   almacen.guardarSesion(registro);
   almacen.limpiarBorrador();
   estado.sesionActiva = null;
-  navegar('adherencia');
+  if (typeof evaluarHitosTrasSesion === 'function') evaluarHitosTrasSesion(); // gancho S5
+  pantallaResumen(registro);
+}
+
+// ---- S4: compartir texto (Web Share API con fallback a portapapeles) ----
+async function compartirTexto(texto, boton) {
+  try {
+    if (navigator.share) { await navigator.share({ text: texto }); return; }
+  } catch { /* el usuario cancelo el share: seguimos con copiar */ }
+  try {
+    await navigator.clipboard.writeText(texto);
+    if (boton) { const t = boton.textContent; boton.textContent = '¡Copiado!'; setTimeout(() => (boton.textContent = t), 1500); }
+  } catch {
+    // ultimo recurso: seleccionar en un textarea
+    const ta = document.createElement('textarea');
+    ta.value = texto; document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch { /* no-op */ }
+    ta.remove();
+    if (boton) { const t = boton.textContent; boton.textContent = '¡Copiado!'; setTimeout(() => (boton.textContent = t), 1500); }
+  }
+}
+
+// ---- S4: pantalla de resumen tras cerrar la sesion ----
+function pantallaResumen(registro) {
+  const md = resumenSesion(registro, estado.bloque);
+  const cont = $vista();
+  cont.innerHTML = '';
+  $titulo().textContent = 'Sesion guardada';
+
+  const pre = el('pre', {
+    text: md,
+    style: 'white-space:pre-wrap;background:var(--bg);border:1px solid var(--borde);border-radius:10px;padding:12px;font-size:0.82rem;overflow-x:auto',
+  });
+  const btnCompartir = el('button', { class: 'btn btn-primario', text: 'Copiar / compartir para el entrenador' });
+  btnCompartir.addEventListener('click', () => compartirTexto(md, btnCompartir));
+
+  cont.appendChild(el('div', { class: 'pila' }, [
+    el('div', { class: 'exito' }, [el('strong', { text: '✓ Sesion registrada. Presentarte es la victoria.' })]),
+    el('div', { class: 'tarjeta' }, [
+      el('h2', { text: 'Resumen para pegar a Claude' }),
+      el('p', { class: 'mini', text: 'Pega esto en la conversacion con el entrenador para la revision.' }),
+      pre,
+      btnCompartir,
+    ]),
+    el('button', { class: 'btn btn-fantasma', text: 'Ver adherencia', onclick: () => navegar('adherencia') }),
+  ]));
 }
 
 // ---- Vista: Adherencia (semaforo semanal, unico KPI de fase 1) ----
@@ -337,6 +384,17 @@ function vistaAdherencia() {
       el('div', { style: 'margin:10px 0' }, puntos),
       el('p', { class: 'tenue', text: `${a.estaSemana} de ${a.objetivo} sesiones del nucleo.${a.extras ? ` (+${a.extras} extra de casa)` : ''}` }),
       el('div', { class: `semaforo ${clase}`, text: a.mensaje }),
+    ]),
+    // gancho S5: hitos activos de la fase actual
+    typeof renderHitos === 'function' ? renderHitos() : null,
+    el('div', { class: 'tarjeta pila' }, [
+      el('h3', { text: 'Revision semanal' }),
+      el('p', { class: 'mini', text: 'Genera el resumen de la semana (dolor, sesiones, fatiga) para pegarlo al entrenador.' }),
+      (() => {
+        const btn = el('button', { class: 'btn btn-fantasma', text: 'Copiar resumen semanal' });
+        btn.addEventListener('click', () => compartirTexto(resumenSemana(h, estado.bloque), btn));
+        return btn;
+      })(),
     ]),
     el('div', { class: 'tarjeta' }, [
       el('h3', { text: 'Como se cuenta' }),
@@ -418,15 +476,32 @@ function pantallaDolor(sa) {
     ]);
   });
 
+  // fatiga general 0-10 (alimenta la revision semanal del entrenador)
+  let fatiga = 0;
+  const fatVal = el('span', { class: 'dolor-val', text: '0' });
+  const fatRng = el('input', { type: 'range', min: '0', max: '10', step: '1', value: '0' });
+  fatRng.addEventListener('input', () => { fatiga = Number(fatRng.value); fatVal.textContent = fatRng.value; });
+
   cont.appendChild(el('div', { class: 'pila' }, [
     el('div', { class: 'tarjeta' }, [
       el('h2', { text: 'Dolor por zona (0-10)' }),
       el('p', { class: 'mini', text: 'Molestia ≤3-4 durante el ejercicio es aceptable si no empeora a 24h. Marca lo que sentiste hoy. Si hubo dolor agudo, punzante, irradiado o nocturno: fisioterapeuta antes de seguir cargando.' }),
       ...filas,
     ]),
+    el('div', { class: 'tarjeta' }, [
+      el('h3', { text: 'Fatiga general (0-10)' }),
+      el('div', { class: 'dolor-fila' }, [
+        el('label', {}, [el('span', { text: 'Cansancio al acabar' }), fatVal]),
+        fatRng,
+      ]),
+    ]),
     el('button', {
       class: 'btn btn-primario', text: 'Guardar sesion',
-      onclick: () => { sa.dolor = { post: respuestas, h24: { lumbar: null, rodilla: null, hombro: null } }; finalizarSesion(); },
+      onclick: () => {
+        sa.dolor = { post: respuestas, h24: { lumbar: null, rodilla: null, hombro: null } };
+        sa.fatiga = fatiga;
+        finalizarSesion();
+      },
     }),
     el('button', {
       class: 'btn btn-fantasma', text: 'Volver al registro',
@@ -466,6 +541,24 @@ function vistaAjustes() {
     el('p', { class: 'tenue', text: `Bloque cargado desde: ${estado.origen || '—'}` }),
     el('p', { class: 'mini', text: 'PWA sin conexion. El plan lo edita el entrenador; el historial vive en este movil.' }),
   ]);
+  const btnExport = el('button', { class: 'btn btn-fantasma', text: 'Exportar historial (JSON)' });
+  btnExport.addEventListener('click', () => descargarJSON());
+  const btnCopiar = el('button', { class: 'btn btn-fantasma', text: 'Copiar historial al portapapeles' });
+  btnCopiar.addEventListener('click', () => compartirTexto(almacen.exportarJSON(), btnCopiar));
+
+  const areaImport = el('textarea', {
+    placeholder: 'Pega aqui un JSON exportado para importarlo…',
+    style: 'width:100%;min-height:90px;background:var(--bg);border:1px solid var(--borde);border-radius:10px;color:var(--txt);padding:10px;font-size:0.85rem',
+  });
+  const btnImport = el('button', { class: 'btn btn-fantasma', text: 'Importar (reemplaza el historial)' });
+  btnImport.addEventListener('click', () => {
+    if (!areaImport.value.trim()) return;
+    if (!confirm('Esto reemplaza el historial actual. ¿Continuar?')) return;
+    const r = almacen.importarJSON(areaImport.value, 'reemplazar');
+    alert(r.mensaje);
+    if (r.ok) navegar('adherencia');
+  });
+
   const acciones = el('div', { class: 'tarjeta pila' }, [
     el('h3', { text: 'Datos' }),
     el('button', {
@@ -473,8 +566,29 @@ function vistaAjustes() {
       text: 'Recargar plan',
       onclick: async () => { await iniciarBloque(); navegar('hoy'); },
     }),
+    btnExport,
+    btnCopiar,
+    el('hr', { style: 'border:none;border-top:1px solid var(--borde);margin:6px 0' }),
+    areaImport,
+    btnImport,
   ]);
   return el('div', { class: 'pila' }, [info, acciones]);
+}
+
+// Descarga el historial como fichero .json (con fallback a compartir/copiar).
+function descargarJSON() {
+  const texto = almacen.exportarJSON();
+  try {
+    const blob = new Blob([texto], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = el('a', { href: url, download: `power-historial-${hoyISO()}.json` });
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  } catch {
+    compartirTexto(texto);
+  }
 }
 
 // ---- arranque ----

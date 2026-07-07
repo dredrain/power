@@ -96,6 +96,43 @@ export function limpiarBorrador() {
   localStorage.removeItem(K.borrador);
 }
 
+// ---- Export / import del historial (S4) ----
+export function exportarJSON() {
+  return JSON.stringify({
+    app: 'power-tracker',
+    version: 1,
+    exportado: new Date().toISOString(),
+    historial: getHistorial(),
+    config: getConfig(),
+  }, null, 2);
+}
+
+// Importa un JSON exportado. modo 'reemplazar' (por defecto) o 'fusionar'.
+// Devuelve { ok, mensaje, total }.
+export function importarJSON(texto, modo = 'reemplazar') {
+  let datos;
+  try {
+    datos = JSON.parse(texto);
+  } catch {
+    return { ok: false, mensaje: 'El texto no es un JSON válido.' };
+  }
+  if (!datos || !Array.isArray(datos.historial)) {
+    return { ok: false, mensaje: 'No se encontró un array "historial" en el archivo.' };
+  }
+  let historial = datos.historial;
+  if (modo === 'fusionar') {
+    const actual = getHistorial();
+    const clave = (r) => `${r.fecha}|${r.sesionId}`;
+    const mapa = new Map(actual.map((r) => [clave(r), r]));
+    for (const r of historial) mapa.set(clave(r), r);
+    historial = [...mapa.values()];
+  }
+  historial.sort((a, b) => (a.iso || a.fecha).localeCompare(b.iso || b.fecha));
+  escribir(K.historial, historial);
+  if (datos.config && modo === 'reemplazar') escribir(K.config, datos.config);
+  return { ok: true, mensaje: `Importadas ${historial.length} sesiones.`, total: historial.length };
+}
+
 // ---- Config ----
 export function getConfig() {
   return leer(K.config, {});
