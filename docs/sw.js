@@ -15,6 +15,7 @@ const SHELL = [
   'js/temporizador.js',
   'js/adherencia.js',
   'js/resumen.js',
+  'js/hitos.js',
   'icons/icon-192.png',
   'icons/icon-512.png',
 ];
