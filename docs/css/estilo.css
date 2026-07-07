@@ -361,6 +361,9 @@ details[open] summary.calent-sum::after { content: "▴"; }
 }
 .esquema .fig, .esquema .barra { stroke: var(--acento); }
 .esquema .disco { stroke: var(--acento); stroke-width: 5; }
-.esquema .flecha { stroke: var(--azul); stroke-width: 2.5; }
+.esquema .flecha { stroke: var(--azul); stroke-width: 3; }
 .esquema .suelo { stroke: var(--borde); stroke-width: 2; }
 .esquema .art, .esquema .relleno { fill: var(--acento); stroke: none; }
+.esquema .equipo { stroke: var(--txt-tenue); fill: none; }        /* banco, cable, rueda, soportes */
+.esquema .ghost { stroke: var(--borde); stroke-width: 2.5; stroke-dasharray: 4 5; } /* recorrido / posicion alternativa */
+.esquema .flecha-fill { fill: var(--azul); stroke: none; }        /* punta de flecha */

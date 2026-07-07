@@ -49,96 +49,136 @@ export const ACLARACIONES = [
 // ---- Esquemas SVG por patron de movimiento ----
 // Se inyectan como innerHTML; el color lo pone el CSS (.esquema ...).
 const ESQUEMAS = {
-  sentadilla: `<svg class="esquema" viewBox="0 0 120 90" role="img" aria-label="Esquema de sentadilla">
-    <line class="suelo" x1="12" y1="80" x2="108" y2="80"/>
-    <circle class="art" cx="46" cy="20" r="7"/>
-    <line class="fig" x1="46" y1="27" x2="53" y2="50"/>
-    <line class="fig" x1="53" y1="50" x2="71" y2="50"/>
-    <line class="fig" x1="71" y1="50" x2="67" y2="79"/>
-    <line class="fig" x1="58" y1="79" x2="76" y2="79"/>
-    <line class="barra" x1="30" y1="30" x2="60" y2="30"/>
-    <line class="disco" x1="30" y1="23" x2="30" y2="37"/>
-    <line class="disco" x1="60" y1="23" x2="60" y2="37"/>
-    <line class="flecha" x1="96" y1="70" x2="96" y2="34"/>
-    <polyline class="flecha" points="90,42 96,34 102,42"/>
+  // Sentadilla (vista frontal, fondo de la sentadilla, barra en la espalda).
+  sentadilla: `<svg class="esquema" viewBox="0 0 140 120" role="img" aria-label="Esquema de sentadilla">
+    <line class="suelo" x1="16" y1="110" x2="124" y2="110"/>
+    <line class="barra" x1="40" y1="38" x2="100" y2="38"/>
+    <line class="disco" x1="40" y1="26" x2="40" y2="50"/>
+    <line class="disco" x1="100" y1="26" x2="100" y2="50"/>
+    <circle class="art" cx="70" cy="26" r="6"/>
+    <line class="fig" x1="70" y1="40" x2="70" y2="66"/>
+    <line class="fig" x1="70" y1="46" x2="52" y2="39"/>
+    <line class="fig" x1="70" y1="46" x2="88" y2="39"/>
+    <line class="fig" x1="70" y1="66" x2="52" y2="84"/>
+    <line class="fig" x1="52" y1="84" x2="52" y2="106"/>
+    <line class="fig" x1="70" y1="66" x2="88" y2="84"/>
+    <line class="fig" x1="88" y1="84" x2="88" y2="106"/>
+    <line class="fig" x1="44" y1="106" x2="58" y2="106"/>
+    <line class="fig" x1="82" y1="106" x2="96" y2="106"/>
+    <line class="flecha" x1="118" y1="98" x2="118" y2="54"/>
+    <polygon class="flecha-fill" points="112,62 124,62 118,48"/>
   </svg>`,
-  bisagra: `<svg class="esquema" viewBox="0 0 120 90" role="img" aria-label="Esquema de bisagra de cadera">
-    <line class="suelo" x1="12" y1="80" x2="108" y2="80"/>
-    <circle class="art" cx="38" cy="30" r="7"/>
-    <line class="fig" x1="44" y1="34" x2="72" y2="44"/>
-    <line class="fig" x1="72" y1="44" x2="74" y2="79"/>
-    <line class="fig" x1="66" y1="79" x2="82" y2="79"/>
-    <line class="fig" x1="47" y1="37" x2="53" y2="66"/>
-    <circle class="relleno" cx="53" cy="68" r="4"/>
-    <line class="disco" x1="53" y1="61" x2="53" y2="75"/>
-    <line class="flecha" x1="98" y1="66" x2="98" y2="38"/>
-    <polyline class="flecha" points="92,46 98,38 104,46"/>
+  // Bisagra de cadera (perfil): tronco hacia delante, espalda recta, barra en las manos.
+  bisagra: `<svg class="esquema" viewBox="0 0 140 120" role="img" aria-label="Esquema de bisagra de cadera">
+    <line class="suelo" x1="16" y1="110" x2="124" y2="110"/>
+    <line class="fig" x1="74" y1="60" x2="74" y2="86"/>
+    <line class="fig" x1="74" y1="86" x2="72" y2="108"/>
+    <line class="fig" x1="64" y1="108" x2="82" y2="108"/>
+    <line class="fig" x1="74" y1="60" x2="43" y2="50"/>
+    <circle class="art" cx="36" cy="47" r="6"/>
+    <line class="fig" x1="47" y1="51" x2="49" y2="82"/>
+    <circle class="relleno" cx="49" cy="88" r="7"/>
+    <line class="disco" x1="49" y1="79" x2="49" y2="97"/>
+    <line class="flecha" x1="112" y1="92" x2="112" y2="54"/>
+    <polygon class="flecha-fill" points="106,62 118,62 112,48"/>
   </svg>`,
-  empuje: `<svg class="esquema" viewBox="0 0 120 90" role="img" aria-label="Esquema de empuje horizontal">
-    <line class="suelo" x1="22" y1="66" x2="92" y2="66"/>
-    <line class="fig" x1="28" y1="60" x2="76" y2="60"/>
-    <circle class="art" cx="80" cy="56" r="6"/>
-    <line class="fig" x1="50" y1="60" x2="50" y2="38"/>
-    <line class="fig" x1="60" y1="60" x2="60" y2="38"/>
-    <line class="barra" x1="38" y1="34" x2="72" y2="34"/>
-    <line class="disco" x1="38" y1="27" x2="38" y2="41"/>
-    <line class="disco" x1="72" y1="27" x2="72" y2="41"/>
-    <line class="flecha" x1="96" y1="58" x2="96" y2="34"/>
-    <polyline class="flecha" points="90,42 96,34 102,42"/>
+  // Press banca (perfil): banco, cuerpo tumbado, barra arriba y fantasma en el pecho.
+  empuje: `<svg class="esquema" viewBox="0 0 140 120" role="img" aria-label="Esquema de press banca">
+    <line class="suelo" x1="16" y1="110" x2="124" y2="110"/>
+    <line class="equipo" x1="30" y1="80" x2="92" y2="80"/>
+    <line class="equipo" x1="38" y1="80" x2="38" y2="108"/>
+    <line class="equipo" x1="84" y1="80" x2="84" y2="108"/>
+    <line class="fig" x1="40" y1="74" x2="80" y2="74"/>
+    <circle class="art" cx="86" cy="71" r="6"/>
+    <line class="fig" x1="44" y1="74" x2="36" y2="92"/>
+    <line class="fig" x1="36" y1="92" x2="36" y2="108"/>
+    <line class="fig" x1="74" y1="74" x2="70" y2="46"/>
+    <line class="fig" x1="80" y1="74" x2="76" y2="46"/>
+    <line class="barra" x1="58" y1="44" x2="90" y2="44"/>
+    <line class="disco" x1="58" y1="34" x2="58" y2="54"/>
+    <line class="disco" x1="90" y1="34" x2="90" y2="54"/>
+    <line class="ghost" x1="60" y1="66" x2="88" y2="66"/>
+    <line class="flecha" x1="112" y1="68" x2="112" y2="46"/>
+    <polygon class="flecha-fill" points="106,54 118,54 112,40"/>
   </svg>`,
-  'tiron-horizontal': `<svg class="esquema" viewBox="0 0 120 90" role="img" aria-label="Esquema de tiron horizontal">
-    <line class="suelo" x1="12" y1="80" x2="108" y2="80"/>
-    <circle class="art" cx="34" cy="24" r="7"/>
-    <line class="fig" x1="34" y1="31" x2="40" y2="62"/>
-    <line class="fig" x1="40" y1="62" x2="30" y2="79"/>
-    <line class="fig" x1="40" y1="62" x2="54" y2="72"/>
-    <line class="fig" x1="36" y1="40" x2="70" y2="44"/>
-    <circle class="relleno" cx="72" cy="44" r="4"/>
-    <line class="disco" x1="72" y1="37" x2="72" y2="51"/>
-    <line class="flecha" x1="88" y1="44" x2="60" y2="44"/>
-    <polyline class="flecha" points="68,38 60,44 68,50"/>
+  // Remo (perfil, remo sentado en polea): tira del agarre hacia el torso.
+  'tiron-horizontal': `<svg class="esquema" viewBox="0 0 140 120" role="img" aria-label="Esquema de remo horizontal">
+    <line class="suelo" x1="16" y1="110" x2="124" y2="110"/>
+    <circle class="art" cx="46" cy="44" r="6"/>
+    <line class="fig" x1="46" y1="50" x2="48" y2="82"/>
+    <line class="fig" x1="48" y1="82" x2="74" y2="86"/>
+    <line class="fig" x1="74" y1="86" x2="92" y2="100"/>
+    <line class="fig" x1="47" y1="56" x2="66" y2="62"/>
+    <line class="fig" x1="66" y1="62" x2="86" y2="64"/>
+    <circle class="relleno" cx="88" cy="64" r="4"/>
+    <line class="equipo" x1="88" y1="64" x2="120" y2="72"/>
+    <line class="equipo" x1="120" y1="52" x2="120" y2="100"/>
+    <line class="flecha" x1="98" y1="46" x2="70" y2="46"/>
+    <polygon class="flecha-fill" points="78,40 78,52 64,46"/>
   </svg>`,
-  'tiron-vertical': `<svg class="esquema" viewBox="0 0 120 90" role="img" aria-label="Esquema de tiron vertical">
-    <line class="barra" x1="30" y1="16" x2="90" y2="16"/>
-    <line class="fig" x1="52" y1="16" x2="60" y2="30"/>
-    <line class="fig" x1="68" y1="16" x2="60" y2="30"/>
-    <circle class="art" cx="60" cy="36" r="7"/>
-    <line class="fig" x1="60" y1="43" x2="60" y2="66"/>
-    <line class="fig" x1="60" y1="66" x2="53" y2="80"/>
-    <line class="fig" x1="60" y1="66" x2="67" y2="80"/>
-    <line class="flecha" x1="98" y1="62" x2="98" y2="30"/>
-    <polyline class="flecha" points="92,38 98,30 104,38"/>
+  // Dominada / jalon (tiron vertical): barra con soportes, brazos flexionados, subir.
+  'tiron-vertical': `<svg class="esquema" viewBox="0 0 140 120" role="img" aria-label="Esquema de dominada">
+    <line class="barra" x1="34" y1="20" x2="106" y2="20"/>
+    <line class="equipo" x1="38" y1="20" x2="38" y2="10"/>
+    <line class="equipo" x1="102" y1="20" x2="102" y2="10"/>
+    <line class="fig" x1="58" y1="22" x2="52" y2="40"/>
+    <line class="fig" x1="52" y1="40" x2="62" y2="48"/>
+    <line class="fig" x1="82" y1="22" x2="88" y2="40"/>
+    <line class="fig" x1="88" y1="40" x2="78" y2="48"/>
+    <circle class="art" cx="70" cy="54" r="6"/>
+    <line class="fig" x1="70" y1="60" x2="70" y2="86"/>
+    <line class="fig" x1="70" y1="86" x2="78" y2="102"/>
+    <line class="fig" x1="70" y1="86" x2="62" y2="102"/>
+    <line class="flecha" x1="118" y1="92" x2="118" y2="54"/>
+    <polygon class="flecha-fill" points="112,62 124,62 118,48"/>
   </svg>`,
-  abduccion: `<svg class="esquema" viewBox="0 0 120 90" role="img" aria-label="Esquema de abduccion de cadera">
-    <line class="suelo" x1="12" y1="80" x2="108" y2="80"/>
-    <circle class="art" cx="50" cy="22" r="7"/>
-    <line class="fig" x1="50" y1="29" x2="50" y2="58"/>
-    <line class="fig" x1="50" y1="58" x2="48" y2="79"/>
-    <line class="fig" x1="50" y1="58" x2="80" y2="70"/>
-    <line class="flecha" x1="72" y1="55" x2="90" y2="64"/>
-    <polyline class="flecha" points="83,54 91,65 79,66"/>
+  // Abduccion de cadera (frontal, de pie con goma): la pierna se abre hacia fuera.
+  abduccion: `<svg class="esquema" viewBox="0 0 140 120" role="img" aria-label="Esquema de abduccion de cadera">
+    <line class="suelo" x1="16" y1="110" x2="124" y2="110"/>
+    <circle class="art" cx="58" cy="26" r="6"/>
+    <line class="fig" x1="58" y1="32" x2="58" y2="64"/>
+    <line class="fig" x1="58" y1="42" x2="48" y2="52"/>
+    <line class="fig" x1="58" y1="64" x2="56" y2="106"/>
+    <line class="fig" x1="50" y1="106" x2="62" y2="106"/>
+    <line class="fig" x1="58" y1="64" x2="92" y2="88"/>
+    <line class="fig" x1="86" y1="90" x2="98" y2="85"/>
+    <path class="ghost" d="M56,104 Q76,104 90,90"/>
+    <line class="flecha" x1="72" y1="78" x2="98" y2="70"/>
+    <polygon class="flecha-fill" points="92,63 106,68 92,77"/>
   </svg>`,
-  core: `<svg class="esquema" viewBox="0 0 120 90" role="img" aria-label="Esquema de core anti-extension">
-    <line class="suelo" x1="12" y1="80" x2="108" y2="80"/>
-    <circle class="art" cx="34" cy="46" r="6"/>
-    <line class="fig" x1="38" y1="49" x2="82" y2="66"/>
-    <line class="fig" x1="38" y1="49" x2="30" y2="66"/>
-    <line class="fig" x1="82" y1="66" x2="86" y2="79"/>
-    <circle class="relleno" cx="26" cy="70" r="8"/>
-    <line class="flecha" x1="44" y1="74" x2="20" y2="74"/>
-    <polyline class="flecha" points="28,68 20,74 28,80"/>
+  // Core anti-extension (rueda abdominal de rodillas): cuerpo extendido hacia la rueda.
+  core: `<svg class="esquema" viewBox="0 0 140 120" role="img" aria-label="Esquema de core con rueda abdominal">
+    <line class="suelo" x1="10" y1="110" x2="130" y2="110"/>
+    <line class="fig" x1="44" y1="88" x2="46" y2="108"/>
+    <line class="fig" x1="44" y1="88" x2="66" y2="78"/>
+    <circle class="art" cx="72" cy="76" r="6"/>
+    <line class="fig" x1="70" y1="80" x2="92" y2="98"/>
+    <circle class="equipo" cx="99" cy="100" r="9"/>
+    <circle class="relleno" cx="99" cy="100" r="2.5"/>
+    <line class="equipo" x1="88" y1="100" x2="110" y2="100"/>
+    <line class="flecha" x1="70" y1="64" x2="98" y2="70"/>
+    <polygon class="flecha-fill" points="90,58 104,68 88,72"/>
   </svg>`,
-  movilidad: `<svg class="esquema" viewBox="0 0 120 90" role="img" aria-label="Esquema de movilidad">
-    <line class="suelo" x1="12" y1="80" x2="108" y2="80"/>
-    <path class="fig" d="M34 74 L34 54 Q60 34 86 54 L86 74"/>
-    <circle class="art" cx="90" cy="48" r="6"/>
-    <line class="flecha" x1="60" y1="24" x2="60" y2="40"/>
-    <polyline class="flecha" points="54,33 60,40 66,33"/>
+  // Movilidad (gato-camello en cuadrupedia): columna arqueada + fantasma hundida.
+  movilidad: `<svg class="esquema" viewBox="0 0 140 120" role="img" aria-label="Esquema de movilidad gato-camello">
+    <line class="suelo" x1="10" y1="110" x2="130" y2="110"/>
+    <line class="fig" x1="44" y1="108" x2="48" y2="76"/>
+    <line class="fig" x1="96" y1="108" x2="90" y2="76"/>
+    <path class="fig" d="M48,76 Q69,50 90,76"/>
+    <path class="ghost" d="M48,80 Q69,98 90,80"/>
+    <line class="fig" x1="48" y1="76" x2="42" y2="70"/>
+    <circle class="art" cx="39" cy="68" r="5"/>
+    <line class="flecha" x1="69" y1="42" x2="69" y2="28"/>
+    <polygon class="flecha-fill" points="63,36 75,36 69,24"/>
   </svg>`,
-  generico: `<svg class="esquema" viewBox="0 0 120 90" role="img" aria-label="Esquema de ejercicio">
-    <line class="barra" x1="24" y1="45" x2="96" y2="45"/>
-    <line class="disco" x1="30" y1="30" x2="30" y2="60"/>
-    <line class="disco" x1="90" y1="30" x2="90" y2="60"/>
+  // Fallback: barra con discos.
+  generico: `<svg class="esquema" viewBox="0 0 140 120" role="img" aria-label="Esquema de ejercicio">
+    <line class="suelo" x1="20" y1="98" x2="120" y2="98"/>
+    <line class="barra" x1="30" y1="60" x2="110" y2="60"/>
+    <line class="disco" x1="34" y1="42" x2="34" y2="78"/>
+    <line class="disco" x1="42" y1="47" x2="42" y2="73"/>
+    <line class="disco" x1="106" y1="42" x2="106" y2="78"/>
+    <line class="disco" x1="98" y1="47" x2="98" y2="73"/>
   </svg>`,
 };
 
