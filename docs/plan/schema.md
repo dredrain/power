@@ -43,7 +43,27 @@ El bloque vigente. Se sirve por GitHub Pages (network-first con fallback a cach�
   "diaSugerido": "lunes",            // orientativo; el usuario entrena cuando puede
   "duracionCompletaMin": 70,         // estimación versión completa
   "duracionMinimaMin": 42,           // estimación versión mínima ("voy justo")
+  "calentamiento": Calentamiento,    // opcional; se muestra al empezar la sesión
   "ejercicios": [ Ejercicio, … ]
+}
+```
+
+### `Calentamiento` (opcional en `Sesion`)
+
+Guía de calentamiento + movilidad específica del día. **No es un ejercicio recortable**:
+se muestra al abrir la sesión (también en "voy justo") como checklist plegable y **no
+cuenta como KPI ni entra al historial** — el estado de los checks vive solo en el borrador.
+Es el hueco donde vive el trabajo correctivo integrado (`instrucciones.md`, fase 1: el
+prehab va en el calentamiento y entre series, no como bloque aparte que se recorta).
+
+```jsonc
+{
+  "duracionMin": 5,                  // estimación (para la etiqueta)
+  "nota": "Correctivo integrado…",   // una línea corta; el "por qué" vive en Aclaraciones
+  "items": [
+    { "nombre": "Gato-camello", "detalle": "x8 lento", "zona": "lumbar" }
+    // zona ∈ ["lumbar","rodilla","hombro"] o null (solo informativo)
+  ]
 }
 ```
 

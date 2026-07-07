@@ -55,7 +55,7 @@ export function estadoAdherencia(historial, bloque, hoy = new Date()) {
 
   let nivel = 'verde';
   let mensaje;
-  if (activaPasada && activaAnte && pasada === 0 && ante === 0) {
+  if (activaPasada && activaAnte && pasada === 0 && ante === 0 && estaSemana === 0) {
     nivel = 'rojo';
     mensaje = 'Dos semanas perdidas seguidas. Retoma esta semana, aunque sea la version minima.';
   } else if (activaPasada && pasada === 0 && estaSemana === 0) {

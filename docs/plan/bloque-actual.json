@@ -14,6 +14,17 @@
       "diaSugerido": "lunes",
       "duracionCompletaMin": 70,
       "duracionMinimaMin": 42,
+      "calentamiento": {
+        "duracionMin": 5,
+        "nota": "Correctivo integrado: hazlo antes del basico. No se recorta.",
+        "items": [
+          { "nombre": "Gato-camello", "detalle": "x8 lento, movilidad lumbar", "zona": "lumbar" },
+          { "nombre": "Apertura toracica en cuadrupedia", "detalle": "x6 por lado", "zona": null },
+          { "nombre": "Activacion gluteo medio con goma", "detalle": "2x12 (abduccion o paseo lateral), control de valgo", "zona": "rodilla" },
+          { "nombre": "Sentadilla goblet ligera", "detalle": "2x8, patron y rodilla", "zona": "rodilla" },
+          { "nombre": "Rampa a la barra", "detalle": "barra vacia -> ~40% -> ~60% -> ~75% antes de la 1a serie", "zona": null }
+        ]
+      },
       "ejercicios": [
         {
           "id": "sentadilla",
@@ -89,6 +100,17 @@
       "diaSugerido": "miercoles",
       "duracionCompletaMin": 65,
       "duracionMinimaMin": 40,
+      "calentamiento": {
+        "duracionMin": 5,
+        "nota": "Prepara el hombro antes de la banca. No se recorta.",
+        "items": [
+          { "nombre": "Movilidad toracica y de hombro", "detalle": "circulos + apertura, 1-2 min", "zona": "hombro" },
+          { "nombre": "Band pull-apart", "detalle": "2x15, espalda alta y deltoide posterior", "zona": "hombro" },
+          { "nombre": "Face pull con goma", "detalle": "2x15, rotadores externos", "zona": "hombro" },
+          { "nombre": "Press ligero de aproximacion", "detalle": "mancuerna o barra vacia 1x10, ROM comodo", "zona": "hombro" },
+          { "nombre": "Rampa en banca", "detalle": "barra vacia -> ~40% -> ~60% -> ~75%", "zona": null }
+        ]
+      },
       "ejercicios": [
         {
           "id": "press-banca",
@@ -151,6 +173,17 @@
       "diaSugerido": "viernes",
       "duracionCompletaMin": 70,
       "duracionMinimaMin": 43,
+      "calentamiento": {
+        "duracionMin": 6,
+        "nota": "Dia de mas carga lumbar: calienta sin prisa y rampa muy progresiva.",
+        "items": [
+          { "nombre": "Gato-camello", "detalle": "x8 lento", "zona": "lumbar" },
+          { "nombre": "Bird-dog", "detalle": "2x8 por lado, control de core y lumbar", "zona": "lumbar" },
+          { "nombre": "Bisagra con goma o palo", "detalle": "2x10, patron de peso muerto", "zona": "lumbar" },
+          { "nombre": "Puente de gluteo", "detalle": "2x12, activacion de cadera", "zona": "rodilla" },
+          { "nombre": "Rampa en peso muerto", "detalle": "barra -> ~40% -> ~55% -> ~70%, muy progresiva", "zona": "lumbar" }
+        ]
+      },
       "ejercicios": [
         {
           "id": "peso-muerto",
@@ -213,6 +246,14 @@
       "diaSugerido": "sabado",
       "duracionCompletaMin": 35,
       "duracionMinimaMin": 20,
+      "calentamiento": {
+        "duracionMin": 3,
+        "nota": "Extra de casa. Calentamiento breve; el rulo y la pelota, si acaso, aqui.",
+        "items": [
+          { "nombre": "Movilidad general", "detalle": "gato-camello, apertura toracica, circulos de cadera 2-3 min", "zona": null },
+          { "nombre": "Band pull-apart", "detalle": "2x15 antes de las dominadas", "zona": "hombro" }
+        ]
+      },
       "ejercicios": [
         {
           "id": "dominadas-casa",
@@ -222,9 +263,9 @@
           "reps": "AMRAP",
           "rirObjetivo": 3,
           "descansoSeg": 120,
-          "recortable": true,
+          "recortable": false,
           "zonas": ["hombro"],
-          "notas": "Extra, no cuenta como fallo si se salta. Progresa en reps/tempo (o negativas si aun no salen completas). Espalda alta para el hombro.",
+          "notas": "Ancla del dia de casa (no se recorta en 'voy justo'). Extra: no cuenta como fallo si se salta el dia entero. Progresa en reps/tempo (o negativas si aun no salen completas).",
           "progresion": { "regla": "rir", "incrementoKg": 0, "cargaInicial": 0 }
         },
         {

@@ -7,6 +7,7 @@ import { sugerirCarga, ACCIONES } from './progresion.js';
 import { estadoAdherencia } from './adherencia.js';
 import { resumenSesion, resumenSemana } from './resumen.js';
 import { evaluarVisibles } from './hitos.js';
+import { ACLARACIONES, FICHAS, esquemaSVG } from './guia.js';
 
 const ZONAS = [
   { id: 'lumbar', nombre: 'Lumbar' },
@@ -21,6 +22,8 @@ const estado = {
   vista: 'hoy',
   sesionActiva: null, // RegistroSesion en curso (persistido como borrador)
   hitos: null,        // documento de hitos.json (gamificacion)
+  planSub: 'sesiones', // sub-vista de Plan: 'sesiones' | 'ejercicios'
+  fichaFoco: null,    // id de ejercicio a resaltar al abrir su ficha
 };
 
 // ---- helpers DOM ----
@@ -49,7 +52,7 @@ export function hoyISO(d = new Date()) {
 }
 
 // ---- navegacion ----
-const TITULOS = { hoy: 'Hoy', adherencia: 'Adherencia', plan: 'Plan', ajustes: 'Ajustes' };
+const TITULOS = { hoy: 'Hoy', adherencia: 'Adherencia', plan: 'Plan', aclaraciones: 'Aclaraciones', ajustes: 'Ajustes' };
 
 export function navegar(vista) {
   // al cambiar de pantalla se detiene el temporizador de descanso (barra flotante
@@ -77,6 +80,7 @@ export const VISTAS = {
   hoy: vistaHoy,
   adherencia: vistaAdherencia,
   plan: vistaPlan,
+  aclaraciones: vistaAclaraciones,
   ajustes: vistaAjustes,
 };
 
@@ -142,20 +146,36 @@ export function abrirSesion(sesionId) {
   navegar('hoy');
 }
 
+// Registro en blanco de un ejercicio, con peso/reps precargados de la ultima vez.
+function nuevoRegistroEjercicio(e) {
+  const prev = almacen.ultimosValores(e.id);
+  const series = [];
+  for (let i = 0; i < e.series; i++) {
+    series.push({
+      peso: prev && typeof prev.peso === 'number' ? prev.peso : null,
+      reps: prev && typeof prev.reps === 'number' ? prev.reps : null,
+      rir: null,
+      hecha: false,
+    });
+  }
+  return { ejercicioId: e.id, series };
+}
+
+// Si el entrenador anadio ejercicios al plan despues de crear el borrador, los
+// incorpora a la sesion en curso (evita que el registro se quede corto o casque).
+function reconciliarEjercicios(def, sa) {
+  const existentes = new Set(sa.ejercicios.map((e) => e.ejercicioId));
+  let cambio = false;
+  for (const e of def.ejercicios) {
+    if (existentes.has(e.id)) continue;
+    sa.ejercicios.push(nuevoRegistroEjercicio(e));
+    cambio = true;
+  }
+  if (cambio) persistir();
+}
+
 function construirSesion(def) {
-  const ejercicios = def.ejercicios.map((e) => {
-    const prev = almacen.ultimosValores(e.id);
-    const series = [];
-    for (let i = 0; i < e.series; i++) {
-      series.push({
-        peso: prev && typeof prev.peso === 'number' ? prev.peso : null,
-        reps: prev && typeof prev.reps === 'number' ? prev.reps : null,
-        rir: null,
-        hecha: false,
-      });
-    }
-    return { ejercicioId: e.id, series };
-  });
+  const ejercicios = def.ejercicios.map(nuevoRegistroEjercicio);
   return {
     fecha: hoyISO(),
     iso: new Date().toISOString(),
@@ -165,6 +185,7 @@ function construirSesion(def) {
     completada: false,
     inicioMs: Date.now(),
     ejercicios,
+    calentamiento: (def.calentamiento?.items || []).map(() => false),
     dolor: { post: {}, h24: {} },
     notas: '',
   };
@@ -183,10 +204,28 @@ function ejerciciosVisibles(def, version) {
   return version === 'minima' ? def.ejercicios.filter((e) => !e.recortable) : def.ejercicios;
 }
 
+// El borrador apunta a una sesion que ya no existe en el plan (el entrenador lo cambio).
+function sesionHuerfana() {
+  return el('div', { class: 'pila' }, [
+    el('p', { class: 'aviso', text: 'La sesion guardada ya no existe en el plan actual. Descartala para volver a empezar.' }),
+    el('button', {
+      class: 'btn btn-primario', text: 'Descartar y volver',
+      onclick: () => {
+        almacen.limpiarBorrador();
+        estado.sesionActiva = null;
+        timer.parar();
+        navegar('hoy');
+      },
+    }),
+  ]);
+}
+
 // ---- Pantalla de registro ----
 function renderSesionActiva() {
   const sa = estado.sesionActiva;
   const def = defSesion(sa.sesionId);
+  if (!def) return sesionHuerfana();
+  reconciliarEjercicios(def, sa);
   const frag = el('div', { class: 'pila' });
 
   // cabecera con toggle "voy justo" + cancelar
@@ -219,7 +258,14 @@ function renderSesionActiva() {
     }),
   ]));
 
-  for (const eDef of ejerciciosVisibles(def, sa.version)) {
+  const cal = tarjetaCalentamiento(def, sa);
+  if (cal) frag.appendChild(cal);
+
+  const visibles = ejerciciosVisibles(def, sa.version);
+  if (!visibles.length) {
+    frag.appendChild(el('p', { class: 'mini', text: 'En "voy justo" no queda ningun ejercicio en esta sesion. Desactiva "voy justo" para la version completa.' }));
+  }
+  for (const eDef of visibles) {
     frag.appendChild(tarjetaEjercicio(eDef, sa));
   }
 
@@ -237,8 +283,52 @@ function etiquetaSwitch(checked, onChange) {
   return el('label', { class: 'switch' }, [input, el('span', { class: 'pista' })]);
 }
 
+// ---- Calentamiento / movilidad integrada al inicio de la sesion ----
+// No es un bloque recortable: se muestra tambien en "voy justo" porque el trabajo
+// correctivo va en el calentamiento, no se corta (ver instrucciones, fase 1). El
+// estado de los checks vive en el borrador y NO entra al historial ni al KPI.
+function tarjetaCalentamiento(def, sa) {
+  const cal = def.calentamiento;
+  if (!cal || !Array.isArray(cal.items) || !cal.items.length) return null;
+  if (!Array.isArray(sa.calentamiento) || sa.calentamiento.length !== cal.items.length) {
+    sa.calentamiento = cal.items.map((_, i) => !!(sa.calentamiento && sa.calentamiento[i]));
+    persistir();
+  }
+  const hechos = () => sa.calentamiento.filter(Boolean).length;
+  const contador = el('span', { class: 'mini', text: `${hechos()}/${cal.items.length}` });
+
+  const filas = cal.items.map((item, i) => {
+    const fila = el('div', { class: 'calent-item' + (sa.calentamiento[i] ? ' hecho' : '') }, [
+      el('span', { class: 'calent-check', text: sa.calentamiento[i] ? '✓' : '' }),
+      el('span', {}, [
+        el('div', { class: 'calent-nom', text: item.nombre }),
+        item.detalle ? el('div', { class: 'calent-det', text: item.detalle }) : null,
+      ]),
+    ]);
+    fila.addEventListener('click', () => {
+      sa.calentamiento[i] = !sa.calentamiento[i];
+      fila.classList.toggle('hecho', sa.calentamiento[i]);
+      fila.querySelector('.calent-check').textContent = sa.calentamiento[i] ? '✓' : '';
+      contador.textContent = `${hechos()}/${cal.items.length}`;
+      persistir();
+    });
+    return fila;
+  });
+
+  const det = el('details', { class: 'tarjeta calent' });
+  det.open = hechos() < cal.items.length; // colapsado cuando ya esta completo
+  det.appendChild(el('summary', { class: 'calent-sum' }, [
+    el('span', { text: `Calentamiento · movilidad${cal.duracionMin ? ` (~${cal.duracionMin} min)` : ''}` }),
+    contador,
+  ]));
+  if (cal.nota) det.appendChild(el('p', { class: 'mini', style: 'margin:8px 0 2px', text: cal.nota }));
+  filas.forEach((f) => det.appendChild(f));
+  return det;
+}
+
 function tarjetaEjercicio(eDef, sa) {
   const est = sa.ejercicios.find((x) => x.ejercicioId === eDef.id);
+  if (!est) return el('div'); // no deberia pasar tras reconciliarEjercicios; guarda defensiva
   const prev = almacen.ultimosValores(eDef.id);
   const card = el('div', { class: 'tarjeta' });
 
@@ -256,7 +346,11 @@ function tarjetaEjercicio(eDef, sa) {
   const sug = typeof renderSugerencia === 'function' ? renderSugerencia(eDef) : null;
   if (sug) card.appendChild(sug);
 
-  if (eDef.notas) card.appendChild(el('p', { class: 'mini', text: eDef.notas }));
+  if (FICHAS[eDef.id]) {
+    const link = el('button', { class: 'ficha-link', text: 'Ver ficha del ejercicio ›' });
+    link.addEventListener('click', () => abrirFicha(eDef.id));
+    card.appendChild(link);
+  }
 
   est.series.forEach((serie, i) => card.appendChild(filaSerie(eDef, est, serie, i)));
   return card;
@@ -316,7 +410,8 @@ export function finalizarSesion() {
     sesionId: sa.sesionId,
     version: sa.version,
     completada: true,
-    duracionSeg: Math.max(0, Math.round((Date.now() - (sa.inicioMs || Date.now())) / 1000)),
+    // cap a 6h: una sesion reanudada al dia siguiente no debe reportar horas al entrenador
+    duracionSeg: Math.min(6 * 3600, Math.max(0, Math.round((Date.now() - (sa.inicioMs || Date.now())) / 1000))),
     ejercicios: sa.ejercicios
       .map((e) => ({
         ejercicioId: e.ejercicioId,
@@ -417,9 +512,12 @@ function vistaAdherencia() {
       })(),
     ]),
     el('div', { class: 'tarjeta' }, [
-      el('h3', { text: 'Como se cuenta' }),
-      el('p', { class: 'mini', text: 'Unico KPI: sesiones completadas/semana. La version minima cuenta igual. El dia de casa es un extra: saltarlo no es un fallo. Sin kilos, sin PRs, sin rachas de dias: eso es fase 2.' }),
-      el('p', { class: 'mini', text: `${h.length} sesiones registradas en total.` }),
+      el('p', { class: 'mini', text: `${h.length} sesiones registradas en total. Unico KPI: sesiones/semana.` }),
+      (() => {
+        const b = el('button', { class: 'ficha-link', text: 'Como se cuenta la adherencia ›' });
+        b.addEventListener('click', () => navegar('aclaraciones'));
+        return b;
+      })(),
     ]),
   ]);
 }
@@ -519,14 +617,14 @@ function render24h() {
     rng.value = post[z.id];
     rng.addEventListener('input', () => { respuestas[z.id] = Number(rng.value); val.textContent = rng.value; });
     return el('div', { class: 'dolor-fila' }, [
-      el('label', {}, [el('span', { text: `${z.nombre} (ayer ${post[z.id]}/10)` }), val]),
+      el('label', {}, [el('span', { text: `${z.nombre} (ultima sesion ${post[z.id]}/10)` }), val]),
       rng,
     ]);
   });
 
   return el('div', { class: 'tarjeta' }, [
     el('h2', { text: 'Como sigues hoy' }),
-    el('p', { class: 'mini', text: 'Regla de las 24h: ¿como estan las zonas tras la ultima sesion? Si algo empeoro, la app bajara la carga.' }),
+    el('p', { class: 'mini', text: '¿Como estan hoy las zonas de la ultima sesion? Si algo empeoro, la app baja la carga.' }),
     ...filas,
     el('button', {
       class: 'btn btn-primario', text: 'Guardar y continuar',
@@ -562,7 +660,7 @@ function pantallaDolor(sa) {
   cont.appendChild(el('div', { class: 'pila' }, [
     el('div', { class: 'tarjeta' }, [
       el('h2', { text: 'Dolor por zona (0-10)' }),
-      el('p', { class: 'mini', text: 'Molestia ≤3-4 durante el ejercicio es aceptable si no empeora a 24h. Marca lo que sentiste hoy. Si hubo dolor agudo, punzante, irradiado o nocturno: fisioterapeuta antes de seguir cargando.' }),
+      el('p', { class: 'mini', text: 'Molestia ≤3-4 es aceptable si no empeora a 24h. Si hubo dolor agudo, punzante o irradiado: fisio antes de seguir cargando.' }),
       ...filas,
     ]),
     el('div', { class: 'tarjeta' }, [
@@ -588,24 +686,96 @@ function pantallaDolor(sa) {
 }
 alCerrarSesion = pantallaDolor;
 
-// ---- Vista: Plan ----
+// ---- Vista: Plan (Sesiones | Ejercicios) ----
 function vistaPlan() {
-  const frag = el('div', { class: 'pila' });
   if (!estado.bloque) return el('p', { class: 'cargando', text: 'Sin bloque.' });
+  const frag = el('div', { class: 'pila' });
+  const sub = estado.planSub || 'sesiones';
+
+  const mkSub = (id, txt) => {
+    const b = el('button', { class: 'subtab' + (sub === id ? ' activa' : ''), text: txt });
+    b.addEventListener('click', () => { estado.planSub = id; if (id !== 'ejercicios') estado.fichaFoco = null; render(); });
+    return b;
+  };
+  frag.appendChild(el('div', { class: 'subtabs' }, [mkSub('sesiones', 'Sesiones'), mkSub('ejercicios', 'Ejercicios')]));
+
+  if (sub === 'ejercicios') { frag.appendChild(planEjercicios()); return frag; }
+
   frag.appendChild(el('p', { class: 'tenue', text: estado.bloque.notas }));
   for (const sesion of estado.bloque.sesiones) {
-    const items = sesion.ejercicios.map((e) =>
-      el('li', { class: 'fila-sep', style: 'padding:6px 0;border-bottom:1px solid var(--borde)' }, [
+    const cal = sesion.calentamiento;
+    const items = sesion.ejercicios.map((e) => {
+      const fila = el('li', { class: 'fila-sep', style: 'padding:8px 0;border-bottom:1px solid var(--borde)' }, [
         el('span', {}, [
           el('strong', { text: e.nombre }),
           el('span', { class: 'mini', text: ` ${e.series}×${e.reps} · RIR ${e.rirObjetivo}` }),
+          FICHAS[e.id] ? el('span', { class: 'info-i', text: ' ⓘ' }) : null,
         ]),
         e.recortable ? el('span', { class: 'mini', text: 'recortable' }) : el('span', { class: 'chip chip-subir', text: 'fijo' }),
-      ]),
-    );
+      ]);
+      if (FICHAS[e.id]) { fila.style.cursor = 'pointer'; fila.addEventListener('click', () => abrirFicha(e.id)); }
+      return fila;
+    });
     frag.appendChild(el('div', { class: 'tarjeta' }, [
       el('h2', { text: sesion.nombre }),
+      cal && cal.items && cal.items.length
+        ? el('p', { class: 'mini', text: `Calentamiento (~${cal.duracionMin} min): ` + cal.items.map((x) => x.nombre).join(' · ') })
+        : null,
       el('ul', { class: 'limpia' }, items),
+    ]));
+  }
+  return frag;
+}
+
+// Contenido de una ficha (reutilizado por la sub-vista Ejercicios y el modal).
+function contenidoFicha(f) {
+  return [
+    el('h3', { text: f.nombre }),
+    el('div', { class: 'esquema-wrap', html: esquemaSVG(f.patron) }),
+    el('p', { class: 'ficha-tit', text: 'Claves' }),
+    el('ul', { class: 'ficha-lista claves' }, f.claves.map((c) => el('li', { text: c }))),
+    f.evita && f.evita.length ? el('p', { class: 'ficha-tit', text: 'Evita' }) : null,
+    f.evita && f.evita.length ? el('ul', { class: 'ficha-lista evita' }, f.evita.map((c) => el('li', { text: c }))) : null,
+  ];
+}
+
+// Sub-vista Ejercicios: ficha breve (esquema + claves + evita) de cada ejercicio del bloque.
+function planEjercicios() {
+  const wrap = el('div', { class: 'pila' });
+  wrap.appendChild(el('p', { class: 'tenue', text: 'Ficha de cada ejercicio del bloque: esquema, claves y errores a evitar.' }));
+  const ids = [];
+  for (const s of estado.bloque.sesiones) for (const e of s.ejercicios) if (!ids.includes(e.id)) ids.push(e.id);
+  for (const id of ids) {
+    const f = FICHAS[id];
+    if (!f) continue;
+    wrap.appendChild(el('div', { class: 'tarjeta ficha', id: 'ficha-' + id }, contenidoFicha(f)));
+  }
+  return wrap;
+}
+
+// Abre la ficha en un modal. No navega: asi el temporizador de descanso sigue vivo
+// si consultas la tecnica en pleno descanso.
+function abrirFicha(id) {
+  const f = FICHAS[id];
+  if (!f) return;
+  const overlay = el('div', { class: 'overlay-ficha' });
+  const cerrar = () => overlay.remove();
+  overlay.appendChild(el('div', { class: 'tarjeta ficha modal-ficha' }, [
+    ...contenidoFicha(f),
+    el('button', { class: 'btn btn-fantasma', text: 'Cerrar', onclick: cerrar }),
+  ]));
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) cerrar(); });
+  document.body.appendChild(overlay);
+}
+
+// ---- Vista: Aclaraciones (explicaciones sacadas del flujo de entreno) ----
+function vistaAclaraciones() {
+  const frag = el('div', { class: 'pila' });
+  frag.appendChild(el('p', { class: 'tenue', text: 'Como funciona la app y por que, sin ocupar el flujo del entreno.' }));
+  for (const a of ACLARACIONES) {
+    frag.appendChild(el('div', { class: 'tarjeta' }, [
+      el('h3', { text: a.titulo }),
+      el('p', { class: 'mini', style: 'font-size:0.85rem', text: a.cuerpo }),
     ]));
   }
   return frag;
@@ -696,6 +866,8 @@ function conectarTabs() {
   document.querySelectorAll('.tab').forEach((t) =>
     t.addEventListener('click', () => navegar(t.dataset.vista)),
   );
+  const btnAj = document.getElementById('btn-ajustes');
+  if (btnAj) btnAj.addEventListener('click', () => navegar('ajustes'));
 }
 
 async function init() {

@@ -39,6 +39,19 @@
 - [ ] En **Adherencia**, "Copiar resumen semanal" genera el resumen de la semana.
 - [ ] En **Ajustes**, "Exportar historial" descarga un `.json`; pegar ese JSON en "Importar" lo restaura.
 
+## Novedades v1.1 (icono, calentamiento, fichas, secciones)
+- [ ] Tras desplegar, abre la app **dos veces** (para que el service worker `power-v2` se active) y comprueba en **modo avión** que cargan la pestaña **Info**, la sub-pestaña **Ejercicios** (con sus esquemas) y el **calentamiento** de una sesión.
+- [ ] El **icono** en la pantalla de inicio es el nuevo (barra con degradado y brillo, no el plano).
+- [ ] Al **empezar una sesión** sale arriba el **Calentamiento · movilidad** plegable; marcar ítems los tacha y sube el contador (x/y).
+- [ ] El calentamiento se ve **también con "voy justo"** activado (no se recorta).
+- [ ] Cerrar y reabrir la app a mitad de sesión: los ítems de calentamiento marcados **se conservan**.
+- [ ] En un ejercicio, **"Ver ficha del ejercicio"** abre un modal con esquema + claves; **cerrarlo NO reinicia el temporizador** de descanso si estaba corriendo.
+- [ ] **Plan → Ejercicios**: fichas de todos los ejercicios del bloque con su esquema SVG.
+- [ ] **Plan → Sesiones**: cada ejercicio con ficha es tocable (ⓘ) y abre su ficha.
+- [ ] Pestaña **Info**: se leen las aclaraciones (adherencia, 24h, RIR, fisio…).
+- [ ] La **rueda ⚙** de la cabecera abre **Ajustes** (exportar/importar, recargar plan).
+- [ ] **Día de casa (D) + "voy justo"**: queda al menos las **dominadas** (ancla), no una pantalla vacía.
+
 ## Comprobación contra `instrucciones.md` (fase 1)
 - [ ] El único KPI visible es **sesiones/semana**. No hay gráficas, PRs ni % de máximos.
 - [ ] La gamificación muestra **solo adherencia**. Nada de kilos ni vanidad.

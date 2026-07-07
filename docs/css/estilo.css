@@ -269,3 +269,98 @@ ul.limpia { list-style: none; padding: 0; margin: 0; }
   border-radius: 10px;
   padding: 10px 12px;
 }
+
+/* ---- Boton de icono (rueda de ajustes en cabecera) ---- */
+.btn-icono {
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  color: var(--txt);
+  font-size: 1.35rem;
+  line-height: 1;
+  padding: 6px;
+  min-width: 44px;
+  min-height: 44px;
+  cursor: pointer;
+}
+
+/* ---- Sub-navegacion (Plan: Sesiones | Ejercicios) ---- */
+.subtabs { display: flex; gap: 8px; margin-bottom: 12px; }
+.subtab {
+  flex: 1; min-height: 44px;
+  border: 1px solid var(--borde); background: var(--sup);
+  color: var(--txt-tenue); border-radius: 10px;
+  font-size: 0.9rem; font-weight: 700; cursor: pointer;
+}
+.subtab.activa { background: var(--acento); color: #fff; border-color: var(--acento); }
+
+/* ---- Calentamiento / movilidad ---- */
+details.calent { padding: 12px 16px; }
+summary.calent-sum {
+  cursor: pointer; list-style: none;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  font-size: 1.05rem; font-weight: 700;
+}
+summary.calent-sum::-webkit-details-marker { display: none; }
+summary.calent-sum::after { content: "▾"; color: var(--txt-tenue); }
+details[open] summary.calent-sum::after { content: "▴"; }
+.calent-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 0; border-bottom: 1px solid var(--borde); cursor: pointer;
+}
+.calent-item:last-child { border-bottom: none; }
+.calent-check {
+  width: 30px; height: 30px; flex: 0 0 auto;
+  border: 1px solid var(--borde); background: var(--bg);
+  border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; color: var(--verde);
+}
+.calent-item.hecho .calent-check { background: var(--verde); border-color: var(--verde); color: #fff; }
+.calent-nom { font-weight: 600; }
+.calent-item.hecho .calent-nom { color: var(--txt-tenue); text-decoration: line-through; }
+.calent-det { font-size: 0.78rem; color: var(--txt-tenue); }
+
+/* ---- Enlace ligero (ver ficha, ir a aclaraciones) ---- */
+.ficha-link {
+  background: none; border: none; color: var(--azul);
+  font-weight: 700; font-size: 0.85rem; cursor: pointer;
+  padding: 8px 0; margin: 4px 0 0; text-align: left; width: auto; min-height: 0;
+}
+.info-i { color: var(--azul); font-weight: 700; }
+
+/* ---- Fichas de ejercicio ---- */
+.ficha .ficha-tit {
+  margin: 8px 0 2px; font-weight: 700; font-size: 0.72rem;
+  text-transform: uppercase; letter-spacing: 0.04em; color: var(--txt-tenue);
+}
+.ficha-lista { margin: 0 0 4px; padding-left: 0; list-style: none; }
+.ficha-lista li { position: relative; padding: 3px 0 3px 22px; font-size: 0.9rem; }
+.ficha-lista li::before { position: absolute; left: 2px; top: 3px; font-weight: 800; }
+.ficha-lista.claves li::before { content: "✓"; color: var(--verde); }
+.ficha-lista.evita li::before { content: "✕"; color: var(--rojo); }
+.ficha.foco { border-color: var(--acento); box-shadow: 0 0 0 2px rgba(232,85,45,0.28); }
+
+/* ---- Modal de ficha (abierto desde el registro; no corta el temporizador) ---- */
+.overlay-ficha {
+  position: fixed; inset: 0; z-index: 50;
+  background: rgba(0,0,0,0.78);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.modal-ficha { max-width: 480px; width: 100%; max-height: 85vh; overflow-y: auto; }
+
+/* ---- Esquema SVG (dibujado, offline) ---- */
+.esquema-wrap {
+  display: flex; justify-content: center;
+  background: var(--bg); border: 1px solid var(--borde);
+  border-radius: 10px; padding: 8px; margin: 6px 0 10px;
+}
+.esquema { width: 100%; max-width: 220px; height: auto; }
+.esquema line, .esquema path, .esquema polyline {
+  fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round;
+}
+.esquema .fig, .esquema .barra { stroke: var(--acento); }
+.esquema .disco { stroke: var(--acento); stroke-width: 5; }
+.esquema .flecha { stroke: var(--azul); stroke-width: 2.5; }
+.esquema .suelo { stroke: var(--borde); stroke-width: 2; }
+.esquema .art, .esquema .relleno { fill: var(--acento); stroke: none; }

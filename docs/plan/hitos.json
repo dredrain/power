@@ -27,7 +27,7 @@
       "fase": 2,
       "activo": false,
       "premio": "Barra de dominadas nueva o lastre",
-      "condicion": { "tipo": "reps_ejercicio", "ejercicioId": "dominadas", "reps": 10 }
+      "condicion": { "tipo": "reps_ejercicio", "ejercicioId": "dominadas-casa", "reps": 10 }
     },
     {
       "id": "sentadilla-160",

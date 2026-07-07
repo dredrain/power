@@ -3,7 +3,7 @@
 // - JSON del plan: network-first con fallback a cache (asi ves los cambios del
 //   entrenador cuando hay red, pero la app sigue si no la hay).
 
-const VERSION = 'power-v1';
+const VERSION = 'power-v2';
 const SHELL = [
   '.',
   'index.html',
@@ -16,6 +16,7 @@ const SHELL = [
   'js/adherencia.js',
   'js/resumen.js',
   'js/hitos.js',
+  'js/guia.js',
   'icons/icon-192.png',
   'icons/icon-512.png',
 ];
