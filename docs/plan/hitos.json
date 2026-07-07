@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "notas": "Motor genérico; el entrenador dosifica el contenido. En fase 1 solo se muestra y evalua un hito: adherencia ~66 dias. Los de fase 2 existen pero estan inactivos hasta que el entrenador ponga activo:true y avance la fase.",
+  "hitos": [
+    {
+      "id": "adherencia-66",
+      "titulo": "66 dias de habito",
+      "descripcion": "Presentarte de forma sostenida sin dos sesiones perdidas seguidas. El unico hito de fase 1: mide presentarse, no kilos.",
+      "fase": 1,
+      "activo": true,
+      "premio": "Camiseta de power (a elegir por ti)",
+      "condicion": { "tipo": "adherencia_habito", "dias": 66 }
+    },
+    {
+      "id": "sesiones-24",
+      "titulo": "24 sesiones completadas",
+      "descripcion": "Dos meses de constancia a 3/semana. Se activa en fase 2.",
+      "fase": 2,
+      "activo": false,
+      "premio": "",
+      "condicion": { "tipo": "sesiones_totales", "n": 24 }
+    },
+    {
+      "id": "dominadas-10",
+      "titulo": "10 dominadas seguidas",
+      "descripcion": "Una serie de 10 dominadas estrictas. Trabajo de espalda alta que ademas cuida el hombro.",
+      "fase": 2,
+      "activo": false,
+      "premio": "Barra de dominadas nueva o lastre",
+      "condicion": { "tipo": "reps_ejercicio", "ejercicioId": "dominadas", "reps": 10 }
+    },
+    {
+      "id": "sentadilla-160",
+      "titulo": "Sentadilla 160 kg",
+      "descripcion": "~89% del PR historico de 180 kg. Hito de reencuentro con la fuerza, no objetivo de fase 1.",
+      "fase": 2,
+      "activo": false,
+      "premio": "Cinturon nuevo",
+      "condicion": { "tipo": "carga_ejercicio", "ejercicioId": "sentadilla", "kg": 160 }
+    },
+    {
+      "id": "pesomuerto-200",
+      "titulo": "Peso muerto 200 kg",
+      "descripcion": "~91% del PR historico de 220 kg. Fase 2, cuando la lumbar tolere volumen alto.",
+      "fase": 2,
+      "activo": false,
+      "premio": "Botas de peso muerto / calzado de fuerza",
+      "condicion": { "tipo": "carga_ejercicio", "ejercicioId": "peso-muerto", "kg": 200 }
+    },
+    {
+      "id": "banca-105",
+      "titulo": "Press banca 105 kg",
+      "descripcion": "~88% del PR historico de 120 kg. Fase 2.",
+      "fase": 2,
+      "activo": false,
+      "premio": "",
+      "condicion": { "tipo": "carga_ejercicio", "ejercicioId": "press-banca", "kg": 105 }
+    }
+  ]
+}

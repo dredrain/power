@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#12141c">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="css/estilo.css">
+  <title>Power Tracker</title>
+</head>
+<body>
+  <header class="cabecera">
+    <h1 id="titulo-vista">Hoy</h1>
+    <span id="sin-conexion" class="badge-offline oculto">sin conexion</span>
+  </header>
+
+  <main id="vista" class="vista">
+    <!-- Las vistas se renderizan aqui desde js/app.js -->
+    <p class="cargando">Cargando…</p>
+  </main>
+
+  <nav class="tabbar" aria-label="Navegacion principal">
+    <button class="tab" data-vista="hoy" aria-label="Hoy">
+      <span class="tab-icono">🏋️</span><span class="tab-txt">Hoy</span>
+    </button>
+    <button class="tab" data-vista="adherencia" aria-label="Adherencia">
+      <span class="tab-icono">📅</span><span class="tab-txt">Adherencia</span>
+    </button>
+    <button class="tab" data-vista="plan" aria-label="Plan">
+      <span class="tab-icono">📋</span><span class="tab-txt">Plan</span>
+    </button>
+    <button class="tab" data-vista="ajustes" aria-label="Ajustes">
+      <span class="tab-icono">⚙️</span><span class="tab-txt">Ajustes</span>
+    </button>
+  </nav>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
