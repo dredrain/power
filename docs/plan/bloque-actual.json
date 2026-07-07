@@ -1,0 +1,272 @@
+{
+  "bloque": 1,
+  "fase": 1,
+  "semanas": 5,
+  "creado": "2026-07-07",
+  "titulo": "Bloque 1 — Reentrada powerbuilding",
+  "notas": "Reentrada tras ~1 ano de destreno. Objetivo del bloque: adherencia y volver sin dolor, NO recuperar marcas. RPE <=7 (RIR objetivo >=3), sin fallos, sin singles pesados. Las cargas van a 'rellenar en la 1a sesion con RPE <=6': elige un peso que puedas mover comodo dejando 4 en el deposito y registralo; a partir de ahi la app autorregula por RIR. Semanas 1-2: asentar tecnica y carga base. Semanas 3-4: la carga sube sola cuando el RIR supere el objetivo. Semana 5: descarga suave (repite pesos de la semana 4 bajando 1 serie si hay fatiga). Ojo al volumen lumbar combinado de los dias A (sentadilla+RDL) y C (peso muerto): si la lumbar acumula, recorta antes el RDL que el basico.",
+  "progresionGlobal": { "regla": "rir", "rirObjetivoDefecto": 3 },
+  "sesiones": [
+    {
+      "id": "A",
+      "nombre": "Sentadilla + bisagra + espalda",
+      "opcional": false,
+      "diaSugerido": "lunes",
+      "duracionCompletaMin": 70,
+      "duracionMinimaMin": 42,
+      "ejercicios": [
+        {
+          "id": "sentadilla",
+          "nombre": "Sentadilla",
+          "tipo": "basico",
+          "series": 3,
+          "reps": "5",
+          "rirObjetivo": 3,
+          "descansoSeg": 180,
+          "recortable": false,
+          "zonas": ["rodilla", "lumbar"],
+          "notas": "Basico primero. Profundidad comoda, sin buscar ROM maximo esta semana. Integra activacion de gluteo medio con goma en el calentamiento y entre series (correctivo de rodilla, control de valgo): no ocupa hueco propio.",
+          "progresion": { "regla": "rir", "incrementoKg": 2.5, "cargaInicial": null }
+        },
+        {
+          "id": "peso-muerto-rumano",
+          "nombre": "Peso muerto rumano",
+          "tipo": "accesorio",
+          "series": 3,
+          "reps": "8",
+          "rirObjetivo": 3,
+          "descansoSeg": 150,
+          "recortable": false,
+          "zonas": ["lumbar"],
+          "notas": "Ancla de la version minima: isquios y extensores cargados (correctivo lumbar segun evidencia HSR). Cadera atras, espalda neutra, sin redondear. Carga moderada, no es un peso muerto pesado.",
+          "progresion": { "regla": "rir", "incrementoKg": 2.5, "cargaInicial": null }
+        },
+        {
+          "id": "remo-mancuerna",
+          "nombre": "Remo con mancuerna a una mano",
+          "tipo": "accesorio",
+          "series": 3,
+          "reps": "10",
+          "rirObjetivo": 3,
+          "descansoSeg": 90,
+          "recortable": true,
+          "zonas": ["hombro"],
+          "notas": "Volumen de espalda alta (salud de hombro y equilibrio de empuje/tiron). Powerbuilding: hipertrofia que ademas cuida el hombro.",
+          "progresion": { "regla": "rir", "incrementoKg": 2.5, "cargaInicial": null }
+        },
+        {
+          "id": "abduccion-cadera",
+          "nombre": "Abduccion de cadera con carga (maquina o polea)",
+          "tipo": "accesorio",
+          "series": 3,
+          "reps": "12-15",
+          "rirObjetivo": 3,
+          "descansoSeg": 75,
+          "recortable": true,
+          "zonas": ["rodilla"],
+          "notas": "Gluteo medio cargado y progresable (no goma de 15 min): fuerza de cadera para control de valgo y cara externa de rodilla. Puede hacerse entre series de sentadilla.",
+          "progresion": { "regla": "rir", "incrementoKg": 2.5, "cargaInicial": null }
+        },
+        {
+          "id": "rueda-abdominal",
+          "nombre": "Rueda abdominal (o plancha con peso)",
+          "tipo": "accesorio",
+          "series": 3,
+          "reps": "8-12",
+          "rirObjetivo": 3,
+          "descansoSeg": 60,
+          "recortable": true,
+          "zonas": ["lumbar"],
+          "notas": "Core anti-extension: protege la lumbar bajo carga. Progresa en ROM/reps antes que en lastre.",
+          "progresion": { "regla": "rir", "incrementoKg": 0, "cargaInicial": 0 }
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "nombre": "Banca + empuje + espalda alta",
+      "opcional": false,
+      "diaSugerido": "miercoles",
+      "duracionCompletaMin": 65,
+      "duracionMinimaMin": 40,
+      "ejercicios": [
+        {
+          "id": "press-banca",
+          "nombre": "Press banca",
+          "tipo": "basico",
+          "series": 3,
+          "reps": "5",
+          "rirObjetivo": 3,
+          "descansoSeg": 180,
+          "recortable": false,
+          "zonas": ["hombro"],
+          "notas": "Basico primero. Agarre no excesivamente ancho y ROM comodo al principio (precaucion de hombro): baja controlado, sin rebote, sin buscar arco extremo.",
+          "progresion": { "regla": "rir", "incrementoKg": 2.5, "cargaInicial": null }
+        },
+        {
+          "id": "press-inclinado-mancuerna",
+          "nombre": "Press inclinado con mancuernas",
+          "tipo": "accesorio",
+          "series": 3,
+          "reps": "8-10",
+          "rirObjetivo": 3,
+          "descansoSeg": 120,
+          "recortable": false,
+          "zonas": ["hombro"],
+          "notas": "Ancla de la version minima: empuje con ROM controlado por mancuerna (mas amable con el hombro que un militar con barra al inicio). Trabaja pecho alto y deltoide anterior.",
+          "progresion": { "regla": "rir", "incrementoKg": 2.5, "cargaInicial": null }
+        },
+        {
+          "id": "jalon-dominada",
+          "nombre": "Jalon al pecho o dominada asistida",
+          "tipo": "accesorio",
+          "series": 3,
+          "reps": "8-10",
+          "rirObjetivo": 3,
+          "descansoSeg": 90,
+          "recortable": true,
+          "zonas": ["hombro"],
+          "notas": "Tiron vertical: dorsal y espalda alta, equilibra el empuje del dia y cuida el hombro.",
+          "progresion": { "regla": "rir", "incrementoKg": 2.5, "cargaInicial": null }
+        },
+        {
+          "id": "face-pull",
+          "nombre": "Face pull / deltoide posterior con carga",
+          "tipo": "accesorio",
+          "series": 3,
+          "reps": "15",
+          "rirObjetivo": 3,
+          "descansoSeg": 60,
+          "recortable": true,
+          "zonas": ["hombro"],
+          "notas": "Deltoide posterior y rotadores externos, progresable en carga. Correctivo de hombro: puede intercalarse entre series de banca.",
+          "progresion": { "regla": "rir", "incrementoKg": 1, "cargaInicial": null }
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "nombre": "Peso muerto + pierna unilateral + espalda",
+      "opcional": false,
+      "diaSugerido": "viernes",
+      "duracionCompletaMin": 70,
+      "duracionMinimaMin": 43,
+      "ejercicios": [
+        {
+          "id": "peso-muerto",
+          "nombre": "Peso muerto convencional",
+          "tipo": "basico",
+          "series": 3,
+          "reps": "4",
+          "rirObjetivo": 3,
+          "descansoSeg": 210,
+          "recortable": false,
+          "zonas": ["lumbar"],
+          "notas": "Basico primero. Empieza MUY conservador: la lumbar tolera menos de lo que la fuerza recuerda. Reps bajas (4) para calidad tecnica con poca fatiga lumbar. Si la lumbar viene cargada del dia A o de estar sentado, baja carga o rango antes que saltarlo.",
+          "progresion": { "regla": "rir", "incrementoKg": 2.5, "cargaInicial": null }
+        },
+        {
+          "id": "bulgara",
+          "nombre": "Sentadilla bulgara (zancada dividida)",
+          "tipo": "accesorio",
+          "series": 3,
+          "reps": "8-10",
+          "rirObjetivo": 3,
+          "descansoSeg": 120,
+          "recortable": false,
+          "zonas": ["rodilla"],
+          "notas": "Ancla de la version minima: cuadriceps y gluteo unilateral, amable con la lumbar (poca carga axial) y clave para control de rodilla/cadera. Reps por pierna.",
+          "progresion": { "regla": "rir", "incrementoKg": 2.5, "cargaInicial": null }
+        },
+        {
+          "id": "hiperextension",
+          "nombre": "Hiperextension / extension lumbar con carga",
+          "tipo": "accesorio",
+          "series": 3,
+          "reps": "12",
+          "rirObjetivo": 3,
+          "descansoSeg": 90,
+          "recortable": true,
+          "zonas": ["lumbar"],
+          "notas": "Extensores de la espalda cargados y progresables (fuerza directa de lumbar, base de la evidencia sobre dolor lumbar). Rango comodo, sin hiperextender de golpe.",
+          "progresion": { "regla": "rir", "incrementoKg": 2.5, "cargaInicial": 0 }
+        },
+        {
+          "id": "remo-alto-dominada",
+          "nombre": "Dominada o jalon agarre neutro",
+          "tipo": "accesorio",
+          "series": 3,
+          "reps": "8-10",
+          "rirObjetivo": 3,
+          "descansoSeg": 90,
+          "recortable": true,
+          "zonas": ["hombro"],
+          "notas": "Mas volumen de espalda alta/dorsal para el hombro. Agarre neutro, comodo para el hombro.",
+          "progresion": { "regla": "rir", "incrementoKg": 2.5, "cargaInicial": null }
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "nombre": "Dia de casa (opcional) — gomas, dominadas, rueda",
+      "opcional": true,
+      "diaSugerido": "sabado",
+      "duracionCompletaMin": 35,
+      "duracionMinimaMin": 20,
+      "ejercicios": [
+        {
+          "id": "dominadas-casa",
+          "nombre": "Dominadas (negativas o completas)",
+          "tipo": "accesorio",
+          "series": 3,
+          "reps": "AMRAP",
+          "rirObjetivo": 3,
+          "descansoSeg": 120,
+          "recortable": true,
+          "zonas": ["hombro"],
+          "notas": "Extra, no cuenta como fallo si se salta. Progresa en reps/tempo (o negativas si aun no salen completas). Espalda alta para el hombro.",
+          "progresion": { "regla": "rir", "incrementoKg": 0, "cargaInicial": 0 }
+        },
+        {
+          "id": "remo-goma-casa",
+          "nombre": "Remo / face pull con goma",
+          "tipo": "accesorio",
+          "series": 3,
+          "reps": "15",
+          "rirObjetivo": 3,
+          "descansoSeg": 60,
+          "recortable": true,
+          "zonas": ["hombro"],
+          "notas": "Tension de goma progresable (goma mas dura = mas carga). Deltoide posterior y rotadores.",
+          "progresion": { "regla": "rir", "incrementoKg": 0, "cargaInicial": 0 }
+        },
+        {
+          "id": "abduccion-goma-casa",
+          "nombre": "Abduccion de cadera con goma (de pie o paseo lateral)",
+          "tipo": "accesorio",
+          "series": 3,
+          "reps": "15-20",
+          "rirObjetivo": 3,
+          "descansoSeg": 60,
+          "recortable": true,
+          "zonas": ["rodilla"],
+          "notas": "Gluteo medio con tension de goma para control de rodilla. Progresa con goma mas dura o mas ROM.",
+          "progresion": { "regla": "rir", "incrementoKg": 0, "cargaInicial": 0 }
+        },
+        {
+          "id": "rueda-casa",
+          "nombre": "Rueda abdominal",
+          "tipo": "accesorio",
+          "series": 3,
+          "reps": "8-12",
+          "rirObjetivo": 3,
+          "descansoSeg": 60,
+          "recortable": true,
+          "zonas": ["lumbar"],
+          "notas": "Core anti-extension para proteger la lumbar. Progresa en ROM (mas estirado) antes que en reps.",
+          "progresion": { "regla": "rir", "incrementoKg": 0, "cargaInicial": 0 }
+        }
+      ]
+    }
+  ]
+}
