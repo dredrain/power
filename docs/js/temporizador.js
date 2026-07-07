@@ -2,6 +2,7 @@
 // cuenta atras los segundos de descanso del ejercicio y vibra/suena al acabar.
 
 let intervalo = null;
+let ocultarTimeout = null; // timeout que oculta la barra tras "¡Ya!"
 let barra = null;
 let restante = 0;
 
@@ -76,11 +77,12 @@ function finalizar() {
   pitar();
   if (barra) {
     barra.querySelector('#t-num').textContent = '¡Ya!';
-    setTimeout(() => barra && barra.classList.add('oculto'), 1500);
+    ocultarTimeout = setTimeout(() => { ocultarTimeout = null; if (barra) barra.classList.add('oculto'); }, 1500);
   }
 }
 
 export function parar(silencioso = false) {
   if (intervalo) { clearInterval(intervalo); intervalo = null; }
+  if (ocultarTimeout) { clearTimeout(ocultarTimeout); ocultarTimeout = null; }
   if (barra && !silencioso) barra.classList.add('oculto');
 }

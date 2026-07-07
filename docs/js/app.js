@@ -52,6 +52,9 @@ export function hoyISO(d = new Date()) {
 const TITULOS = { hoy: 'Hoy', adherencia: 'Adherencia', plan: 'Plan', ajustes: 'Ajustes' };
 
 export function navegar(vista) {
+  // al cambiar de pantalla se detiene el temporizador de descanso (barra flotante
+  // sobre <body>): si no, seguiria visible y sonando sobre otras vistas.
+  timer.parar();
   estado.vista = vista;
   $titulo().textContent = TITULOS[vista] || 'Power';
   document.querySelectorAll('.tab').forEach((t) =>
