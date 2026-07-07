@@ -65,7 +65,8 @@ body {
 /* ---- Vista ---- */
 .vista {
   flex: 1;
-  padding: 4px 16px calc(var(--tap) + 40px + var(--safe-b));
+  /* padding inferior amplio: deja pasar el temporizador flotante sin tapar botones */
+  padding: 4px 16px calc(var(--tap) + 150px + var(--safe-b));
   max-width: 640px;
   width: 100%;
   margin: 0 auto;

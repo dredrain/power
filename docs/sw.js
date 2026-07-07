@@ -13,6 +13,7 @@ const SHELL = [
   'js/almacen.js',
   'js/progresion.js',
   'js/temporizador.js',
+  'js/adherencia.js',
   'icons/icon-192.png',
   'icons/icon-512.png',
 ];

@@ -3,6 +3,14 @@
 
 import * as almacen from './almacen.js';
 import * as timer from './temporizador.js';
+import { sugerirCarga, ACCIONES } from './progresion.js';
+import { estadoAdherencia } from './adherencia.js';
+
+const ZONAS = [
+  { id: 'lumbar', nombre: 'Lumbar' },
+  { id: 'rodilla', nombre: 'Rodilla (cara externa)' },
+  { id: 'hombro', nombre: 'Hombro' },
+];
 
 // ---- estado ----
 const estado = {
@@ -309,16 +317,124 @@ export function finalizarSesion() {
   navegar('adherencia');
 }
 
-// ---- Vista: Adherencia (S3 la amplia con el semaforo real) ----
+// ---- Vista: Adherencia (semaforo semanal, unico KPI de fase 1) ----
 function vistaAdherencia() {
   const h = almacen.getHistorial();
+  const a = estadoAdherencia(h, estado.bloque);
+  const clase = { verde: 'sem-verde', amarillo: 'sem-amarillo', rojo: 'sem-rojo' }[a.nivel];
+
+  const puntos = [];
+  for (let i = 0; i < a.objetivo; i++) {
+    puntos.push(el('span', {
+      style: `width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:800;margin-right:8px;background:${i < a.estaSemana ? 'var(--acento)' : 'var(--sup2)'};color:${i < a.estaSemana ? '#fff' : 'var(--txt-tenue)'}`,
+      text: i < a.estaSemana ? '✓' : '',
+    }));
+  }
+
   return el('div', { class: 'pila' }, [
     el('div', { class: 'tarjeta' }, [
-      el('h2', { text: 'Sesiones registradas' }),
-      el('p', { class: 'tenue', text: `${h.length} en total. El detalle semanal llega en S3.` }),
+      el('h2', { text: 'Esta semana' }),
+      el('div', { style: 'margin:10px 0' }, puntos),
+      el('p', { class: 'tenue', text: `${a.estaSemana} de ${a.objetivo} sesiones del nucleo.${a.extras ? ` (+${a.extras} extra de casa)` : ''}` }),
+      el('div', { class: `semaforo ${clase}`, text: a.mensaje }),
+    ]),
+    el('div', { class: 'tarjeta' }, [
+      el('h3', { text: 'Como se cuenta' }),
+      el('p', { class: 'mini', text: 'Unico KPI: sesiones completadas/semana. La version minima cuenta igual. El dia de casa es un extra: saltarlo no es un fallo. Sin kilos, sin PRs, sin rachas de dias: eso es fase 2.' }),
+      el('p', { class: 'mini', text: `${h.length} sesiones registradas en total.` }),
     ]),
   ]);
 }
+
+// ---- S3: sugerencia de carga al abrir cada ejercicio ----
+function renderSugerencia(eDef) {
+  const reg = almacen.ultimoRegistroEjercicio(eDef.id);
+  const s = sugerirCarga(eDef, reg);
+  const claseChip = {
+    [ACCIONES.SUBIR]: 'chip-subir',
+    [ACCIONES.MANTENER]: 'chip-mantener',
+    [ACCIONES.BAJAR]: 'chip-bajar',
+    [ACCIONES.ESTIMAR]: 'chip-estimar',
+  }[s.accion];
+  const etiqueta = {
+    [ACCIONES.SUBIR]: '▲ Subir',
+    [ACCIONES.MANTENER]: '＝ Mantener',
+    [ACCIONES.BAJAR]: '▼ Bajar',
+    [ACCIONES.ESTIMAR]: '◆ Estimar',
+  }[s.accion];
+  return el('div', { style: 'margin:6px 0' }, [
+    el('span', { class: `chip ${claseChip}`, text: etiqueta + (s.pesoSugerido != null ? ` · ${s.pesoSugerido} kg` : '') }),
+    el('p', { class: 'mini', style: 'margin-top:6px', text: s.mensaje }),
+  ]);
+}
+
+// ---- S3: pregunta de 24h sobre la sesion anterior (al abrir la siguiente) ----
+function render24h() {
+  const pend = almacen.sesionPendiente24h();
+  if (!pend) return null;
+  const post = pend.dolor?.post || {};
+  const zonas = ZONAS.filter((z) => typeof post[z.id] === 'number');
+  if (!zonas.length) return null;
+
+  const respuestas = {};
+  const filas = zonas.map((z) => {
+    respuestas[z.id] = post[z.id];
+    const val = el('span', { class: 'dolor-val', text: String(post[z.id]) });
+    const rng = el('input', { type: 'range', min: '0', max: '10', step: '1' });
+    rng.value = post[z.id];
+    rng.addEventListener('input', () => { respuestas[z.id] = Number(rng.value); val.textContent = rng.value; });
+    return el('div', { class: 'dolor-fila' }, [
+      el('label', {}, [el('span', { text: `${z.nombre} (ayer ${post[z.id]}/10)` }), val]),
+      rng,
+    ]);
+  });
+
+  return el('div', { class: 'tarjeta' }, [
+    el('h2', { text: 'Como sigues hoy' }),
+    el('p', { class: 'mini', text: 'Regla de las 24h: ¿como estan las zonas tras la ultima sesion? Si algo empeoro, la app bajara la carga.' }),
+    ...filas,
+    el('button', {
+      class: 'btn btn-primario', text: 'Guardar y continuar',
+      onclick: () => { almacen.responder24h(pend.fecha, pend.sesionId, respuestas); render(); },
+    }),
+  ]);
+}
+
+// ---- S3: check de dolor al cerrar sesion (reemplaza el cierre directo) ----
+function pantallaDolor(sa) {
+  const respuestas = {};
+  const cont = $vista();
+  cont.innerHTML = '';
+  $titulo().textContent = 'Cierre de sesion';
+
+  const filas = ZONAS.map((z) => {
+    respuestas[z.id] = 0;
+    const val = el('span', { class: 'dolor-val', text: '0' });
+    const rng = el('input', { type: 'range', min: '0', max: '10', step: '1', value: '0' });
+    rng.addEventListener('input', () => { respuestas[z.id] = Number(rng.value); val.textContent = rng.value; });
+    return el('div', { class: 'dolor-fila' }, [
+      el('label', {}, [el('span', { text: z.nombre }), val]),
+      rng,
+    ]);
+  });
+
+  cont.appendChild(el('div', { class: 'pila' }, [
+    el('div', { class: 'tarjeta' }, [
+      el('h2', { text: 'Dolor por zona (0-10)' }),
+      el('p', { class: 'mini', text: 'Molestia ≤3-4 durante el ejercicio es aceptable si no empeora a 24h. Marca lo que sentiste hoy. Si hubo dolor agudo, punzante, irradiado o nocturno: fisioterapeuta antes de seguir cargando.' }),
+      ...filas,
+    ]),
+    el('button', {
+      class: 'btn btn-primario', text: 'Guardar sesion',
+      onclick: () => { sa.dolor = { post: respuestas, h24: { lumbar: null, rodilla: null, hombro: null } }; finalizarSesion(); },
+    }),
+    el('button', {
+      class: 'btn btn-fantasma', text: 'Volver al registro',
+      onclick: () => { navegar('hoy'); },
+    }),
+  ]));
+}
+alCerrarSesion = pantallaDolor;
 
 // ---- Vista: Plan ----
 function vistaPlan() {
