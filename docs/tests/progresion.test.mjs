@@ -133,6 +133,14 @@ test('#13 dolor rodilla 8 pero ejercicio de hombro → SUBIR', () => {
   assert.equal(r.accion, ACCIONES.SUBIR);
 });
 
+// #14 Peso previo 0 (peso corporal), bajar → no sugiere negativo
+test('#14 peso previo 0, delta -2 → BAJAR con pesoSugerido 0 (no negativo)', () => {
+  const ej = ejercicio({ zonas: [] });
+  const r = sugerirCarga(ej, { series: [{ peso: 0, reps: 5, rir: 1 }], dolor: { post: {}, h24: {} } });
+  assert.equal(r.accion, ACCIONES.BAJAR);
+  assert.equal(r.pesoSugerido, 0);
+});
+
 console.log('\nUtilidades:\n');
 
 test('repsObjetivoMin("5")=5, ("8-10")=8, ("AMRAP")=null', () => {

@@ -25,7 +25,12 @@ export function diasDeHabito(historial, bloque, hoy = new Date()) {
   if (!fechas.length) return 0;
 
   const cuenta = {};
-  for (const f of fechas) { const k = claveSemana(f); cuenta[k] = (cuenta[k] || 0) + 1; }
+  const primeraDeSemana = {}; // primera fecha de sesion de cada semana (para reanudar exacto)
+  for (const f of fechas) {
+    const k = claveSemana(f);
+    cuenta[k] = (cuenta[k] || 0) + 1;
+    if (!primeraDeSemana[k]) primeraDeSemana[k] = truncar(f);
+  }
 
   const finLunes = lunesDe(hoy);
   let cursor = lunesDe(fechas[0]);
@@ -35,14 +40,20 @@ export function diasDeHabito(historial, bloque, hoy = new Date()) {
 
   // Solo semanas YA cerradas (anteriores a la actual) cuentan como perdidas.
   while (cursor < finLunes) {
-    const n = cuenta[claveSemana(cursor)] || 0;
+    const k = claveSemana(cursor);
+    const n = cuenta[k] || 0;
     const fallo = n === 0;
-    if (resetPendiente && n > 0) { inicioRacha = new Date(cursor); resetPendiente = false; }
+    // al reanudar, la racha empieza en la 1a sesion real de esa semana, no en el lunes
+    if (resetPendiente && n > 0) { inicioRacha = primeraDeSemana[k] || new Date(cursor); resetPendiente = false; }
     if (fallo && prevFallo) resetPendiente = true;
     prevFallo = fallo;
     cursor = new Date(cursor.getTime() + 7 * 86400000);
   }
-  if (resetPendiente) inicioRacha = finLunes; // habito roto: se reinicia esta semana
+  if (resetPendiente) {
+    // habito roto y aun sin reanudar en semanas cerradas: cuenta desde la 1a sesion
+    // de la semana en curso si la hay, si no desde hoy.
+    inicioRacha = primeraDeSemana[claveSemana(hoy)] || truncar(hoy);
+  }
 
   return Math.max(0, Math.floor((truncar(hoy) - inicioRacha) / 86400000) + 1);
 }

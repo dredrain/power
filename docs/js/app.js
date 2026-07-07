@@ -128,8 +128,14 @@ export function abrirSesion(sesionId) {
   if (!def) return;
   const borrador = almacen.getBorrador();
   if (borrador && borrador.sesionId === sesionId) {
-    estado.sesionActiva = borrador; // reanudar
+    estado.sesionActiva = borrador; // reanudar la misma sesion
   } else {
+    // hay un borrador de OTRA sesion sin terminar: no lo pisamos sin avisar
+    if (borrador && tieneAlgoRegistrado(borrador)) {
+      const otra = defSesion(borrador.sesionId);
+      const ok = confirm(`Tienes "${otra ? otra.nombre : borrador.sesionId}" sin terminar. ¿Descartarla y empezar esta?`);
+      if (!ok) { estado.sesionActiva = borrador; navegar('hoy'); return; }
+    }
     estado.sesionActiva = construirSesion(def);
     almacen.guardarBorrador(estado.sesionActiva);
   }
@@ -166,6 +172,11 @@ function construirSesion(def) {
 
 function persistir() {
   if (estado.sesionActiva) almacen.guardarBorrador(estado.sesionActiva);
+}
+
+// ¿el borrador tiene alguna serie realizada (marcada o con RIR)?
+function tieneAlgoRegistrado(b) {
+  return (b?.ejercicios || []).some((e) => (e.series || []).some((s) => s.hecha || typeof s.rir === 'number'));
 }
 
 function ejerciciosVisibles(def, version) {
@@ -287,7 +298,7 @@ export function setAlCerrar(fn) { alCerrarSesion = fn; }
 function terminarSesion() {
   const sa = estado.sesionActiva;
   if (!sa) return;
-  const algoRegistrado = sa.ejercicios.some((e) => e.series.some((s) => typeof s.reps === 'number' || s.hecha));
+  const algoRegistrado = sa.ejercicios.some((e) => e.series.some((s) => s.hecha || typeof s.rir === 'number'));
   if (!algoRegistrado && !confirm('No has registrado ninguna serie. ¿Cerrar igualmente?')) return;
   timer.parar();
   if (typeof alCerrarSesion === 'function') { alCerrarSesion(sa); return; }
@@ -309,8 +320,12 @@ export function finalizarSesion() {
     ejercicios: sa.ejercicios
       .map((e) => ({
         ejercicioId: e.ejercicioId,
+        // Solo se guardan las series REALIZADAS: marcada (hecha) o con RIR introducido.
+        // Los valores precargados (peso/reps de la ultima vez, sin tocar) NO cuentan,
+        // asi los ejercicios ocultos en "voy justo" o las series no hechas no ensucian
+        // el historial ni la progresion/adherencia.
         series: e.series
-          .filter((s) => typeof s.reps === 'number' || s.hecha)
+          .filter((s) => s.hecha || typeof s.rir === 'number')
           .map((s) => ({ peso: s.peso ?? null, reps: s.reps ?? null, rir: s.rir ?? null })),
       }))
       .filter((e) => e.series.length),

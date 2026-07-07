@@ -107,7 +107,7 @@ export function sugerirCarga(ejercicio, registro) {
       accion: ACCIONES.BAJAR,
       mensaje: 'Una zona empeoró a 24h: baja carga o rango en este ejercicio (regla de las 24h).',
       incrementoKg,
-      pesoSugerido: pesoPrevio != null ? +(pesoPrevio - incrementoKg).toFixed(2) : null,
+      pesoSugerido: pesoPrevio != null ? Math.max(0, +(pesoPrevio - incrementoKg).toFixed(2)) : null,
       dolorAlto: dolor.maxPost > 4,
       empeoro24h: true,
     };
@@ -121,7 +121,7 @@ export function sugerirCarga(ejercicio, registro) {
       accion: ACCIONES.BAJAR,
       mensaje: `No se completaron las reps (${serie.reps}/${repsMin}): baja carga para volver al rango.`,
       incrementoKg,
-      pesoSugerido: pesoPrevio != null ? +(pesoPrevio - incrementoKg).toFixed(2) : null,
+      pesoSugerido: pesoPrevio != null ? Math.max(0, +(pesoPrevio - incrementoKg).toFixed(2)) : null,
       dolorAlto: dolor.maxPost > 4,
       empeoro24h: false,
     };
@@ -169,7 +169,7 @@ export function sugerirCarga(ejercicio, registro) {
       accion: ACCIONES.BAJAR,
       mensaje: `Fue muy duro (RIR ${ultimoRir} < objetivo ${rirObjetivo}): baja -${incrementoKg} kg para no acercarte al fallo.`,
       incrementoKg,
-      pesoSugerido: pesoPrevio != null ? +(pesoPrevio - incrementoKg).toFixed(2) : null,
+      pesoSugerido: pesoPrevio != null ? Math.max(0, +(pesoPrevio - incrementoKg).toFixed(2)) : null,
       dolorAlto,
       empeoro24h: false,
     };

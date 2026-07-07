@@ -160,10 +160,17 @@ export function setConfig(parcial) {
 // ---- Sesion anterior sin responder la pregunta de 24h ----
 // Devuelve la ultima sesion cuyo dolor.h24 aun no se ha rellenado (todos null),
 // para preguntar al abrir la siguiente. null si no hay ninguna pendiente.
-export function sesionPendiente24h() {
+function hoyStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+export function sesionPendiente24h(hoy = hoyStr()) {
   const h = getHistorial();
   for (let i = h.length - 1; i >= 0; i--) {
     const s = h[i];
+    // solo se pregunta al dia SIGUIENTE o despues (no el mismo dia de la sesion)
+    if (s.fecha >= hoy) continue;
     const h24 = s.dolor?.h24 || {};
     const post = s.dolor?.post || {};
     // solo interesa preguntar por zonas que tuvieron dolor real (>0)
