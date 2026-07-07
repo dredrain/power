@@ -166,7 +166,8 @@ export function sesionPendiente24h() {
     const s = h[i];
     const h24 = s.dolor?.h24 || {};
     const post = s.dolor?.post || {};
-    const zonasConDolor = Object.keys(post);
+    // solo interesa preguntar por zonas que tuvieron dolor real (>0)
+    const zonasConDolor = Object.keys(post).filter((z) => post[z] > 0);
     const sinResponder = zonasConDolor.every((z) => h24[z] == null);
     if (zonasConDolor.length && sinResponder) return s;
   }

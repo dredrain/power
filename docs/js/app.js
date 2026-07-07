@@ -490,7 +490,7 @@ function render24h() {
   const pend = almacen.sesionPendiente24h();
   if (!pend) return null;
   const post = pend.dolor?.post || {};
-  const zonas = ZONAS.filter((z) => typeof post[z.id] === 'number');
+  const zonas = ZONAS.filter((z) => post[z.id] > 0); // solo zonas con dolor real
   if (!zonas.length) return null;
 
   const respuestas = {};

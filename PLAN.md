@@ -115,9 +115,9 @@ bien especificada. Fable solo esta primera sesión (plan).
 | 3 | Sonnet | ✅ **S1 — Scaffolding.** Estructura `docs/`, PWA base (manifest, service worker, layout móvil, navegación), iconos. *(git init/repo/Pages ya estaban; activar Pages queda como paso manual.)* | app vacía instalable en el móvil |
 | 4 | Sonnet | ✅ **S2 — Pantalla de sesión + registro.** Render del plan JSON, registro por serie (peso/reps/RIR), precarga de últimos valores, localStorage, toggle versión mínima, temporizador de descanso. | núcleo funcional |
 | 5 | Sonnet | ✅ **S3 — Progresión + cierre de sesión.** Implementar el algoritmo de O1 (sugerencias de carga), check de dolor por zona, pregunta 24h, adherencia semanal con regla "nunca dos seguidas". | app completa el ciclo |
-| 6 | Sonnet | **S4 — Resumen del entrenador + export.** Generador del resumen markdown, botón copiar/compartir (Web Share API), export/import JSON del historial. | resumen listo para pegar a Claude |
-| 7 | Sonnet | **S5 — Motor de gamificación.** Logros/hitos/premios leídos de `hitos.json`, evaluación de condiciones contra el historial local, pantalla de hitos (solo los activos), celebración al desbloquear. En v1 solo el hito de adherencia ~66 días visible. | gamificación por fases funcionando |
-| 8 | **Opus** | **O3 — Revisión final.** Code review, probar el flujo completo contra `instrucciones.md` (¿el MVP respeta fase 1? ¿la gamificación muestra solo adherencia?), pulir sugerencias, checklist de prueba en móvil real. | v1.0 lista |
+| 6 | Sonnet | ✅ **S4 — Resumen del entrenador + export.** Generador del resumen markdown, botón copiar/compartir (Web Share API), export/import JSON del historial. | resumen listo para pegar a Claude |
+| 7 | Sonnet | ✅ **S5 — Motor de gamificación.** Logros/hitos/premios leídos de `hitos.json`, evaluación de condiciones contra el historial local, pantalla de hitos (solo los activos), celebración al desbloquear. En v1 solo el hito de adherencia ~66 días visible. | gamificación por fases funcionando |
+| 8 | **Opus** | ✅ **O3 — Revisión final.** Code review, flujo completo contra `instrucciones.md` (fase 1 respetada, gamificación solo adherencia), pulir sugerencias, checklist de prueba en móvil (`docs/plan/checklist-movil.md`). | v1.0 lista |
 
 **Orden**: O1 → S1 → S2 → (O2 en paralelo con S2/S3) → S3 → S4 → S5 → O3.
 S2 puede empezar con un bloque de ejemplo si O2 no está listo.
