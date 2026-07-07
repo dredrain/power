@@ -146,18 +146,21 @@ const ESQUEMAS = {
     <line class="flecha" x1="72" y1="78" x2="98" y2="70"/>
     <polygon class="flecha-fill" points="92,63 106,68 92,77"/>
   </svg>`,
-  // Core anti-extension (rueda abdominal de rodillas): cuerpo extendido hacia la rueda.
-  core: `<svg class="esquema" viewBox="0 0 140 120" role="img" aria-label="Esquema de core con rueda abdominal">
-    <line class="suelo" x1="10" y1="110" x2="130" y2="110"/>
-    <line class="fig" x1="44" y1="88" x2="46" y2="108"/>
-    <line class="fig" x1="44" y1="88" x2="66" y2="78"/>
-    <circle class="art" cx="72" cy="76" r="6"/>
-    <line class="fig" x1="70" y1="80" x2="92" y2="98"/>
-    <circle class="equipo" cx="99" cy="100" r="9"/>
-    <circle class="relleno" cx="99" cy="100" r="2.5"/>
-    <line class="equipo" x1="88" y1="100" x2="110" y2="100"/>
-    <line class="flecha" x1="70" y1="64" x2="98" y2="70"/>
-    <polygon class="flecha-fill" points="90,58 104,68 88,72"/>
+  // Rueda abdominal (perfil, de rodillas, extendido): cuerpo rigido bajo, brazos a la rueda.
+  core: `<svg class="esquema" viewBox="0 0 140 120" role="img" aria-label="Esquema de rueda abdominal">
+    <line class="suelo" x1="10" y1="112" x2="130" y2="112"/>
+    <line class="fig" x1="46" y1="110" x2="32" y2="110"/>
+    <line class="fig" x1="46" y1="110" x2="54" y2="94"/>
+    <line class="fig" x1="54" y1="94" x2="92" y2="90"/>
+    <line class="fig" x1="92" y1="90" x2="99" y2="88"/>
+    <circle class="art" cx="103" cy="87" r="5"/>
+    <line class="fig" x1="90" y1="91" x2="112" y2="106"/>
+    <circle class="equipo" cx="116" cy="106" r="9"/>
+    <circle class="relleno" cx="116" cy="106" r="2.5"/>
+    <line class="equipo" x1="106" y1="106" x2="126" y2="106"/>
+    <line class="ghost" x1="62" y1="104" x2="104" y2="106"/>
+    <line class="flecha" x1="66" y1="74" x2="98" y2="80"/>
+    <polygon class="flecha-fill" points="90,72 104,82 89,85"/>
   </svg>`,
   // Movilidad (gato-camello en cuadrupedia): columna arqueada + fantasma hundida.
   movilidad: `<svg class="esquema" viewBox="0 0 140 120" role="img" aria-label="Esquema de movilidad gato-camello">
@@ -179,6 +182,105 @@ const ESQUEMAS = {
     <line class="disco" x1="42" y1="47" x2="42" y2="73"/>
     <line class="disco" x1="106" y1="42" x2="106" y2="78"/>
     <line class="disco" x1="98" y1="47" x2="98" y2="73"/>
+  </svg>`,
+
+  // ---- Esquemas de movilidad / calentamiento ----
+  // Apertura toracica en cuadrupedia: un brazo rota abriendo el pecho hacia arriba.
+  'apertura-toracica': `<svg class="esquema" viewBox="0 0 140 120" role="img" aria-label="Esquema de apertura toracica">
+    <line class="suelo" x1="10" y1="110" x2="130" y2="110"/>
+    <line class="fig" x1="46" y1="108" x2="50" y2="80"/>
+    <line class="fig" x1="94" y1="108" x2="88" y2="80"/>
+    <line class="fig" x1="50" y1="80" x2="88" y2="80"/>
+    <line class="fig" x1="50" y1="80" x2="43" y2="75"/>
+    <circle class="art" cx="39" cy="72" r="5"/>
+    <line class="fig" x1="56" y1="80" x2="62" y2="62"/>
+    <line class="fig" x1="62" y1="62" x2="78" y2="54"/>
+    <path class="flecha" d="M60,46 A20,20 0 0 1 86,50"/>
+    <polygon class="flecha-fill" points="82,42 90,52 78,54"/>
+  </svg>`,
+  // Band pull-apart: de pie, brazos al frente separando una goma tensada.
+  'band-pull-apart': `<svg class="esquema" viewBox="0 0 140 120" role="img" aria-label="Esquema de band pull-apart">
+    <line class="suelo" x1="16" y1="110" x2="124" y2="110"/>
+    <circle class="art" cx="70" cy="24" r="6"/>
+    <line class="fig" x1="70" y1="30" x2="70" y2="66"/>
+    <line class="fig" x1="70" y1="66" x2="60" y2="106"/>
+    <line class="fig" x1="70" y1="66" x2="80" y2="106"/>
+    <line class="fig" x1="54" y1="106" x2="66" y2="106"/>
+    <line class="fig" x1="74" y1="106" x2="86" y2="106"/>
+    <line class="fig" x1="70" y1="42" x2="46" y2="46"/>
+    <line class="fig" x1="70" y1="42" x2="94" y2="46"/>
+    <path class="equipo" d="M46,46 Q70,58 94,46"/>
+    <line class="flecha" x1="40" y1="46" x2="24" y2="46"/>
+    <polygon class="flecha-fill" points="30,40 20,46 30,52"/>
+    <line class="flecha" x1="100" y1="46" x2="116" y2="46"/>
+    <polygon class="flecha-fill" points="110,40 120,46 110,52"/>
+  </svg>`,
+  // Bird-dog: cuadrupedia, brazo y pierna opuestos extendidos y alineados.
+  'bird-dog': `<svg class="esquema" viewBox="0 0 140 120" role="img" aria-label="Esquema de bird-dog">
+    <line class="suelo" x1="10" y1="110" x2="130" y2="110"/>
+    <line class="fig" x1="60" y1="108" x2="58" y2="80"/>
+    <line class="fig" x1="86" y1="108" x2="90" y2="80"/>
+    <line class="fig" x1="58" y1="80" x2="90" y2="80"/>
+    <line class="fig" x1="58" y1="80" x2="52" y2="76"/>
+    <circle class="art" cx="48" cy="74" r="5"/>
+    <line class="fig" x1="58" y1="80" x2="30" y2="70"/>
+    <line class="fig" x1="90" y1="80" x2="118" y2="70"/>
+    <line class="ghost" x1="28" y1="70" x2="120" y2="70"/>
+  </svg>`,
+  // Puente de gluteo: tumbado boca arriba, rodillas dobladas, cadera elevada.
+  'puente-gluteo': `<svg class="esquema" viewBox="0 0 140 120" role="img" aria-label="Esquema de puente de gluteo">
+    <line class="suelo" x1="16" y1="110" x2="124" y2="110"/>
+    <circle class="art" cx="30" cy="104" r="5"/>
+    <line class="fig" x1="36" y1="106" x2="74" y2="80"/>
+    <line class="fig" x1="74" y1="80" x2="92" y2="84"/>
+    <line class="fig" x1="92" y1="84" x2="92" y2="108"/>
+    <line class="fig" x1="86" y1="108" x2="100" y2="108"/>
+    <line class="fig" x1="40" y1="107" x2="54" y2="107"/>
+    <line class="flecha" x1="72" y1="68" x2="72" y2="50"/>
+    <polygon class="flecha-fill" points="66,58 78,58 72,46"/>
+  </svg>`,
+  // Rampa de aproximacion: series con carga creciente antes de la de trabajo.
+  rampa: `<svg class="esquema" viewBox="0 0 140 120" role="img" aria-label="Esquema de rampa de aproximacion">
+    <line class="suelo" x1="10" y1="110" x2="130" y2="110"/>
+    <line class="barra" x1="16" y1="94" x2="38" y2="94"/>
+    <line class="disco" x1="21" y1="88" x2="21" y2="100"/>
+    <line class="disco" x1="33" y1="88" x2="33" y2="100"/>
+    <line class="barra" x1="54" y1="76" x2="80" y2="76"/>
+    <line class="disco" x1="59" y1="68" x2="59" y2="84"/>
+    <line class="disco" x1="75" y1="68" x2="75" y2="84"/>
+    <line class="barra" x1="94" y1="54" x2="124" y2="54"/>
+    <line class="disco" x1="99" y1="44" x2="99" y2="64"/>
+    <line class="disco" x1="119" y1="44" x2="119" y2="64"/>
+    <line class="flecha" x1="22" y1="106" x2="104" y2="66"/>
+    <polygon class="flecha-fill" points="96,62 112,62 103,74"/>
+  </svg>`,
+  // Movilidad de hombro: circulos de hombro (flecha circular en la articulacion).
+  'movilidad-hombro': `<svg class="esquema" viewBox="0 0 140 120" role="img" aria-label="Esquema de movilidad de hombro">
+    <line class="suelo" x1="16" y1="112" x2="124" y2="112"/>
+    <circle class="art" cx="60" cy="30" r="6"/>
+    <line class="fig" x1="60" y1="36" x2="60" y2="80"/>
+    <line class="fig" x1="60" y1="80" x2="52" y2="108"/>
+    <line class="fig" x1="60" y1="80" x2="68" y2="108"/>
+    <line class="fig" x1="60" y1="46" x2="86" y2="56"/>
+    <path class="flecha" d="M96,44 A22,22 0 1 0 100,66"/>
+    <polygon class="flecha-fill" points="90,40 102,46 92,54"/>
+  </svg>`,
+  // Sentadilla goblet: sentadilla sujetando un peso contra el pecho.
+  goblet: `<svg class="esquema" viewBox="0 0 140 120" role="img" aria-label="Esquema de sentadilla goblet">
+    <line class="suelo" x1="16" y1="110" x2="124" y2="110"/>
+    <circle class="art" cx="70" cy="22" r="6"/>
+    <line class="fig" x1="70" y1="28" x2="70" y2="64"/>
+    <line class="fig" x1="70" y1="40" x2="61" y2="50"/>
+    <line class="fig" x1="70" y1="40" x2="79" y2="50"/>
+    <circle class="relleno" cx="70" cy="52" r="6"/>
+    <line class="fig" x1="70" y1="64" x2="54" y2="82"/>
+    <line class="fig" x1="54" y1="82" x2="54" y2="106"/>
+    <line class="fig" x1="70" y1="64" x2="86" y2="82"/>
+    <line class="fig" x1="86" y1="82" x2="86" y2="106"/>
+    <line class="fig" x1="46" y1="106" x2="60" y2="106"/>
+    <line class="fig" x1="80" y1="106" x2="94" y2="106"/>
+    <line class="flecha" x1="116" y1="98" x2="116" y2="56"/>
+    <polygon class="flecha-fill" points="110,64 122,64 116,50"/>
   </svg>`,
 };
 

@@ -316,9 +316,15 @@ details[open] summary.calent-sum::after { content: "▴"; }
   font-size: 1rem; color: var(--verde);
 }
 .calent-item.hecho .calent-check { background: var(--verde); border-color: var(--verde); color: #fff; }
+.calent-txt { flex: 1; min-width: 0; }
 .calent-nom { font-weight: 600; }
 .calent-item.hecho .calent-nom { color: var(--txt-tenue); text-decoration: line-through; }
 .calent-det { font-size: 0.78rem; color: var(--txt-tenue); }
+.calent-info {
+  flex: 0 0 auto; background: none; border: none;
+  color: var(--azul); font-size: 1.25rem; line-height: 1;
+  padding: 4px 6px; margin: 0; min-height: 0; width: auto; cursor: pointer;
+}
 
 /* ---- Enlace ligero (ver ficha, ir a aclaraciones) ---- */
 .ficha-link {
@@ -359,11 +365,15 @@ details[open] summary.calent-sum::after { content: "▴"; }
 .esquema line, .esquema path, .esquema polyline {
   fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round;
 }
-.esquema .fig, .esquema .barra { stroke: var(--acento); }
-.esquema .disco { stroke: var(--acento); stroke-width: 5; }
+/* monigote (figura) = acento; material/hierro (barra, discos, banco, cable, goma, rueda) = gris acero; movimiento = azul */
+.esquema .fig { stroke: var(--acento); }
+.esquema .art { fill: var(--acento); stroke: none; }              /* cabeza (figura) */
+.esquema .barra, .esquema .equipo { stroke: var(--txt-tenue); }   /* barra, banco, cable, goma, soportes */
+.esquema .disco { stroke: var(--txt-tenue); stroke-width: 5; }    /* discos */
+.esquema .relleno { fill: var(--txt-tenue); stroke: none; }       /* agarre, disco de perfil, eje de la rueda */
+.esquema .equipo { fill: none; }
 .esquema .flecha { stroke: var(--azul); stroke-width: 3; }
-.esquema .suelo { stroke: var(--borde); stroke-width: 2; }
-.esquema .art, .esquema .relleno { fill: var(--acento); stroke: none; }
-.esquema .equipo { stroke: var(--txt-tenue); fill: none; }        /* banco, cable, rueda, soportes */
-.esquema .ghost { stroke: var(--borde); stroke-width: 2.5; stroke-dasharray: 4 5; } /* recorrido / posicion alternativa */
 .esquema .flecha-fill { fill: var(--azul); stroke: none; }        /* punta de flecha */
+.esquema .suelo, .esquema .ghost { stroke: var(--borde); }
+.esquema .suelo { stroke-width: 2; }
+.esquema .ghost { stroke-width: 2.5; stroke-dasharray: 4 5; }     /* recorrido / posicion alternativa */

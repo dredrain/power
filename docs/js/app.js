@@ -300,10 +300,11 @@ function tarjetaCalentamiento(def, sa) {
   const filas = cal.items.map((item, i) => {
     const fila = el('div', { class: 'calent-item' + (sa.calentamiento[i] ? ' hecho' : '') }, [
       el('span', { class: 'calent-check', text: sa.calentamiento[i] ? '✓' : '' }),
-      el('span', {}, [
+      el('span', { class: 'calent-txt' }, [
         el('div', { class: 'calent-nom', text: item.nombre }),
         item.detalle ? el('div', { class: 'calent-det', text: item.detalle }) : null,
       ]),
+      item.esquema ? botonEsquema(item) : null,
     ]);
     fila.addEventListener('click', () => {
       sa.calentamiento[i] = !sa.calentamiento[i];
@@ -762,6 +763,27 @@ function abrirFicha(id) {
   const cerrar = () => overlay.remove();
   overlay.appendChild(el('div', { class: 'tarjeta ficha modal-ficha' }, [
     ...contenidoFicha(f),
+    el('button', { class: 'btn btn-fantasma', text: 'Cerrar', onclick: cerrar }),
+  ]));
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) cerrar(); });
+  document.body.appendChild(overlay);
+}
+
+// Boton ⓘ de un item de calentamiento: abre su esquema sin togglear el check.
+function botonEsquema(item) {
+  const b = el('button', { class: 'calent-info', text: 'ⓘ', 'aria-label': 'Ver esquema' });
+  b.addEventListener('click', (e) => { e.stopPropagation(); modalEsquema(item.nombre, item.detalle, item.esquema); });
+  return b;
+}
+
+// Modal con el esquema de un movimiento de movilidad (nombre + esquema + detalle).
+function modalEsquema(nombre, detalle, patron) {
+  const overlay = el('div', { class: 'overlay-ficha' });
+  const cerrar = () => overlay.remove();
+  overlay.appendChild(el('div', { class: 'tarjeta ficha modal-ficha' }, [
+    el('h3', { text: nombre }),
+    el('div', { class: 'esquema-wrap', html: esquemaSVG(patron) }),
+    detalle ? el('p', { class: 'mini', text: detalle }) : null,
     el('button', { class: 'btn btn-fantasma', text: 'Cerrar', onclick: cerrar }),
   ]));
   overlay.addEventListener('click', (e) => { if (e.target === overlay) cerrar(); });

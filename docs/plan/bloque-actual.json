@@ -18,11 +18,11 @@
         "duracionMin": 5,
         "nota": "Correctivo integrado: hazlo antes del basico. No se recorta.",
         "items": [
-          { "nombre": "Gato-camello", "detalle": "x8 lento, movilidad lumbar", "zona": "lumbar" },
-          { "nombre": "Apertura toracica en cuadrupedia", "detalle": "x6 por lado", "zona": null },
-          { "nombre": "Activacion gluteo medio con goma", "detalle": "2x12 (abduccion o paseo lateral), control de valgo", "zona": "rodilla" },
-          { "nombre": "Sentadilla goblet ligera", "detalle": "2x8, patron y rodilla", "zona": "rodilla" },
-          { "nombre": "Rampa a la barra", "detalle": "barra vacia -> ~40% -> ~60% -> ~75% antes de la 1a serie", "zona": null }
+          { "nombre": "Gato-camello", "detalle": "x8 lento, movilidad lumbar", "zona": "lumbar", "esquema": "movilidad" },
+          { "nombre": "Apertura toracica en cuadrupedia", "detalle": "x6 por lado", "zona": null, "esquema": "apertura-toracica" },
+          { "nombre": "Activacion gluteo medio con goma", "detalle": "2x12 (abduccion o paseo lateral), control de valgo", "zona": "rodilla", "esquema": "abduccion" },
+          { "nombre": "Sentadilla goblet ligera", "detalle": "2x8, patron y rodilla", "zona": "rodilla", "esquema": "goblet" },
+          { "nombre": "Rampa a la barra", "detalle": "barra vacia -> ~40% -> ~60% -> ~75% antes de la 1a serie", "zona": null, "esquema": "rampa" }
         ]
       },
       "ejercicios": [
@@ -104,11 +104,11 @@
         "duracionMin": 5,
         "nota": "Prepara el hombro antes de la banca. No se recorta.",
         "items": [
-          { "nombre": "Movilidad toracica y de hombro", "detalle": "circulos + apertura, 1-2 min", "zona": "hombro" },
-          { "nombre": "Band pull-apart", "detalle": "2x15, espalda alta y deltoide posterior", "zona": "hombro" },
-          { "nombre": "Face pull con goma", "detalle": "2x15, rotadores externos", "zona": "hombro" },
-          { "nombre": "Press ligero de aproximacion", "detalle": "mancuerna o barra vacia 1x10, ROM comodo", "zona": "hombro" },
-          { "nombre": "Rampa en banca", "detalle": "barra vacia -> ~40% -> ~60% -> ~75%", "zona": null }
+          { "nombre": "Movilidad toracica y de hombro", "detalle": "circulos + apertura, 1-2 min", "zona": "hombro", "esquema": "movilidad-hombro" },
+          { "nombre": "Band pull-apart", "detalle": "2x15, espalda alta y deltoide posterior", "zona": "hombro", "esquema": "band-pull-apart" },
+          { "nombre": "Face pull con goma", "detalle": "2x15, rotadores externos", "zona": "hombro", "esquema": "tiron-horizontal" },
+          { "nombre": "Press ligero de aproximacion", "detalle": "mancuerna o barra vacia 1x10, ROM comodo", "zona": "hombro", "esquema": "empuje" },
+          { "nombre": "Rampa en banca", "detalle": "barra vacia -> ~40% -> ~60% -> ~75%", "zona": null, "esquema": "rampa" }
         ]
       },
       "ejercicios": [
@@ -177,11 +177,11 @@
         "duracionMin": 6,
         "nota": "Dia de mas carga lumbar: calienta sin prisa y rampa muy progresiva.",
         "items": [
-          { "nombre": "Gato-camello", "detalle": "x8 lento", "zona": "lumbar" },
-          { "nombre": "Bird-dog", "detalle": "2x8 por lado, control de core y lumbar", "zona": "lumbar" },
-          { "nombre": "Bisagra con goma o palo", "detalle": "2x10, patron de peso muerto", "zona": "lumbar" },
-          { "nombre": "Puente de gluteo", "detalle": "2x12, activacion de cadera", "zona": "rodilla" },
-          { "nombre": "Rampa en peso muerto", "detalle": "barra -> ~40% -> ~55% -> ~70%, muy progresiva", "zona": "lumbar" }
+          { "nombre": "Gato-camello", "detalle": "x8 lento", "zona": "lumbar", "esquema": "movilidad" },
+          { "nombre": "Bird-dog", "detalle": "2x8 por lado, control de core y lumbar", "zona": "lumbar", "esquema": "bird-dog" },
+          { "nombre": "Bisagra con goma o palo", "detalle": "2x10, patron de peso muerto", "zona": "lumbar", "esquema": "bisagra" },
+          { "nombre": "Puente de gluteo", "detalle": "2x12, activacion de cadera", "zona": "rodilla", "esquema": "puente-gluteo" },
+          { "nombre": "Rampa en peso muerto", "detalle": "barra -> ~40% -> ~55% -> ~70%, muy progresiva", "zona": "lumbar", "esquema": "rampa" }
         ]
       },
       "ejercicios": [
@@ -250,8 +250,8 @@
         "duracionMin": 3,
         "nota": "Extra de casa. Calentamiento breve; el rulo y la pelota, si acaso, aqui.",
         "items": [
-          { "nombre": "Movilidad general", "detalle": "gato-camello, apertura toracica, circulos de cadera 2-3 min", "zona": null },
-          { "nombre": "Band pull-apart", "detalle": "2x15 antes de las dominadas", "zona": "hombro" }
+          { "nombre": "Movilidad general", "detalle": "gato-camello, apertura toracica, circulos de cadera 2-3 min", "zona": null, "esquema": "movilidad" },
+          { "nombre": "Band pull-apart", "detalle": "2x15 antes de las dominadas", "zona": "hombro", "esquema": "band-pull-apart" }
         ]
       },
       "ejercicios": [
