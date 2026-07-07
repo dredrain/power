@@ -53,8 +53,22 @@ Móvil (PWA) <──descarga plan── ─────────────�
 9. **Día de casa opcional**: sesión de gomas/dominadas/rueda en el plan, marcada
    `opcional: true` — no cuenta como fallo ni afecta a la adherencia si se salta.
 
-**Fuera del MVP (fase 2, tras ~66 días de hábito):** gráficas de progresión,
-% sobre máximos históricos, hitos motivacionales, nutrición.
+10. **Gamificación por fases** (decidido 2026-07-07): logros, hitos y premios,
+    pero **con activación gradual** para respetar las instrucciones de fase 1:
+    - **Fase 1 (activo desde v1):** una sola métrica gamificada — presentarse.
+      Progreso hacia los ~66 días de hábito con la regla "nunca dos perdidas
+      seguidas" (no racha estricta de días). Un único hito visible a la vez.
+    - **Fase 2 (los desbloquea el entrenador editando el JSON, no salen solos):**
+      hitos tipo 10 dominadas, % sobre máximos históricos (120/180/220), etc.
+      Uno o dos activos a la vez, no todos de golpe.
+    - **Premios**: cada hito puede llevar premio asociado definido por el usuario
+      (camisetas de power, cinturón nuevo, botas — ligados al hobby, no a comida).
+    - Los hitos viven en `docs/plan/hitos.json` editable por Claude: el motor es
+      genérico, el contenido lo dosifica el entrenador.
+
+**Fuera del MVP (fase 2, tras ~66 días de hábito):** gráficas de progresión y
+stats detalladas, nutrición. (Los hitos de fase 2 existen en el motor desde v1,
+pero desactivados hasta que el entrenador los active.)
 
 ## 3. Stack y decisiones técnicas
 
@@ -96,15 +110,16 @@ bien especificada. Fable solo esta primera sesión (plan).
 | # | Modelo | Tarea | Entregable |
 |---|--------|-------|------------|
 | 0 | Fable | ✅ Plan y arquitectura (esta sesión) | `PLAN.md` |
-| 1 | **Opus** | **O1 — Modelo de datos + algoritmo de progresión.** Cerrar esquemas de `plan.json` y del log de sesión; especificar las reglas subir/mantener/bajar (RIR vs objetivo, dolor 0-10, regla 24h, incrementos por ejercicio) como pseudocódigo testeable. | `docs/plan/schema.md` + spec del algoritmo |
+| 1 | **Opus** | **O1 — Modelo de datos + algoritmo de progresión.** Cerrar esquemas de `plan.json`, del log de sesión y de `hitos.json` (logros/hitos/premios con estado activo/inactivo y condición de desbloqueo); especificar las reglas subir/mantener/bajar (RIR vs objetivo, dolor 0-10, regla 24h, incrementos por ejercicio) como pseudocódigo testeable. | `docs/plan/schema.md` + spec del algoritmo |
 | 2 | **Opus** | **O2 — Primer bloque de entreno (4-6 semanas).** Trabajo de *entrenador*: 3 sesiones/semana + día de casa, versión completa y mínima, RPE ≤7, accesorios justificados según lumbar/rodilla/hombro (ver `instrucciones.md`). En formato `bloque-actual.json`. | `docs/plan/bloque-actual.json` |
 | 3 | Sonnet | **S1 — Scaffolding.** `git init`, repo GitHub, Pages activado, estructura `docs/`, PWA base (manifest, service worker, layout móvil, navegación). | app vacía instalable en el móvil |
 | 4 | Sonnet | **S2 — Pantalla de sesión + registro.** Render del plan JSON, registro por serie (peso/reps/RIR), precarga de últimos valores, localStorage, toggle versión mínima, temporizador de descanso. | núcleo funcional |
 | 5 | Sonnet | **S3 — Progresión + cierre de sesión.** Implementar el algoritmo de O1 (sugerencias de carga), check de dolor por zona, pregunta 24h, adherencia semanal con regla "nunca dos seguidas". | app completa el ciclo |
 | 6 | Sonnet | **S4 — Resumen del entrenador + export.** Generador del resumen markdown, botón copiar/compartir (Web Share API), export/import JSON del historial. | resumen listo para pegar a Claude |
-| 7 | **Opus** | **O3 — Revisión final.** Code review, probar el flujo completo contra `instrucciones.md` (¿el MVP respeta fase 1?), pulir sugerencias, checklist de prueba en móvil real. | v1.0 lista |
+| 7 | Sonnet | **S5 — Motor de gamificación.** Logros/hitos/premios leídos de `hitos.json`, evaluación de condiciones contra el historial local, pantalla de hitos (solo los activos), celebración al desbloquear. En v1 solo el hito de adherencia ~66 días visible. | gamificación por fases funcionando |
+| 8 | **Opus** | **O3 — Revisión final.** Code review, probar el flujo completo contra `instrucciones.md` (¿el MVP respeta fase 1? ¿la gamificación muestra solo adherencia?), pulir sugerencias, checklist de prueba en móvil real. | v1.0 lista |
 
-**Orden**: O1 → S1 → S2 → (O2 en paralelo con S2/S3) → S3 → S4 → O3.
+**Orden**: O1 → S1 → S2 → (O2 en paralelo con S2/S3) → S3 → S4 → S5 → O3.
 S2 puede empezar con un bloque de ejemplo si O2 no está listo.
 
 ## 5. Criterios de éxito de la v1
@@ -118,13 +133,10 @@ S2 puede empezar con un bloque de ejemplo si O2 no está listo.
 
 ## 6. Estado y pendientes
 
-- **Repo**: `https://github.com/dredrain/power` (decidido 2026-07-07). Repo git
-  local inicializado y con remote configurado. ⚠️ Pendiente del usuario: el repo
-  no existe aún en GitHub (o es privado) — debe crearse **público**, porque
-  GitHub Pages gratuito solo funciona en repos públicos.
-- `tareas.md` actualizado por el usuario (2026-07-07): ahora es el tablero del
-  proyecto de *entreno* (no de la app). Ojo: sitúa la app en "más adelante
-  (mes 4+)" y pide solo un tracker mínimo en fase 1 — el usuario ha decidido
-  explícitamente adelantar la app (esta sesión). El MVP se mantiene deliberadamente
-  mínimo y sin gamificación para respetar el espíritu de esa nota: la app no debe
-  competir en tiempo/energía con ir al gimnasio.
+- **Repo**: `https://github.com/dredrain/power` — público, remote configurado.
+- `tareas.md` es el tablero del proyecto de *entreno* (no de la app).
+- Decisión del usuario (2026-07-07): la app avanza como **side project** —
+  "los entrenos van aparte, entrenaré aunque no tenga app". La app incluye
+  gamificación (logros/hitos/premios), pero dosificada por fases desde el motor:
+  en fase 1 solo se muestra el hito de adherencia. La app no marca el ritmo del
+  entreno ni lo condiciona.
