@@ -6,6 +6,7 @@ const K = {
   borrador: 'power:borrador',
   config: 'power:config',
   cacheBloque: 'power:cacheBloque',
+  cacheHitos: 'power:cacheHitos',
 };
 
 // ---- utilidades localStorage ----
@@ -41,6 +42,19 @@ export async function cargarBloque() {
     const cache = leer(K.cacheBloque, null);
     if (cache) return { bloque: cache, origen: 'cache' };
     throw new Error('No se pudo cargar el bloque ni hay copia local: ' + e.message);
+  }
+}
+
+// ---- Hitos (gamificacion, S5) ----
+export async function cargarHitos() {
+  try {
+    const resp = await fetch('plan/hitos.json', { cache: 'no-cache' });
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const doc = await resp.json();
+    escribir(K.cacheHitos, doc);
+    return doc;
+  } catch {
+    return leer(K.cacheHitos, null);
   }
 }
 

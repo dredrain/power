@@ -6,6 +6,7 @@ import * as timer from './temporizador.js';
 import { sugerirCarga, ACCIONES } from './progresion.js';
 import { estadoAdherencia } from './adherencia.js';
 import { resumenSesion, resumenSemana } from './resumen.js';
+import { evaluarVisibles } from './hitos.js';
 
 const ZONAS = [
   { id: 'lumbar', nombre: 'Lumbar' },
@@ -19,6 +20,7 @@ const estado = {
   origen: null,
   vista: 'hoy',
   sesionActiva: null, // RegistroSesion en curso (persistido como borrador)
+  hitos: null,        // documento de hitos.json (gamificacion)
 };
 
 // ---- helpers DOM ----
@@ -404,6 +406,63 @@ function vistaAdherencia() {
   ]);
 }
 
+// ---- S5: pantalla de hitos (solo activos de la fase actual) ----
+function renderHitos() {
+  if (!estado.hitos || !estado.bloque) return null;
+  const evals = evaluarVisibles(estado.hitos, almacen.getHistorial(), estado.bloque, estado.bloque.fase);
+  if (!evals.length) return null;
+
+  const tarjetas = evals.map((ev) => {
+    const barra = el('div', { style: 'height:10px;background:var(--sup2);border-radius:999px;overflow:hidden;margin:8px 0' }, [
+      el('div', { style: `height:100%;width:${ev.pct}%;background:${ev.desbloqueado ? 'var(--verde)' : 'var(--acento)'}` }),
+    ]);
+    return el('div', { class: 'tarjeta' }, [
+      el('div', { class: 'fila-sep' }, [
+        el('h3', { text: ev.hito.titulo }),
+        ev.desbloqueado ? el('span', { class: 'chip chip-subir', text: '✓ logrado' }) : el('span', { class: 'mini', text: `${ev.actual}/${ev.objetivo}` }),
+      ]),
+      el('p', { class: 'mini', text: ev.hito.descripcion }),
+      barra,
+      ev.hito.premio ? el('p', { class: 'mini', text: `🎁 Premio: ${ev.hito.premio}` }) : null,
+    ]);
+  });
+
+  return el('div', {}, [
+    el('h2', { style: 'margin:6px 2px', text: 'Hito' + (tarjetas.length > 1 ? 's' : '') }),
+    ...tarjetas,
+  ]);
+}
+
+// Evalua tras cerrar sesion; celebra el primer hito recien desbloqueado.
+function evaluarHitosTrasSesion() {
+  if (!estado.hitos || !estado.bloque) return;
+  const evals = evaluarVisibles(estado.hitos, almacen.getHistorial(), estado.bloque, estado.bloque.fase);
+  const yaCelebrados = new Set(almacen.getConfig().hitosDesbloqueados || []);
+  const nuevo = evals.find((ev) => ev.desbloqueado && !yaCelebrados.has(ev.id));
+  if (nuevo) {
+    yaCelebrados.add(nuevo.id);
+    almacen.setConfig({ hitosDesbloqueados: [...yaCelebrados] });
+    celebrar(nuevo.hito);
+  }
+}
+
+function celebrar(hito) {
+  const overlay = el('div', {
+    style: 'position:fixed;inset:0;z-index:50;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;padding:24px',
+  });
+  const tarjeta = el('div', { class: 'tarjeta', style: 'max-width:420px;text-align:center;border-color:var(--acento)' }, [
+    el('div', { style: 'font-size:3rem', text: '🏆' }),
+    el('h2', { text: '¡Hito desbloqueado!' }),
+    el('h3', { style: 'color:var(--acento)', text: hito.titulo }),
+    el('p', { class: 'mini', text: hito.descripcion }),
+    hito.premio ? el('p', { text: `🎁 ${hito.premio}` }) : null,
+    el('button', { class: 'btn btn-primario', text: '¡Genial!', onclick: () => overlay.remove() }),
+  ]);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+  overlay.appendChild(tarjeta);
+  document.body.appendChild(overlay);
+}
+
 // ---- S3: sugerencia de carga al abrir cada ejercicio ----
 function renderSugerencia(eDef) {
   const reg = almacen.ultimoRegistroEjercicio(eDef.id);
@@ -625,6 +684,7 @@ async function init() {
   registrarSW();
   conectarTabs();
   await iniciarBloque();
+  try { estado.hitos = await almacen.cargarHitos(); } catch { estado.hitos = null; }
   const borrador = almacen.getBorrador();
   if (borrador && estado.bloque && defSesion(borrador.sesionId)) estado.sesionActiva = borrador;
   navegar('hoy');
