@@ -1,0 +1,133 @@
+// almacen.js — capa de datos: carga del plan (network-first + cache) e historial
+// de sesiones en localStorage. Sin dependencias. Ver docs/plan/schema.md.
+
+const K = {
+  historial: 'power:historial',
+  borrador: 'power:borrador',
+  config: 'power:config',
+  cacheBloque: 'power:cacheBloque',
+};
+
+// ---- utilidades localStorage ----
+function leer(clave, porDefecto) {
+  try {
+    const s = localStorage.getItem(clave);
+    return s ? JSON.parse(s) : porDefecto;
+  } catch {
+    return porDefecto;
+  }
+}
+function escribir(clave, valor) {
+  try {
+    localStorage.setItem(clave, JSON.stringify(valor));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// ---- Plan / bloque ----
+// Network-first con fallback a la copia cacheada en localStorage. El service
+// worker ya cachea la respuesta HTTP; aqui guardamos ademas una copia parseada
+// para funcionar aunque falle todo.
+export async function cargarBloque() {
+  try {
+    const resp = await fetch('plan/bloque-actual.json', { cache: 'no-cache' });
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const bloque = await resp.json();
+    escribir(K.cacheBloque, bloque);
+    return { bloque, origen: 'red' };
+  } catch (e) {
+    const cache = leer(K.cacheBloque, null);
+    if (cache) return { bloque: cache, origen: 'cache' };
+    throw new Error('No se pudo cargar el bloque ni hay copia local: ' + e.message);
+  }
+}
+
+// ---- Historial ----
+export function getHistorial() {
+  const h = leer(K.historial, []);
+  return Array.isArray(h) ? h : [];
+}
+
+// Guarda (o reemplaza por fecha+sesionId) un RegistroSesion y ordena por iso/fecha.
+export function guardarSesion(registro) {
+  const h = getHistorial();
+  const idx = h.findIndex(
+    (r) => r.fecha === registro.fecha && r.sesionId === registro.sesionId,
+  );
+  if (idx >= 0) h[idx] = registro;
+  else h.push(registro);
+  h.sort((a, b) => (a.iso || a.fecha).localeCompare(b.iso || b.fecha));
+  escribir(K.historial, h);
+  return h;
+}
+
+// Ultimo RegistroEjercicio de un ejercicio, con el dolor de esa sesion adjunto.
+// Es la entrada que consume sugerirCarga(). Devuelve null si nunca se hizo.
+export function ultimoRegistroEjercicio(ejercicioId) {
+  const h = getHistorial();
+  for (let i = h.length - 1; i >= 0; i--) {
+    const sesion = h[i];
+    const ej = (sesion.ejercicios || []).find((e) => e.ejercicioId === ejercicioId);
+    if (ej && Array.isArray(ej.series) && ej.series.length) {
+      return { series: ej.series, dolor: sesion.dolor || { post: {}, h24: {} } };
+    }
+  }
+  return null;
+}
+
+// Valores de la ultima serie registrada de un ejercicio (para precargar campos).
+export function ultimosValores(ejercicioId) {
+  const reg = ultimoRegistroEjercicio(ejercicioId);
+  if (!reg) return null;
+  const conReps = [...reg.series].reverse().find((s) => typeof s.reps === 'number');
+  return conReps || reg.series[reg.series.length - 1] || null;
+}
+
+// ---- Borrador de sesion en curso ----
+export function getBorrador() {
+  return leer(K.borrador, null);
+}
+export function guardarBorrador(borrador) {
+  escribir(K.borrador, borrador);
+}
+export function limpiarBorrador() {
+  localStorage.removeItem(K.borrador);
+}
+
+// ---- Config ----
+export function getConfig() {
+  return leer(K.config, {});
+}
+export function setConfig(parcial) {
+  const c = { ...getConfig(), ...parcial };
+  escribir(K.config, c);
+  return c;
+}
+
+// ---- Sesion anterior sin responder la pregunta de 24h ----
+// Devuelve la ultima sesion cuyo dolor.h24 aun no se ha rellenado (todos null),
+// para preguntar al abrir la siguiente. null si no hay ninguna pendiente.
+export function sesionPendiente24h() {
+  const h = getHistorial();
+  for (let i = h.length - 1; i >= 0; i--) {
+    const s = h[i];
+    const h24 = s.dolor?.h24 || {};
+    const post = s.dolor?.post || {};
+    const zonasConDolor = Object.keys(post);
+    const sinResponder = zonasConDolor.every((z) => h24[z] == null);
+    if (zonasConDolor.length && sinResponder) return s;
+  }
+  return null;
+}
+
+// Rellena el dolor.h24 de una sesion concreta (respuesta a la pregunta 24h).
+export function responder24h(fecha, sesionId, h24) {
+  const h = getHistorial();
+  const s = h.find((r) => r.fecha === fecha && r.sesionId === sesionId);
+  if (!s) return;
+  s.dolor = s.dolor || { post: {}, h24: {} };
+  s.dolor.h24 = { ...s.dolor.h24, ...h24 };
+  escribir(K.historial, h);
+}
