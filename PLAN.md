@@ -122,6 +122,37 @@ bien especificada. Fable solo esta primera sesión (plan).
 **Orden**: O1 → S1 → S2 → (O2 en paralelo con S2/S3) → S3 → S4 → S5 → O3.
 S2 puede empezar con un bloque de ejemplo si O2 no está listo.
 
+### Sprint 2 — feedback de la primera sesión real (notas del usuario, 2026-07-08)
+
+**Bugs:**
+- [ ] **B1 — El bloque 1 no carga: aparece otra cosa en su lugar.** Falta detalle
+  de reproducción (¿qué ejercicio/sesión salió y qué día del bloque tocaba?).
+  Hipótesis a comprobar primero: (a) service worker sirviendo caché vieja del
+  plan JSON (el SW ya va por `power-v3`, verificar la estrategia network-first
+  del plan), (b) lógica de selección de sesión por fecha/día de la semana.
+- [ ] **B2 — El temporizador de descanso se resetea al cambiar de pestaña**
+  (Hoy/Adherencia/Plan/Info). Debe persistir en todas: guardar instante de
+  inicio + duración (timestamp en localStorage/estado global), no un contador
+  vivo atado a la vista; mostrarlo en cualquier pestaña.
+
+**Features:**
+- [ ] **F1 — Campo de notas por ejercicio** en la pantalla de sesión, persistido
+  en el log e incluido en el resumen del entrenador.
+- [ ] **F2 — Exportar sesión suelta** (empezando por la primera ya registrada),
+  además del export completo del historial que ya existe.
+- [ ] **F3 — Histórico por ejercicio**: vista tipo base de datos con fecha, peso,
+  reps y RIR de cada sesión pasada. Es memoria de trabajo (saber qué puse),
+  no stats de vanidad — sin gráficas ni PRs en fase 1.
+- [ ] **F4 — Textos repetidos fuera del general**: instrucciones puntuales tipo
+  "primera vez: elige peso con RPE ≤6" o "estirar" deben vivir en la
+  particularidad de esa sesión/semana concreta del bloque (campo por sesión-día),
+  no en las notas generales del ejercicio que se repiten en cada pantalla.
+  Puede requerir campo nuevo en el esquema del bloque (`notasPrimeraVez` o
+  `notasSemana`).
+
+**Reparto sugerido**: B1 investigación + F4 (toca esquema) → Opus; B2, F1, F2,
+F3 → Sonnet. B1 necesita el detalle de reproducción del usuario antes de tocar código.
+
 ## 5. Criterios de éxito de la v1
 
 - Instalo la app desde el móvil y abro la sesión de hoy sin conexión.

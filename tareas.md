@@ -20,6 +20,10 @@ No son instrucciones permanentes — son cosas que se construyen o deciden en su
 ## Más adelante (solo si el hábito ya es sólido — probablemente mes 4+)
 - [ ] App gamificada — la vas a construir tú como side project, así que aquí solo queda darte los requisitos funcionales cuando te pongas (qué gamifica, estructura de datos de adherencia/hitos, etc.), no construirla en este proyecto.
 - [ ] Revisar el objetivo final (75 kg, 120/180/220, teniendo en cuenta que los hiciste a 82 kg) con datos reales de cómo respondes — es un horizonte de años, se ajusta con evidencia, no con ilusión del mes 1.
+## App Power Tracker (side project — no cuenta como tarea de entreno)
+- La app se adelantó a fase 1 por decisión explícita (2026-07-07): la construye Claude, es side project y no condiciona el entreno.
+- Backlog técnico de la app: ver `PLAN.md` §4 → "Sprint 2" (bugs y features detectados en la primera sesión real, 2026-07-08).
+
 ---
  
 ### Nota crítica sobre el orden
