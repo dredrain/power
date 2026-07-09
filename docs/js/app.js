@@ -11,7 +11,7 @@ import { ACLARACIONES, FICHAS, esquemaSVG } from './guia.js';
 
 // Version legible de la app (para el usuario, en Ajustes). Ver CHANGELOG.md
 // en la raiz del repo. Sube esto (y CHANGELOG.md) en cada cambio notable.
-const APP_VERSION = '1.4.0';
+const APP_VERSION = '1.5.0';
 
 const ZONAS = [
   { id: 'lumbar', nombre: 'Lumbar' },
@@ -107,6 +107,10 @@ function vistaHoy() {
   const avisoReanudar = bannerReanudar();
   if (avisoReanudar) frag.appendChild(avisoReanudar);
 
+  // Check-in de dolor sin sesion: se puede anotar una molestia (p.ej. trapecio
+  // cargado) en cualquier momento, sin tener que abrir y cerrar un entreno.
+  frag.appendChild(tarjetaCheckinDolor());
+
   frag.appendChild(
     el('p', { class: 'tenue', text: `${estado.bloque.titulo} · fase ${estado.bloque.fase} · ${estado.bloque.semanas} semanas` }),
   );
@@ -144,6 +148,63 @@ function bannerReanudar() {
       el('button', { class: 'btn btn-primario btn-compacto', text: 'Reanudar', onclick: () => abrirSesion(b.sesionId) }),
     ]),
   ]);
+}
+
+// Check-in de dolor sin sesion: nota rapida de "como estoy hoy" por zona
+// (incluye trapecio), independiente de entrenar. Vive un solo dia (ver
+// almacen.getCheckinHoy). No sustituye el dolor de cierre de sesion; es para
+// cuando algo esta cargado y no vas a entrenar ahora mismo.
+function tarjetaCheckinDolor() {
+  const cont = el('div', { class: 'tarjeta' });
+
+  const pintarResumen = () => {
+    cont.innerHTML = '';
+    const c = almacen.getCheckinHoy();
+    const conDolor = c ? ZONAS.filter((z) => (c.zonas[z.id] || 0) > 0) : [];
+    cont.appendChild(el('div', { class: 'fila-sep' }, [
+      el('span', {}, [
+        el('strong', { text: 'Molestias de hoy' }),
+        el('div', {
+          class: 'mini',
+          text: conDolor.length
+            ? conDolor.map((z) => `${z.nombre} ${c.zonas[z.id]}`).join(', ')
+            : (c ? 'Sin molestias' : 'Anota si algo te duele o esta cargado, sin necesidad de entrenar.'),
+        }),
+      ]),
+      el('button', { class: 'btn btn-fantasma btn-compacto', text: c ? 'Editar' : 'Anotar', onclick: pintarForm }),
+    ]));
+  };
+
+  const pintarForm = () => {
+    cont.innerHTML = '';
+    const c = almacen.getCheckinHoy();
+    const zonas = { ...(c?.zonas || {}) };
+    const filas = ZONAS.map((z) => {
+      const actual = zonas[z.id] || 0;
+      const val = el('span', { class: 'dolor-val', text: String(actual) });
+      const rng = el('input', { type: 'range', min: '0', max: '10', step: '1', value: String(actual) });
+      rng.addEventListener('input', () => { zonas[z.id] = Number(rng.value); val.textContent = rng.value; });
+      return el('div', { class: 'dolor-fila' }, [
+        el('label', {}, [el('span', { text: z.nombre }), val]),
+        rng,
+      ]);
+    });
+    cont.appendChild(el('div', {}, [
+      el('strong', { text: 'Molestias de hoy' }),
+      el('p', { class: 'mini', text: 'Sin necesidad de entrenar. Se usa en la revision semanal con el entrenador.' }),
+      ...filas,
+      el('div', { class: 'fila-sep', style: 'margin-top:8px;gap:8px' }, [
+        el('button', { class: 'btn btn-fantasma btn-compacto', text: 'Cancelar', onclick: pintarResumen }),
+        el('button', {
+          class: 'btn btn-primario btn-compacto', text: 'Guardar',
+          onclick: () => { almacen.guardarCheckinHoy(zonas); pintarResumen(); },
+        }),
+      ]),
+    ]));
+  };
+
+  pintarResumen();
+  return cont;
 }
 
 function defSesion(sesionId) {

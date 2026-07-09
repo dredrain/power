@@ -7,6 +7,7 @@ const K = {
   config: 'power:config',
   cacheBloque: 'power:cacheBloque',
   cacheHitos: 'power:cacheHitos',
+  checkinHoy: 'power:checkinHoy',
 };
 
 // ---- utilidades localStorage ----
@@ -143,6 +144,20 @@ export function guardarBorrador(borrador) {
 }
 export function limpiarBorrador() {
   localStorage.removeItem(K.borrador);
+}
+
+// ---- Check-in de dolor sin sesion ----
+// Nota rapida de "como estoy hoy" (zonas: lumbar/rodilla/hombro/trapecio) sin
+// pasar por una sesion de entreno. Vive un solo dia: si la fecha guardada no
+// es hoy, se considera caducado y no se devuelve.
+export function getCheckinHoy(hoy = hoyStr()) {
+  const c = leer(K.checkinHoy, null);
+  return c && c.fecha === hoy ? c : null;
+}
+export function guardarCheckinHoy(zonas, hoy = hoyStr()) {
+  const c = { fecha: hoy, zonas, ts: new Date().toISOString() };
+  escribir(K.checkinHoy, c);
+  return c;
 }
 
 // ---- Export / import del historial (S4) ----

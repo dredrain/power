@@ -9,6 +9,15 @@ La versión se muestra en la app en **Ajustes** (`Version X.Y.Z`). Compárala
 aquí si algo no se ve como esperas — y usa el botón **"Comprobar
 actualizaciones"** en Ajustes para forzar la recarga del service worker.
 
+## 1.5.0 — 2026-07-09
+
+- **Check-in de dolor sin sesión**: nueva tarjeta arriba de todo en "Hoy"
+  ("Molestias de hoy") para anotar una molestia por zona (incluido trapecio)
+  en cualquier momento, sin tener que abrir y cerrar un entreno. Vive un
+  solo día (se resetea al día siguiente); no sustituye el dolor de cierre de
+  sesión, que sigue siendo el que gatea la progresión de carga.
+- SW: `power-v8` → `power-v9`.
+
 ## 1.4.0 — 2026-07-09
 
 Mejoras a partir de dos revisiones independientes (investigación de fuentes
