@@ -11,7 +11,7 @@ import { ACLARACIONES, FICHAS, esquemaSVG } from './guia.js';
 
 // Version legible de la app (para el usuario, en Ajustes). Ver CHANGELOG.md
 // en la raiz del repo. Sube esto (y CHANGELOG.md) en cada cambio notable.
-const APP_VERSION = '1.3.0';
+const APP_VERSION = '1.4.0';
 
 const ZONAS = [
   { id: 'lumbar', nombre: 'Lumbar' },
@@ -110,8 +110,24 @@ function vistaHoy() {
   frag.appendChild(
     el('p', { class: 'tenue', text: `${estado.bloque.titulo} · fase ${estado.bloque.fase} · ${estado.bloque.semanas} semanas` }),
   );
-  for (const sesion of estado.bloque.sesiones) frag.appendChild(tarjetaSesion(sesion));
+  const sugeridaId = sesionSugerida()?.id;
+  for (const sesion of estado.bloque.sesiones) frag.appendChild(tarjetaSesion(sesion, sesion.id === sugeridaId));
   return frag;
+}
+
+// Siguiente sesion del nucleo en la rotacion (ignora el dia opcional de casa):
+// la que sigue a la ultima completada, o la primera si aun no hay historial.
+// diaSugerido es solo orientativo (el usuario entrena cuando puede), asi que
+// esto se basa en la rotacion real, no en el dia de la semana.
+function sesionSugerida() {
+  const nucleo = (estado.bloque?.sesiones || []).filter((s) => !s.opcional);
+  if (!nucleo.length) return null;
+  const ultimaCore = almacen.getHistorial()
+    .filter((r) => r.completada && nucleo.some((s) => s.id === r.sesionId))
+    .sort((a, b) => (a.iso < b.iso ? 1 : -1))[0];
+  if (!ultimaCore) return nucleo[0];
+  const idx = nucleo.findIndex((s) => s.id === ultimaCore.sesionId);
+  return nucleo[(idx + 1) % nucleo.length];
 }
 
 // Aviso superior si hay un borrador a medias: lo hace visible sin tapar el bloque.
@@ -134,14 +150,16 @@ function defSesion(sesionId) {
   return estado.bloque?.sesiones.find((s) => s.id === sesionId) || null;
 }
 
-function tarjetaSesion(sesion) {
+function tarjetaSesion(sesion, esSugerida) {
   const nEj = sesion.ejercicios.length;
   const borrador = almacen.getBorrador();
   const hayBorrador = borrador && borrador.sesionId === sesion.id;
   return el('div', { class: 'tarjeta' }, [
     el('div', { class: 'fila-sep' }, [
       el('h2', { text: sesion.nombre }),
-      sesion.opcional ? el('span', { class: 'chip chip-estimar', text: 'opcional' }) : null,
+      sesion.opcional
+        ? el('span', { class: 'chip chip-estimar', text: 'opcional' })
+        : (esSugerida ? el('span', { class: 'chip chip-subir', text: 'Te toca' }) : null),
     ]),
     el('p', { class: 'mini', text: `${nEj} ejercicios · ~${sesion.duracionCompletaMin} min (min ~${sesion.duracionMinimaMin})` }),
     el('button', {
@@ -431,6 +449,25 @@ function campoNum(label, valor, onInput) {
   return el('div', { class: 'campo' }, [el('label', { text: label }), input]);
 }
 
+// RIR con stepper +/- en vez de teclado numerico: nunca se precarga (siempre
+// vacio al empezar), rango pequeno y fijo (0-10) -- justo el caso en el que un
+// stepper evita el teclado con dedos sudados/con tiza entre series (NN/G,
+// "Design Guidelines for Input Steppers"; Apple HIG "Steppers").
+function campoStepper(label, valor, onInput, { min = 0, max = 10 } = {}) {
+  let v = valor;
+  const disp = el('span', { class: 'stepper-val', text: v == null ? '—' : String(v) });
+  const clamp = (n) => Math.max(min, Math.min(max, n));
+  const set = (n) => { v = clamp(n); disp.textContent = String(v); onInput(v); };
+  const menos = el('button', { type: 'button', class: 'stepper-btn', text: '−', 'aria-label': `${label} menos` });
+  menos.addEventListener('click', () => set(v == null ? min : v - 1));
+  const mas = el('button', { type: 'button', class: 'stepper-btn', text: '+', 'aria-label': `${label} mas` });
+  mas.addEventListener('click', () => set(v == null ? min : v + 1));
+  return el('div', { class: 'campo' }, [
+    el('label', { text: label }),
+    el('div', { class: 'stepper' }, [menos, disp, mas]),
+  ]);
+}
+
 function filaSerie(eDef, est, serie, i) {
   const check = el('button', { class: 'check-serie' + (serie.hecha ? ' hecha' : ''), text: serie.hecha ? '✓' : '' });
   check.addEventListener('click', () => {
@@ -444,7 +481,7 @@ function filaSerie(eDef, est, serie, i) {
     el('span', { class: 'serie-num', text: String(i + 1) }),
     campoNum('kg', serie.peso, (v) => { serie.peso = v; persistir(); }),
     campoNum('reps', serie.reps, (v) => { serie.reps = v; persistir(); }),
-    campoNum('RIR', serie.rir, (v) => { serie.rir = v; persistir(); }),
+    campoStepper('RIR', serie.rir, (v) => { serie.rir = v; persistir(); }),
     check,
   ]);
 }
@@ -984,41 +1021,7 @@ function vistaAjustes() {
     areaImport,
     btnImport,
   ]);
-  return el('div', { class: 'pila' }, [info, tarjetaExportSesion(), acciones]);
-}
-
-// F2: exportar una sesion suelta (elegida de las registradas), ademas del historial completo.
-function tarjetaExportSesion() {
-  const lista = almacen.listaSesiones().slice().reverse(); // mas reciente primero
-  if (!lista.length) {
-    return el('div', { class: 'tarjeta pila' }, [
-      el('h3', { text: 'Exportar una sesion' }),
-      el('p', { class: 'mini', text: 'Aun no hay sesiones registradas.' }),
-    ]);
-  }
-  const sel = el('select', { class: 'sel-sesion' });
-  lista.forEach((s, i) => {
-    const nombre = defSesion(s.sesionId)?.nombre || s.sesionId;
-    sel.appendChild(el('option', { value: String(i), text: `${s.fecha} · ${nombre}` }));
-  });
-  const sesionDe = () => lista[Number(sel.value) || 0];
-  const btnDesc = el('button', { class: 'btn btn-fantasma', text: 'Exportar sesion (JSON)' });
-  btnDesc.addEventListener('click', () => {
-    const s = sesionDe();
-    const texto = almacen.exportarSesion(s.fecha, s.sesionId);
-    if (texto) descargarTexto(texto, `power-sesion-${s.fecha}-${s.sesionId}.json`);
-  });
-  const btnCopiar = el('button', { class: 'btn btn-fantasma', text: 'Copiar sesion' });
-  btnCopiar.addEventListener('click', () => {
-    const s = sesionDe();
-    const texto = almacen.exportarSesion(s.fecha, s.sesionId);
-    if (texto) compartirTexto(texto, btnCopiar);
-  });
-  return el('div', { class: 'tarjeta pila' }, [
-    el('h3', { text: 'Exportar una sesion' }),
-    el('p', { class: 'mini', text: 'Exporta una sesion concreta como JSON (ademas del historial completo).' }),
-    sel, btnDesc, btnCopiar,
-  ]);
+  return el('div', { class: 'pila' }, [info, acciones]);
 }
 
 // Descarga un texto como fichero .json (con fallback a compartir/copiar).
@@ -1092,11 +1095,12 @@ async function init() {
   conectarTabs();
   await iniciarBloque();
   try { estado.hitos = await almacen.cargarHitos(); } catch { estado.hitos = null; }
-  // B1: NO se auto-abre el borrador al arrancar. Antes, un borrador a medias tapaba
-  // el bloque en "Hoy" (aparecia la pantalla de registro en su lugar). Ahora se
-  // aterriza siempre en el resumen del bloque; la sesion a medias se reanuda desde
-  // su tarjeta ("Reanudar sesion") o desde el aviso superior.
-  estado.sesionActiva = null;
+  // B1: no aterrizar en un borrador VIEJO al arrancar (tapaba el bloque en "Hoy").
+  // Pero si el borrador es de HOY, se retoma directo: evita el tap de "Reanudar"
+  // cada vez que Android mata la PWA a media sesion. Un borrador de otro dia sigue
+  // sin auto-abrirse (aviso superior o su tarjeta, como con B1).
+  const borradorArranque = almacen.getBorrador();
+  estado.sesionActiva = (borradorArranque && borradorArranque.fecha === hoyISO()) ? borradorArranque : null;
   timer.restaurar(); // B2: si habia un descanso en curso, retoma la barra flotante
   navegar('hoy');
 }

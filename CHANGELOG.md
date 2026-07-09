@@ -9,6 +9,27 @@ La versión se muestra en la app en **Ajustes** (`Version X.Y.Z`). Compárala
 aquí si algo no se ve como esperas — y usa el botón **"Comprobar
 actualizaciones"** en Ajustes para forzar la recarga del service worker.
 
+## 1.4.0 — 2026-07-09
+
+Mejoras a partir de dos revisiones independientes (investigación de fuentes
+UX expertas + revisión de producto con Fable):
+
+- **Stepper +/- para el RIR** en el registro de cada serie, en vez del
+  teclado numérico del sistema (NN/G "Input Steppers", Apple HIG
+  "Steppers"): el RIR nunca se precarga y tiene rango pequeño y fijo, el
+  caso ideal para evitar el teclado con dedos sudados/con tiza entre series.
+- **"Te toca" en Hoy**: la app destaca la siguiente sesión del núcleo según
+  la rotación real (no el día de la semana, que es solo orientativo), en
+  vez de que haya que recordar cuál corresponde.
+- **Auto-reanudar sesión de hoy**: si Android mata la PWA a media sesión, al
+  reabrir la app se retoma directo (ya no hay que pulsar "Reanudar" cada
+  vez). Un borrador de otro día sigue sin auto-abrirse (eso seguía siendo B1).
+- **Limpieza**: fuera la tarjeta de "exportar una sesión suelta" en Ajustes
+  (duplicaba el botón que ya existe en la propia pantalla de resumen al
+  cerrar sesión, y competía con el markdown, que es lo que de verdad usa el
+  entrenador).
+- SW: `power-v7` → `power-v8`.
+
 ## 1.3.0 — 2026-07-09
 
 - Bloque 1 reescrito para alinearse exactamente con `bloque1_powerlifting.md`
