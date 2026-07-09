@@ -9,6 +9,10 @@ import { resumenSesion, resumenSemana } from './resumen.js';
 import { evaluarVisibles } from './hitos.js';
 import { ACLARACIONES, FICHAS, esquemaSVG } from './guia.js';
 
+// Version legible de la app (para el usuario, en Ajustes). Ver CHANGELOG.md
+// en la raiz del repo. Sube esto (y CHANGELOG.md) en cada cambio notable.
+const APP_VERSION = '1.3.0';
+
 const ZONAS = [
   { id: 'lumbar', nombre: 'Lumbar' },
   { id: 'rodilla', nombre: 'Rodilla (cara externa)' },
@@ -939,10 +943,15 @@ function vistaAclaraciones() {
 
 // ---- Vista: Ajustes ----
 function vistaAjustes() {
+  const btnUpdate = el('button', { class: 'btn btn-fantasma', text: 'Comprobar actualizaciones' });
+  btnUpdate.addEventListener('click', () => comprobarActualizaciones(btnUpdate));
+
   const info = el('div', { class: 'tarjeta' }, [
     el('h2', { text: 'Power Tracker' }),
+    el('p', { class: 'tenue', text: `Version ${APP_VERSION}` }),
     el('p', { class: 'tenue', text: `Bloque cargado desde: ${estado.origen || '—'}` }),
     el('p', { class: 'mini', text: 'PWA sin conexion. El plan lo edita el entrenador; el historial vive en este movil.' }),
+    btnUpdate,
   ]);
   const btnExport = el('button', { class: 'btn btn-fantasma', text: 'Exportar historial (JSON)' });
   btnExport.addEventListener('click', () => descargarJSON());
@@ -1042,6 +1051,20 @@ async function iniciarBloque() {
     estado.bloque = null;
     $vista().innerHTML = `<p class="aviso">${e.message}</p>`;
   }
+}
+
+// Fuerza la comprobacion de una nueva version del service worker y recarga.
+// El SW ya hace skipWaiting()+clients.claim(), asi que basta con pedirle que
+// compruebe si hay un sw.js nuevo y recargar cuando tome el control.
+async function comprobarActualizaciones(boton) {
+  if (!('serviceWorker' in navigator)) { location.reload(); return; }
+  if (boton) { boton.disabled = true; boton.textContent = 'Comprobando…'; }
+  navigator.serviceWorker.addEventListener('controllerchange', () => location.reload());
+  try {
+    const reg = await navigator.serviceWorker.getRegistration();
+    if (reg) await reg.update();
+  } catch (e) { /* sin red o sin SW: el reload de abajo basta */ }
+  setTimeout(() => location.reload(), 1200);
 }
 
 function registrarSW() {
