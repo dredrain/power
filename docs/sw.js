@@ -3,7 +3,7 @@
 // - JSON del plan: network-first con fallback a cache (asi ves los cambios del
 //   entrenador cuando hay red, pero la app sigue si no la hay).
 
-const VERSION = 'power-v5';
+const VERSION = 'power-v6';
 const SHELL = [
   '.',
   'index.html',
