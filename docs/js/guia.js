@@ -296,14 +296,19 @@ export const FICHAS = {
     evita: ['Valgo: que la rodilla se meta hacia dentro.', 'Buscar la maxima profundidad esta semana.'],
   },
   'peso-muerto-rumano': {
-    nombre: 'Peso muerto rumano', patron: 'bisagra',
-    claves: ['Ancla de la version minima: no se recorta.', 'Bisagra de cadera: culo atras, no es una sentadilla.', 'Espalda neutra; barra pegada a la pierna.', 'Carga moderada, no es un peso muerto pesado.'],
+    nombre: 'Peso muerto rumano (moderado)', patron: 'bisagra',
+    claves: ['Ancla de la version minima: no se recorta.', 'Bisagra de cadera: culo atras, no es una sentadilla.', 'Espalda neutra; barra pegada a la pierna.', 'Genuinamente ligero: no compite con el peso muerto del dia 3.'],
     evita: ['Redondear la lumbar.', 'Adelantar las rodillas y convertirlo en sentadilla.'],
   },
   'remo-mancuerna': {
     nombre: 'Remo con mancuerna a una mano', patron: 'tiron-horizontal',
     claves: ['Tira del codo hacia la cadera, no del brazo.', 'Espalda apoyada y neutra.', 'Volumen de espalda alta: cuida el hombro.'],
     evita: ['Rotar el tronco para levantar mas peso.'],
+  },
+  'remo-apoyo-pecho': {
+    nombre: 'Remo con apoyo en pecho', patron: 'tiron-horizontal',
+    claves: ['Tira del codo hacia la cadera, pecho apoyado y estable.', 'Espalda alta: equilibra el empuje del dia.', 'RIR 2-3: aqui acercarte al fallo es el beneficio.'],
+    evita: ['Impulsarte con el tronco al no tener apoyo firme.'],
   },
   'abduccion-cadera': {
     nombre: 'Abduccion de cadera con carga', patron: 'abduccion',
@@ -321,18 +326,23 @@ export const FICHAS = {
     evita: ['Arco extremo y agarre muy abierto al principio.'],
   },
   'press-inclinado-mancuerna': {
-    nombre: 'Press inclinado con mancuernas', patron: 'empuje',
-    claves: ['Ancla de la version minima.', 'La mancuerna deja elegir un ROM amable con el hombro.', 'Pecho alto y deltoide anterior.'],
+    nombre: 'Press militar de pie (o incline con mancuernas)', patron: 'empuje',
+    claves: ['Empuje vertical amable con el hombro.', 'La mancuerna deja elegir un ROM comodo si haces la variante inclinada.', 'RIR 3-4, nunca por debajo de 3.'],
     evita: ['Bajar mas alla de un rango comodo de hombro.'],
   },
   'jalon-dominada': {
-    nombre: 'Jalon al pecho o dominada asistida', patron: 'tiron-vertical',
-    claves: ['Tiron vertical: dorsal y espalda alta.', 'Equilibra el empuje del dia, cuida el hombro.', 'Lleva los codos abajo y atras.'],
+    nombre: 'Jalon al pecho', patron: 'tiron-vertical',
+    claves: ['Tiron vertical: dorsal y espalda alta.', 'Equilibra el empuje del dia, cuida el hombro.', 'Lleva los codos abajo y atras.', 'RIR 2-3: relleno de volumen con reps limpias.'],
     evita: ['Balancearte para completar la repeticion.'],
   },
+  'dominadas-limpias': {
+    nombre: 'Dominadas (solo limpias o excentricas)', patron: 'tiron-vertical',
+    claves: ['Solo reps limpias: para antes de que la tecnica se rompa.', '4-5 series de 2 reps limpias, o 3-4 series de 3 excentricas controladas si aun no salen completas.', 'El volumen alto de espalda va al jalon.'],
+    evita: ['Ensuciar la ultima rep para sumar una mas.'],
+  },
   'face-pull': {
-    nombre: 'Face pull / deltoide posterior', patron: 'tiron-horizontal',
-    claves: ['Deltoide posterior y rotadores externos.', 'Progresable en carga; correctivo de hombro.', 'Puede intercalarse entre series de banca.'],
+    nombre: 'Face pull (o press militar ligero)', patron: 'tiron-horizontal',
+    claves: ['Deltoide posterior y rotadores externos.', 'Progresable en carga; correctivo de hombro.', 'RIR 2-3: puede intercalarse entre series de banca.'],
     evita: ['Usar demasiado peso y perder el rango.'],
   },
   'peso-muerto': {
@@ -341,38 +351,38 @@ export const FICHAS = {
     evita: ['Redondear la lumbar buscando kilos.', 'Encadenar volumen lumbar alto de los dias A y C.'],
   },
   bulgara: {
-    nombre: 'Sentadilla bulgara (zancada dividida)', patron: 'sentadilla',
-    claves: ['Ancla de la version minima.', 'Cuadriceps y gluteo unilateral, amable con la lumbar.', 'Clave para control de rodilla y cadera.', 'Cuenta las reps por pierna.'],
+    nombre: 'Sentadilla bulgara (o prensa)', patron: 'sentadilla',
+    claves: ['Ancla de la version minima.', 'Cuadriceps y gluteo unilateral, amable con la lumbar.', 'Clave para control de rodilla y cadera.', 'Cuenta las reps por pierna. RIR 3-4, nunca por debajo de 3.'],
     evita: ['Dejar caer la rodilla hacia dentro.'],
   },
   hiperextension: {
-    nombre: 'Hiperextension / extension lumbar con carga', patron: 'bisagra',
-    claves: ['Extensores de la espalda cargados y progresables.', 'Base de la evidencia sobre dolor lumbar.', 'Rango comodo, control en todo el recorrido.'],
+    nombre: 'Extension lumbar 45° (o hip thrust)', patron: 'bisagra',
+    claves: ['Extensores/gluteo cargados y progresables.', 'Base de la evidencia sobre dolor lumbar.', 'Rango comodo, control en todo el recorrido.', 'RIR 3-4, nunca por debajo de 3. Alternativa: hip thrust.'],
     evita: ['Hiperextender de golpe al final.'],
-  },
-  'remo-alto-dominada': {
-    nombre: 'Dominada o jalon agarre neutro', patron: 'tiron-vertical',
-    claves: ['Mas volumen de espalda alta/dorsal para el hombro.', 'Agarre neutro, comodo para el hombro.'],
-    evita: ['Rango parcial por usar demasiada asistencia o lastre.'],
   },
   'dominadas-casa': {
     nombre: 'Dominadas (negativas o completas)', patron: 'tiron-vertical',
-    claves: ['Extra de casa: no cuenta como fallo si se salta.', 'Progresa en reps/tempo, o negativas si aun no salen.', 'Espalda alta para el hombro.'],
+    claves: ['Ancla del dia de casa: no se recorta.', 'Deja ~2 reps en reserva, no vayas al fallo.', 'Progresa en reps/tempo, o negativas si aun no salen.'],
     evita: ['Bajar de golpe sin controlar la negativa.'],
   },
-  'remo-goma-casa': {
-    nombre: 'Remo / face pull con goma', patron: 'tiron-horizontal',
-    claves: ['Tension de goma progresable (goma mas dura = mas carga).', 'Deltoide posterior y rotadores.'],
-    evita: ['Perder tension al volver.'],
-  },
   'abduccion-goma-casa': {
-    nombre: 'Abduccion de cadera con goma', patron: 'abduccion',
+    nombre: 'Abduccion de cadera con goma fuerte', patron: 'abduccion',
     claves: ['Gluteo medio con tension de goma para control de rodilla.', 'Progresa con goma mas dura o mas rango.'],
     evita: ['Compensar con el tronco.'],
   },
+  'good-morning-goma': {
+    nombre: 'Good morning con goma (o band pull-through)', patron: 'bisagra',
+    claves: ['Bisagra de cadera: cadena posterior y lumbar.', 'Culo atras, espalda neutra, tension progresable con la goma.', 'No es relleno: es trabajo cargable para la lumbar.'],
+    evita: ['Redondear la espalda para ganar rango.'],
+  },
   'rueda-casa': {
-    nombre: 'Rueda abdominal (casa)', patron: 'core',
-    claves: ['Core anti-extension para proteger la lumbar.', 'Progresa en rango antes que en reps.'],
+    nombre: 'Rueda abdominal', patron: 'core',
+    claves: ['Core anti-extension para proteger la lumbar.', 'Progresa en rango (ROM que controles) antes que en reps.'],
     evita: ['Arquear la lumbar en la fase estirada.'],
+  },
+  'remo-goma-casa': {
+    nombre: 'Face pull / pull-apart con goma', patron: 'tiron-horizontal',
+    claves: ['Tension de goma progresable (goma mas dura = mas carga).', 'Deltoide posterior y rotadores.'],
+    evita: ['Perder tension al volver.'],
   },
 };

@@ -819,17 +819,31 @@ function contenidoFicha(f, id) {
   return arr;
 }
 
-// Sub-vista Ejercicios: ficha breve (esquema + claves + evita) de cada ejercicio del bloque.
+// Sub-vista Ejercicios: lista de ejercicios del bloque. Toca uno para ver tu
+// historico (F3); el boton ⓘ abre la ficha con el esquema y las claves.
 function planEjercicios() {
   const wrap = el('div', { class: 'pila' });
-  wrap.appendChild(el('p', { class: 'tenue', text: 'Ficha de cada ejercicio del bloque: esquema, claves y errores a evitar.' }));
+  wrap.appendChild(el('p', { class: 'tenue', text: 'Toca un ejercicio para ver tu historico. El boton ⓘ abre el esquema y las claves.' }));
   const ids = [];
-  for (const s of estado.bloque.sesiones) for (const e of s.ejercicios) if (!ids.includes(e.id)) ids.push(e.id);
-  for (const id of ids) {
-    const f = FICHAS[id];
-    if (!f) continue;
-    wrap.appendChild(el('div', { class: 'tarjeta ficha', id: 'ficha-' + id }, contenidoFicha(f, id)));
+  const nombres = {};
+  for (const s of estado.bloque.sesiones) {
+    for (const e of s.ejercicios) {
+      if (!ids.includes(e.id)) { ids.push(e.id); nombres[e.id] = (FICHAS[e.id] && FICHAS[e.id].nombre) || e.nombre; }
+    }
   }
+  const filas = ids.map((id) => {
+    const nombre = nombres[id];
+    const hijos = [el('span', { text: nombre })];
+    if (FICHAS[id]) {
+      const btn = el('button', { class: 'calent-info', text: 'ⓘ', 'aria-label': 'Ver esquema' });
+      btn.addEventListener('click', (e) => { e.stopPropagation(); abrirFicha(id); });
+      hijos.push(btn);
+    }
+    const fila = el('li', { class: 'fila-sep', style: 'padding:10px 0;border-bottom:1px solid var(--borde);cursor:pointer' }, hijos);
+    fila.addEventListener('click', () => abrirHistorico(id, nombre));
+    return fila;
+  });
+  wrap.appendChild(el('ul', { class: 'limpia' }, filas));
   return wrap;
 }
 

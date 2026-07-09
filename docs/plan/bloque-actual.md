@@ -1,7 +1,8 @@
-# Bloque 1 — Reentrada powerbuilding (5 semanas)
+# Bloque 1 — Vuelta al powerlifting (powerbuilding, 6 semanas)
 
-> Resumen legible de [`bloque-actual.json`](./bloque-actual.json). La app lee el JSON;
-> este documento es para ti (y para la revisión semanal con el entrenador).
+> Resumen legible de [`bloque-actual.json`](./bloque-actual.json), alineado con
+> [`bloque1_powerlifting.md`](../../bloque1_powerlifting.md) (fuente original del bloque).
+> La app lee el JSON; este documento es para ti (y para la revisión semanal con el entrenador).
 
 ## Idea del bloque
 
@@ -9,85 +10,105 @@ Vuelves tras ~1 año de destreno. **El objetivo NO es recuperar marcas, es volve
 entrenar de forma sostenible y sin dolor.** Único KPI: sesiones completadas/semana.
 
 - **3 sesiones/semana** en Fitness Park Actur (zona de power) + **1 día de casa opcional**.
-- **RPE ≤7 → RIR objetivo ≥3**, sin fallos, sin singles pesados.
-- **Cargas a rellenar en la 1ª sesión con RPE ≤6**: elige un peso cómodo dejando ~4 reps
-  en el depósito y regístralo. **No se parte de % de tus PRs antiguos** (120/180/220 los
-  hiciste a 82 kg y hace un año; ahora empezamos de cero controlado). A partir de ahí la
-  app sube la carga sola cuando el RIR real supere el objetivo.
-- **Básico primero** en cada sesión (se abre con lo que motiva). El trabajo correctivo se
-  integra en calentamiento y entre series, no en un hueco que se recorte cuando vas justo.
+- **RIR ≥4 en básicos** (nunca a menos de 4 reps del fallo), sin fallos, sin singles pesados.
+- **Cap de esfuerzo escalonado** (el riesgo vive en la barra, no en un face pull):
+  básicos con barra RIR 4-5 (nunca <4) · accesorios que cargan zonas (ext. lumbar/hip
+  thrust, búlgara/prensa) RIR 3-4 · accesorios "seguros" (remos, jalón, face pull,
+  dominadas limpias) RIR 2-3 — ahí acercarte al fallo es el beneficio.
+- **Cargas a rellenar en la semana 1**: en la primera serie de cada básico, sube en saltos
+  hasta un peso que en la última rep te deje en RIR 5-6. Ese es tu peso de arranque,
+  anótalo. **No se parte de % de tus PRs antiguos** (120/180/220 los hiciste a 82 kg y
+  hace un año). A partir de ahí la app sube la carga sola cuando el RIR real supere el
+  objetivo.
+- **Básico primero** en cada sesión. El trabajo correctivo se integra en calentamiento y
+  entre series, no en un hueco que se recorte cuando vas justo.
 
 ## Progresión semanal
 
-| Semana | Qué hacer |
-|--------|-----------|
-| 1–2 | Asentar técnica y encontrar la carga base (RPE ≤6). Prioriza registrar RIR bien. |
-| 3–4 | La carga sube sola cuando el RIR supere el objetivo (la app lo sugiere). Sigue sin forzar. |
-| 5 | Descarga suave: repite pesos de la semana 4, baja 1 serie por ejercicio si hay fatiga. |
+| Semana | RIR básicos | Reps básicos | Qué hacer |
+|--------|-------------|---------------|-----------|
+| 1 | 5-6 | tope del rango | Calibrar y anotar el peso de arranque. |
+| 2 | 5 | tope del rango | Asentar técnica. Igual o +mínimo si sobra (RIR ≥6) y sin dolor. |
+| 3 | 4-5 | medio del rango | Empezar a cargar: +incremento mínimo. |
+| 4 | 4 | medio del rango | Cargar: +incremento si cumples criterios. |
+| 5 | 4 | bajo del rango | Pico del bloque: el RIR se queda en 4, sube la carga. |
+| 6 | 4-5 | libre | Cierre/reevaluar: mantén, algo más suave si hay fatiga acumulada. |
 
-Al acabar la semana 5 → revisión con el entrenador (dolor por zona, adherencia, fatiga) y
+Al acabar la semana 6 → revisión con el entrenador (dolor por zona, adherencia, fatiga) y
 se decide el bloque 2.
 
 ## Las sesiones
 
-Cada sesión tiene **versión completa** (~60–70 min) y **versión mínima** ("voy justo",
-~40–43 min) = básico + su ejercicio ancla no recortable. El resto son recortables (y
-muchos pueden hacerse entre series).
+Cada sesión tiene **versión completa** y **versión mínima** ("voy justo", ~40-45 min) =
+básico + su ejercicio ancla no recortable. El resto son recortables.
 
-### Sesión A — Sentadilla + bisagra + espalda (lunes)
+### Día 1 — Sentadilla + press banca (lunes)
 
-| Ejercicio | Series×reps | RIR | Descanso | Recortable | Zona | Por qué |
-|-----------|-------------|-----|----------|-----------|------|---------|
-| **Sentadilla** | 3×5 | 3 | 180s | ❌ | rodilla, lumbar | Básico. Gluteo medio con goma en calentamiento/entre series. |
-| **Peso muerto rumano** | 3×8 | 3 | 150s | ❌ (ancla mínima) | lumbar | Isquios/extensores cargados (HSR) — correctivo lumbar. |
-| Remo mancuerna 1 brazo | 3×10 | 3 | 90s | ✅ | hombro | Espalda alta, salud de hombro. |
-| Abducción de cadera con carga | 3×12–15 | 3 | 75s | ✅ | rodilla | Glúteo medio, control de valgo/rodilla externa. |
-| Rueda abdominal | 3×8–12 | 3 | 60s | ✅ | lumbar | Core anti-extensión. |
+Material: goma ligera (rotadores) · goma fuerte (abducción de cadera).
 
-### Sesión B — Banca + empuje + espalda alta (miércoles)
+| Ejercicio | Series×reps | RIR | Descanso | Recortable | Zona |
+|-----------|-------------|-----|----------|-----------|------|
+| **Sentadilla trasera (barra alta)** | 3×5-6 (4ª serie desde sem. 3 si cumple criterios) | 5→4 | 180s | ❌ | rodilla, lumbar |
+| **Press banca** | 3×6-8 | 4-5 | 150s | ❌ (ancla mínima) | hombro |
+| Extensión lumbar 45° o hip thrust | 3×8-10 | 3-4 | 120s | ✅ | lumbar |
+| Remo con apoyo en pecho | 3×8-12 | 2-3 | 90s | ✅ | hombro |
 
-| Ejercicio | Series×reps | RIR | Descanso | Recortable | Zona | Por qué |
-|-----------|-------------|-----|----------|-----------|------|---------|
-| **Press banca** | 3×5 | 3 | 180s | ❌ | hombro | Básico. Agarre no muy ancho, ROM cómodo, sin rebote. |
-| **Press inclinado mancuernas** | 3×8–10 | 3 | 120s | ❌ (ancla mínima) | hombro | Empuje con ROM controlado, amable con el hombro. |
-| Jalón / dominada asistida | 3×8–10 | 3 | 90s | ✅ | hombro | Tirón vertical, equilibra el empuje. |
-| Face pull / deltoide posterior | 3×15 | 3 | 60s | ✅ | hombro | Rotadores y deltoide posterior; entre series de banca. |
+Correctivo en calentamiento: rotación externa de hombro con goma, abducción de cadera con
+goma. Swap si la lumbar sube: belt squat > hack/prensa; **NO front squat**.
 
-### Sesión C — Peso muerto + pierna unilateral + espalda (viernes)
+### Día 2 — Press banca + peso muerto rumano (miércoles)
 
-| Ejercicio | Series×reps | RIR | Descanso | Recortable | Zona | Por qué |
-|-----------|-------------|-----|----------|-----------|------|---------|
-| **Peso muerto convencional** | 3×4 | 3 | 210s | ❌ | lumbar | Básico. Muy conservador; reps bajas = calidad con poca fatiga lumbar. |
-| **Sentadilla búlgara** | 3×8–10/pierna | 3 | 120s | ❌ (ancla mínima) | rodilla | Cuádriceps/glúteo unilateral, amable con lumbar, control de rodilla. |
-| Hiperextensión con carga | 3×12 | 3 | 90s | ✅ | lumbar | Extensores directos, progresables. |
-| Dominada / jalón agarre neutro | 3×8–10 | 3 | 90s | ✅ | hombro | Más espalda alta para el hombro. |
+Material: goma ligera (rotadores) · goma pull-apart · rueda abdominal.
 
-### Día D — Casa (opcional, sábado) — NO cuenta como fallo si se salta
+| Ejercicio | Series×reps | RIR | Descanso | Recortable | Zona |
+|-----------|-------------|-----|----------|-----------|------|
+| **Press banca** | 4×5-6 | 5→4 | 180s | ❌ | hombro |
+| **Peso muerto rumano (moderado)** | 3×6-8 | 5 | 150s | ❌ (ancla mínima) | lumbar |
+| Dominadas (solo limpias o excéntricas) | 4-5×2 / 3-4×3 exc. | limpias | 120s | ✅ | hombro |
+| Jalón al pecho | 3×8-12 | 2-3 | 90s | ✅ | hombro |
+| Face pull (o press militar ligero) | 3×10-12 | 2-3 | 60s | ✅ | hombro |
 
-Gomas, dominadas, rueda. Es un **extra**. Base real: dominadas, remo/face pull con goma,
-abducción con goma, rueda abdominal (todo progresable en reps/tensión/ROM). El rulo y la
-pelota miofascial son extra de bajo valor, no el contenido.
+RDL genuinamente ligero: no compite con el peso muerto del día 3.
+
+### Día 3 — Peso muerto + pierna unilateral (viernes)
+
+Material: goma fuerte (abducción con carga) · goma ligera (rotadores).
+
+| Ejercicio | Series×reps | RIR | Descanso | Recortable | Zona |
+|-----------|-------------|-----|----------|-----------|------|
+| **Peso muerto convencional desde suelo** | 3×4-5 | 5→4 | 210s | ❌ | lumbar |
+| **Sentadilla búlgara (o prensa)** | 3×8-10/pierna | 3-4 | 120s | ❌ (ancla mínima) | rodilla |
+| Press militar de pie (o incline mancuernas) | 3×6-10 | 3-4 | 120s | ✅ | hombro |
+| Remo con mancuerna a una mano | 3×8-12 | 2-3 | 90s | ✅ | hombro |
+
+Día de más carga lumbar: si vienes cargado del día 1 o de estar sentado, baja carga o
+rango antes que saltarlo.
+
+### Día opcional en casa (sábado) — NO cuenta como fallo si se salta
+
+Gomas, dominadas, rueda. Base real: dominadas (3×máx-2, deja 2 en reserva), abducción de
+cadera con goma fuerte (3×15), good morning con goma o band pull-through (3×15), rueda
+abdominal (3×ROM controlado), face pull/pull-apart con goma (3×20). El rulo y la pelota
+miofascial son extra de bajo valor, no el contenido.
 
 ## Cuándo subir carga (lo hace la app, pero para que lo entiendas)
 
-- Si en la última serie el **RIR quedó por encima del objetivo** (se quedó fácil) y **no
-  hubo dolor >4 ni empeora a 24h** → sube el incremento del ejercicio (2,5 kg básicos;
-  1–2,5 kg / goma más dura en accesorios).
-- Si estás **en el objetivo** o fue algo más duro → mantén.
-- Si fue **muy duro** (cerca del fallo) o **no completaste las reps** → baja.
-- **Una zona que empeora a 24h manda**: baja carga o rango, no elimines el movimiento
-  (salvo dolor agudo, punzante, irradiado o nocturno → fisioterapeuta antes de seguir).
+- Completaste todas las series al tope de reps dejando **al menos el RIR objetivo** y sin
+  dolor >4 ni empeora a 24h → sube el incremento mínimo: **+2,5 kg tren superior / +5 kg
+  tren inferior** en básicos (menor en accesorios).
+- Llegaste pero con **menos RIR del objetivo** → repite el mismo peso.
+- Dolor >4/10 o peor a 24h → baja ~10% o reduce rango; no elimines el ejercicio salvo
+  dolor agudo (→ fisioterapeuta antes de seguir).
 
 ## Notas de diseño (para la revisión)
 
-- **Volumen lumbar**: los días A (sentadilla + RDL) y C (peso muerto) concentran la lumbar.
-  Es intencionado que estén separados (lun/vie). Si la lumbar acumula, recorta el RDL antes
-  que el básico. Recuerda: parte de tu molestia lumbar es postural (oficina), no toda es del
-  entreno — la app pregunta por el dolor pero el contexto lo pones tú.
+- **Volumen lumbar**: los días 1 (sentadilla) y 3 (peso muerto) concentran la lumbar. Es
+  intencionado que estén separados (lun/vie). Si la lumbar acumula, recorta el accesorio
+  antes que el básico.
 - **Accesorios pocos y justificados**: cada uno cubre a la vez powerbuilding y una zona
-  problemática (espalda alta→hombro, glúteo medio/búlgara→rodilla, RDL/hiperextensión→lumbar).
-  No hay circuitos de gomas de relleno.
-- **Base de evidencia**: carga progresiva > correctivos aislados (Barbell Medicine, HSR de
-  Kongsgaard/Beyer para tendón; Aasa 2017 y Keogh 2017 para las zonas de riesgo en fuerza:
-  lumbar, hombro, rodilla).
-</content>
+  problemática (espalda alta→hombro, búlgara→rodilla, RDL/extensión lumbar→lumbar). No
+  hay circuitos de gomas de relleno.
+- **Base de evidencia**: progresión gradual como factor de riesgo (Aasa 2017, Bengtsson
+  2024, Keogh & Winwood 2017); carga progresiva > correctivos aislados para tendón
+  (Kongsgaard/Beyer, HSR); belt squat/prensa para descargar la columna en vez de front
+  squat. Consultas puntuales: Barbell Medicine, Stronger by Science, E3 Rehab.
