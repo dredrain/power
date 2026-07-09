@@ -21,7 +21,7 @@
 
 ## Progresión y dolor (S3)
 - [ ] Al abrir cada ejercicio aparece la **sugerencia** (Subir/Mantener/Bajar/Estimar) con color y peso.
-- [ ] "Terminar sesión" → pide **dolor por zona** (lumbar/rodilla/hombro) y **fatiga**, con deslizadores.
+- [ ] "Terminar sesión" → pide **dolor por zona** (lumbar/rodilla/hombro/trapecio) y **fatiga**, con deslizadores.
 - [ ] Al día siguiente, al abrir la app, pregunta **cómo siguen a 24h** las zonas que dolieron (>0).
 - [ ] Registrar una serie fácil (RIR alto) y sin dolor → la próxima vez sugiere **Subir**.
 - [ ] Poner dolor 24h peor que el del día → sugiere **Bajar** (regla de las 24h).

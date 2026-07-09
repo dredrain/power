@@ -76,7 +76,7 @@ prehab va en el calentamiento y entre series, no como bloque aparte que se recor
   "nota": "Correctivo integrado…",   // una línea corta; el "por qué" vive en Aclaraciones
   "items": [
     { "nombre": "Gato-camello", "detalle": "x8 lento", "zona": "lumbar" }
-    // zona ∈ ["lumbar","rodilla","hombro"] o null (solo informativo)
+    // zona ∈ ["lumbar","rodilla","hombro","trapecio"] o null (solo informativo)
   ]
 }
 ```
@@ -116,7 +116,7 @@ prehab va en el calentamiento y entre series, no como bloque aparte que se recor
 | `reps` como *string* | Permite reps fijas (`"5"`), rango (`"8-10"`) o `"AMRAP"`. El algoritmo extrae el mínimo del rango. |
 | `rirObjetivo` | Núcleo de la progresión autorregulada: la carga sube cuando el RIR real supera al objetivo (el peso "se quedó fácil"). |
 | `recortable` | `false` en el básico y en el trabajo correctivo no negociable; esos sobreviven a la versión mínima. |
-| `zonas` | Subconjunto de `["lumbar","rodilla","hombro"]`. Activa el gate de dolor (nunca subir con dolor >4 o empeora a 24h en una zona relevante). Vacío = sin gate. |
+| `zonas` | Subconjunto de `["lumbar","rodilla","hombro","trapecio"]`. Activa el gate de dolor (nunca subir con dolor >4 o empeora a 24h en una zona relevante). Vacío = sin gate. |
 | `progresion.incrementoKg` | Incremento sugerido al subir. |
 | `progresion.cargaInicial` | `null` deliberado: fase 1 no parte de % de PRs antiguos, se rellena en la 1ª sesión con RPE ≤6. |
 
@@ -152,8 +152,8 @@ Offline-first. El historial es la fuente de verdad para la progresión y la adhe
   "duracionSeg": 3480,
   "ejercicios": [ RegistroEjercicio, … ],
   "dolor": {                         // check de dolor por zona, 0–10
-    "post":  { "lumbar": 2, "rodilla": 1, "hombro": 0 },   // al cerrar ESTA sesión
-    "h24":   { "lumbar": null, "rodilla": null, "hombro": null } // se rellena al abrir la SIGUIENTE
+    "post":  { "lumbar": 2, "rodilla": 1, "hombro": 0, "trapecio": 0 },   // al cerrar ESTA sesión
+    "h24":   { "lumbar": null, "rodilla": null, "hombro": null, "trapecio": null } // se rellena al abrir la SIGUIENTE
   },
   "fatiga": 5,                       // fatiga general 0–10 al cerrar (para la revisión semanal); null si no se registró
   "notas": ""

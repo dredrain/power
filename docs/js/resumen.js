@@ -21,7 +21,7 @@ function fmtSerie(s) {
 
 function fmtDolor(dolor) {
   const post = dolor?.post || {};
-  const zonas = ['lumbar', 'rodilla', 'hombro'].filter((z) => typeof post[z] === 'number');
+  const zonas = ['lumbar', 'rodilla', 'hombro', 'trapecio'].filter((z) => typeof post[z] === 'number');
   if (!zonas.length) return 'sin registro';
   return zonas.map((z) => `${z} ${post[z]}`).join(', ');
 }
@@ -29,7 +29,7 @@ function fmtDolor(dolor) {
 function fmtDolor24h(dolor) {
   const post = dolor?.post || {};
   const h24 = dolor?.h24 || {};
-  const zonas = ['lumbar', 'rodilla', 'hombro'].filter((z) => typeof h24[z] === 'number');
+  const zonas = ['lumbar', 'rodilla', 'hombro', 'trapecio'].filter((z) => typeof h24[z] === 'number');
   if (!zonas.length) return null;
   return zonas.map((z) => {
     const flecha = typeof post[z] === 'number'
@@ -77,7 +77,7 @@ export function resumenSemana(historial, bloque, hoy = new Date()) {
   L.push(`> ${a.mensaje}`);
 
   // dolor maximo por zona en la semana
-  const maxZ = { lumbar: null, rodilla: null, hombro: null };
+  const maxZ = { lumbar: null, rodilla: null, hombro: null, trapecio: null };
   let maxFatiga = null;
   for (const r of deLaSemana) {
     const post = r.dolor?.post || {};

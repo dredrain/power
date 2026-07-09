@@ -75,7 +75,7 @@
           "rirObjetivo": 2,
           "descansoSeg": 90,
           "recortable": true,
-          "zonas": ["hombro"],
+          "zonas": ["hombro", "trapecio"],
           "notas": "Espalda alta, equilibra el empuje del dia y cuida el hombro. RIR 2-3: accesorio 'seguro', aqui acercarte al fallo es el beneficio.",
           "progresion": { "regla": "rir", "incrementoKg": 2.5, "cargaInicial": null }
         }
@@ -136,7 +136,7 @@
           "rirObjetivo": 2,
           "descansoSeg": 120,
           "recortable": true,
-          "zonas": ["hombro"],
+          "zonas": ["hombro", "trapecio"],
           "notas": "4-5 series de 2 reps limpias, o 3-4 series de 3 excentricas controladas si aun no salen completas. Para 1 rep antes de que se ensucie: nada de reps sucias. El volumen alto de espalda va al jalon.",
           "progresion": { "regla": "rir", "incrementoKg": 0, "cargaInicial": 0 }
         },
@@ -149,7 +149,7 @@
           "rirObjetivo": 2,
           "descansoSeg": 90,
           "recortable": true,
-          "zonas": ["hombro"],
+          "zonas": ["hombro", "trapecio"],
           "notas": "Relleno de volumen de espalda con reps limpias. RIR 2-3.",
           "progresion": { "regla": "rir", "incrementoKg": 2.5, "cargaInicial": null }
         },
@@ -162,7 +162,7 @@
           "rirObjetivo": 2,
           "descansoSeg": 60,
           "recortable": true,
-          "zonas": ["hombro"],
+          "zonas": ["hombro", "trapecio"],
           "notas": "Deltoide posterior/rotadores cargados. RIR 2-3. Alternativa: press militar ligero.",
           "progresion": { "regla": "rir", "incrementoKg": 1, "cargaInicial": null }
         }
@@ -236,7 +236,7 @@
           "rirObjetivo": 2,
           "descansoSeg": 90,
           "recortable": true,
-          "zonas": ["hombro"],
+          "zonas": ["hombro", "trapecio"],
           "notas": "Espalda alta. RIR 2-3.",
           "progresion": { "regla": "rir", "incrementoKg": 2.5, "cargaInicial": null }
         }
@@ -268,7 +268,7 @@
           "rirObjetivo": 2,
           "descansoSeg": 120,
           "recortable": false,
-          "zonas": ["hombro"],
+          "zonas": ["hombro", "trapecio"],
           "notas": "Ancla del dia de casa (no se recorta). Deja ~2 reps en reserva: no vayas al fallo. Progresa en reps/tempo (o negativas si aun no salen completas).",
           "progresion": { "regla": "rir", "incrementoKg": 0, "cargaInicial": 0 }
         },
@@ -320,7 +320,7 @@
           "rirObjetivo": 3,
           "descansoSeg": 60,
           "recortable": true,
-          "zonas": ["hombro"],
+          "zonas": ["hombro", "trapecio"],
           "notas": "Tension de goma progresable (goma mas dura = mas carga). Deltoide posterior y rotadores.",
           "progresion": { "regla": "rir", "incrementoKg": 0, "cargaInicial": 0 }
         }

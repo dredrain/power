@@ -13,6 +13,7 @@ const ZONAS = [
   { id: 'lumbar', nombre: 'Lumbar' },
   { id: 'rodilla', nombre: 'Rodilla (cara externa)' },
   { id: 'hombro', nombre: 'Hombro' },
+  { id: 'trapecio', nombre: 'Trapecio' },
 ];
 
 // ---- estado ----

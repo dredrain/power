@@ -9,7 +9,7 @@
 //  - Regla de las 24h: si una zona relevante empeora a 24h, se baja carga o rango.
 //  - NUNCA sugerir subida con dolor >4/10 en zona relevante o si empeoró a 24h.
 
-export const ZONAS = ['lumbar', 'rodilla', 'hombro'];
+export const ZONAS = ['lumbar', 'rodilla', 'hombro', 'trapecio'];
 
 export const ACCIONES = Object.freeze({
   SUBIR: 'subir',
