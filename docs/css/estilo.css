@@ -377,3 +377,45 @@ details[open] summary.calent-sum::after { content: "▴"; }
 .esquema .suelo, .esquema .ghost { stroke: var(--borde); }
 .esquema .suelo { stroke-width: 2; }
 .esquema .ghost { stroke-width: 2.5; stroke-dasharray: 4 5; }     /* recorrido / posicion alternativa */
+
+/* ---- Sprint 2 ---- */
+
+/* B1: aviso de sesion sin terminar en "Hoy" (no tapa el bloque) */
+.aviso-reanudar { border-color: var(--acento); }
+.aviso-reanudar .fila-sep { align-items: center; }
+.btn-compacto { width: auto; min-height: 44px; padding: 0 16px; margin-top: 0; }
+
+/* F4: nota de la sesion-dia (una sola vez, destacada) */
+.nota-sesion { border-color: var(--azul); background: rgba(74,125,224,0.10); }
+.nota-sesion-txt { font-size: 0.9rem; margin: 0; }
+.nota-sesion-txt + .nota-sesion-txt { margin-top: 8px; }
+
+/* F1: nota libre por ejercicio */
+.nota-ej-input {
+  width: 100%; margin-top: 10px; min-height: 44px;
+  background: var(--bg); border: 1px solid var(--borde); border-radius: 10px;
+  color: var(--txt); padding: 8px 10px; font-size: 0.9rem; font-family: inherit; resize: vertical;
+}
+.nota-ej-input:focus { outline: 2px solid var(--acento); border-color: var(--acento); }
+
+/* enlaces (ver ficha / ver historico) en una fila */
+.fila-enlaces { display: flex; flex-wrap: wrap; gap: 16px; }
+
+/* F3: tabla de historico por ejercicio */
+.tabla-hist { width: 100%; border-collapse: collapse; margin: 6px 0; font-size: 0.9rem; }
+.tabla-hist th, .tabla-hist td {
+  padding: 7px 8px; text-align: center; border-bottom: 1px solid var(--borde);
+  font-variant-numeric: tabular-nums;
+}
+.tabla-hist th {
+  font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--txt-tenue); font-weight: 700;
+}
+.tabla-hist .td-fecha { text-align: left; color: var(--txt-tenue); white-space: nowrap; }
+
+/* F2: selector de sesion a exportar */
+.sel-sesion {
+  width: 100%; min-height: 48px; margin-top: 4px;
+  background: var(--bg); border: 1px solid var(--borde); border-radius: 10px;
+  color: var(--txt); padding: 8px 10px; font-size: 0.95rem;
+}

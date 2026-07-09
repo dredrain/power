@@ -125,33 +125,34 @@ S2 puede empezar con un bloque de ejemplo si O2 no está listo.
 ### Sprint 2 — feedback de la primera sesión real (notas del usuario, 2026-07-08)
 
 **Bugs:**
-- [ ] **B1 — El bloque 1 no carga: aparece otra cosa en su lugar.** Falta detalle
-  de reproducción (¿qué ejercicio/sesión salió y qué día del bloque tocaba?).
-  Hipótesis a comprobar primero: (a) service worker sirviendo caché vieja del
-  plan JSON (el SW ya va por `power-v3`, verificar la estrategia network-first
-  del plan), (b) lógica de selección de sesión por fecha/día de la semana.
-- [ ] **B2 — El temporizador de descanso se resetea al cambiar de pestaña**
-  (Hoy/Adherencia/Plan/Info). Debe persistir en todas: guardar instante de
-  inicio + duración (timestamp en localStorage/estado global), no un contador
-  vivo atado a la vista; mostrarlo en cualquier pestaña.
+- [x] **B1 — El bloque 1 no carga: aparece otra cosa en su lugar.** *Causa real
+  (reproducida en navegador):* al arrancar, `init()` auto-abría el borrador de una
+  sesión sin terminar y mostraba su pantalla de registro **en lugar** del resumen
+  del bloque. El usuario dejó a medias su primera sesión real (ligado a B2) y desde
+  entonces cada apertura saltaba a "Sentadilla…" en vez de al bloque. La caché vieja
+  quedó descartada (fetch `no-cache` + SW network-first del plan; carga limpia OK).
+  *Arreglo:* aterrizar siempre en "Hoy"; el borrador se reanuda desde su tarjeta o
+  desde un aviso superior "Sesión sin terminar".
+- [x] **B2 — El temporizador de descanso se resetea al cambiar de pestaña.**
+  *Arreglo:* estado como timestamp (`finMs`) en `localStorage`; se quitó
+  `timer.parar()` de `navegar()`; la barra flota sobre `<body>` y persiste en todas
+  las pestañas y tras recargar (`temporizador.restaurar()` en el arranque).
 
 **Features:**
-- [ ] **F1 — Campo de notas por ejercicio** en la pantalla de sesión, persistido
-  en el log e incluido en el resumen del entrenador.
-- [ ] **F2 — Exportar sesión suelta** (empezando por la primera ya registrada),
-  además del export completo del historial que ya existe.
-- [ ] **F3 — Histórico por ejercicio**: vista tipo base de datos con fecha, peso,
-  reps y RIR de cada sesión pasada. Es memoria de trabajo (saber qué puse),
-  no stats de vanidad — sin gráficas ni PRs en fase 1.
-- [ ] **F4 — Textos repetidos fuera del general**: instrucciones puntuales tipo
-  "primera vez: elige peso con RPE ≤6" o "estirar" deben vivir en la
-  particularidad de esa sesión/semana concreta del bloque (campo por sesión-día),
-  no en las notas generales del ejercicio que se repiten en cada pantalla.
-  Puede requerir campo nuevo en el esquema del bloque (`notasPrimeraVez` o
-  `notasSemana`).
+- [x] **F1 — Campo de notas por ejercicio** en la sesión, persistido en el log
+  (`RegistroEjercicio.notas`) e incluido en el resumen del entrenador.
+- [x] **F2 — Exportar sesión suelta**: `almacen.exportarSesion()` + selector en
+  Ajustes y botón "Exportar esta sesión" en la pantalla de resumen.
+- [x] **F3 — Histórico por ejercicio**: modal con tabla fecha/peso/reps/RIR
+  (`almacen.historialEjercicio()`), abierto desde la tarjeta del ejercicio y desde
+  Plan › Ejercicios. Memoria de trabajo, sin gráficas ni PRs.
+- [x] **F4 — Textos por sesión-día**: campos `notaPrimeraVez` (solo la 1ª vez) y
+  `notaSesion` (siempre) en el esquema y en `bloque-actual.json`, renderizados una
+  sola vez al abrir la sesión. Se eliminó el texto fijo "primera vez: elige un peso
+  cómodo (RPE ≤6)" que se repetía en cada ejercicio.
 
 **Reparto sugerido**: B1 investigación + F4 (toca esquema) → Opus; B2, F1, F2,
-F3 → Sonnet. B1 necesita el detalle de reproducción del usuario antes de tocar código.
+F3 → Sonnet. *(Resuelto entero por Opus el 2026-07-09; B1 reproducido en navegador.)*
 
 ## 5. Criterios de éxito de la v1
 

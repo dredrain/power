@@ -49,7 +49,9 @@ export function resumenSesion(registro, bloque) {
   L.push('**Ejercicios**');
   for (const e of registro.ejercicios || []) {
     const series = (e.series || []).map(fmtSerie).join(', ');
-    L.push(`- ${nombreEjercicio(bloque, registro.sesionId, e.ejercicioId)}: ${series || '—'}`);
+    // F1: nota libre del ejercicio, si la hay.
+    const nota = e.notas ? ` — ${e.notas}` : '';
+    L.push(`- ${nombreEjercicio(bloque, registro.sesionId, e.ejercicioId)}: ${series || '—'}${nota}`);
   }
   L.push('');
   L.push(`**Dolor (0-10)**: ${fmtDolor(registro.dolor)}`);

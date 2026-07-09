@@ -14,6 +14,7 @@
       "diaSugerido": "lunes",
       "duracionCompletaMin": 70,
       "duracionMinimaMin": 42,
+      "notaPrimeraVez": "Primera vez del bloque: en cada ejercicio elige una carga que muevas comodo dejando ~4 en el deposito (RPE <=6) y registrala; a partir de ahi la app autorregula por RIR.",
       "calentamiento": {
         "duracionMin": 5,
         "nota": "Correctivo integrado: hazlo antes del basico. No se recorta.",
@@ -100,6 +101,7 @@
       "diaSugerido": "miercoles",
       "duracionCompletaMin": 65,
       "duracionMinimaMin": 40,
+      "notaPrimeraVez": "Primera vez del bloque: elige cargas comodas (RPE <=6, ~4 en el deposito) y registralas. En banca y press, ROM comodo sin forzar el hombro.",
       "calentamiento": {
         "duracionMin": 5,
         "nota": "Prepara el hombro antes de la banca. No se recorta.",
@@ -173,6 +175,8 @@
       "diaSugerido": "viernes",
       "duracionCompletaMin": 70,
       "duracionMinimaMin": 43,
+      "notaPrimeraVez": "Primera vez del bloque: empieza MUY conservador en peso muerto (la lumbar tolera menos de lo que la fuerza recuerda). Elige RPE <=6 y registralo.",
+      "notaSesion": "Dia de mas carga lumbar: si vienes cargado del dia A o de estar sentado, baja carga o rango antes que saltarlo.",
       "calentamiento": {
         "duracionMin": 6,
         "nota": "Dia de mas carga lumbar: calienta sin prisa y rampa muy progresiva.",
@@ -246,6 +250,7 @@
       "diaSugerido": "sabado",
       "duracionCompletaMin": 35,
       "duracionMinimaMin": 20,
+      "notaSesion": "Extra opcional: si lo saltas no cuenta como fallo ni afecta a la adherencia.",
       "calentamiento": {
         "duracionMin": 3,
         "nota": "Extra de casa. Calentamiento breve; el rulo y la pelota, si acaso, aqui.",

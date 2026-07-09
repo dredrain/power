@@ -99,6 +99,41 @@ export function ultimosValores(ejercicioId) {
   return conReps || reg.series[reg.series.length - 1] || null;
 }
 
+// ---- F3: historico por ejercicio ----
+// Sesiones pasadas en las que se registro este ejercicio, con sus series, ordenadas
+// de mas reciente a mas antigua. Memoria de trabajo (que puse), sin stats de vanidad.
+export function historialEjercicio(ejercicioId) {
+  const h = getHistorial();
+  const out = [];
+  for (let i = h.length - 1; i >= 0; i--) {
+    const s = h[i];
+    const ej = (s.ejercicios || []).find((e) => e.ejercicioId === ejercicioId);
+    if (ej && Array.isArray(ej.series) && ej.series.length) {
+      out.push({ fecha: s.fecha, iso: s.iso, sesionId: s.sesionId, series: ej.series });
+    }
+  }
+  return out;
+}
+
+// ---- F2: exportar una sesion suelta ----
+// Lista compacta de las sesiones registradas (para elegir cual exportar).
+export function listaSesiones() {
+  return getHistorial().map((r) => ({ fecha: r.fecha, sesionId: r.sesionId, iso: r.iso }));
+}
+
+// Exporta UNA sesion registrada como JSON (mismo envoltorio que el export completo).
+// Devuelve null si no existe.
+export function exportarSesion(fecha, sesionId) {
+  const r = getHistorial().find((s) => s.fecha === fecha && s.sesionId === sesionId);
+  if (!r) return null;
+  return JSON.stringify({
+    app: 'power-tracker',
+    version: 1,
+    exportado: new Date().toISOString(),
+    sesion: r,
+  }, null, 2);
+}
+
 // ---- Borrador de sesion en curso ----
 export function getBorrador() {
   return leer(K.borrador, null);

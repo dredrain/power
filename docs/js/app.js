@@ -55,9 +55,10 @@ export function hoyISO(d = new Date()) {
 const TITULOS = { hoy: 'Hoy', adherencia: 'Adherencia', plan: 'Plan', aclaraciones: 'Aclaraciones', ajustes: 'Ajustes' };
 
 export function navegar(vista) {
-  // al cambiar de pantalla se detiene el temporizador de descanso (barra flotante
-  // sobre <body>): si no, seguiria visible y sonando sobre otras vistas.
-  timer.parar();
+  // B2: NO se para el temporizador al cambiar de pestaña. La barra flota sobre
+  // <body> (render() solo limpia #vista) y su estado vive como timestamp, asi que
+  // el descanso persiste y se ve en cualquier pantalla. Solo se para de forma
+  // explicita al terminar/cancelar la sesion o al pulsar "Saltar".
   estado.vista = vista;
   $titulo().textContent = TITULOS[vista] || 'Power';
   document.querySelectorAll('.tab').forEach((t) =>
@@ -97,11 +98,31 @@ function vistaHoy() {
   const banner24h = typeof render24h === 'function' ? render24h() : null;
   if (banner24h) frag.appendChild(banner24h);
 
+  // B1: aviso de sesion sin terminar (en vez de abrirla por encima del bloque).
+  const avisoReanudar = bannerReanudar();
+  if (avisoReanudar) frag.appendChild(avisoReanudar);
+
   frag.appendChild(
     el('p', { class: 'tenue', text: `${estado.bloque.titulo} · fase ${estado.bloque.fase} · ${estado.bloque.semanas} semanas` }),
   );
   for (const sesion of estado.bloque.sesiones) frag.appendChild(tarjetaSesion(sesion));
   return frag;
+}
+
+// Aviso superior si hay un borrador a medias: lo hace visible sin tapar el bloque.
+function bannerReanudar() {
+  const b = almacen.getBorrador();
+  if (!b || !defSesion(b.sesionId) || !tieneAlgoRegistrado(b)) return null;
+  const nombre = defSesion(b.sesionId).nombre;
+  return el('div', { class: 'tarjeta aviso-reanudar' }, [
+    el('div', { class: 'fila-sep' }, [
+      el('span', {}, [
+        el('strong', { text: 'Sesion sin terminar' }),
+        el('div', { class: 'mini', text: nombre }),
+      ]),
+      el('button', { class: 'btn btn-primario btn-compacto', text: 'Reanudar', onclick: () => abrirSesion(b.sesionId) }),
+    ]),
+  ]);
 }
 
 function defSesion(sesionId) {
@@ -258,6 +279,10 @@ function renderSesionActiva() {
     }),
   ]));
 
+  // F4: notas puntuales de esta sesion-dia (viven en el bloque, no repetidas por ejercicio)
+  const notaSes = tarjetaNotaSesion(def);
+  if (notaSes) frag.appendChild(notaSes);
+
   const cal = tarjetaCalentamiento(def, sa);
   if (cal) frag.appendChild(cal);
 
@@ -327,6 +352,23 @@ function tarjetaCalentamiento(def, sa) {
   return det;
 }
 
+// F4: ¿es la primera vez que se hace esta sesion-dia? (no hay ningun registro suyo)
+function esPrimeraVezSesion(sesionId) {
+  return !almacen.getHistorial().some((r) => r.sesionId === sesionId && (r.ejercicios || []).length);
+}
+
+// F4: nota(s) de la sesion-dia. `notaPrimeraVez` solo la 1a vez (p.ej. "elige peso
+// con RPE ≤6"); `notaSesion` siempre (p.ej. "estirar al acabar"). Antes este tipo
+// de texto se repetia en cada tarjeta de ejercicio; ahora vive una sola vez aqui.
+function tarjetaNotaSesion(def) {
+  const notas = [];
+  if (def.notaPrimeraVez && esPrimeraVezSesion(def.id)) notas.push(def.notaPrimeraVez);
+  if (def.notaSesion) notas.push(def.notaSesion);
+  if (!notas.length) return null;
+  return el('div', { class: 'tarjeta nota-sesion' },
+    notas.map((t) => el('p', { class: 'nota-sesion-txt', text: t })));
+}
+
 function tarjetaEjercicio(eDef, sa) {
   const est = sa.ejercicios.find((x) => x.ejercicioId === eDef.id);
   if (!est) return el('div'); // no deberia pasar tras reconciliarEjercicios; guarda defensiva
@@ -339,21 +381,38 @@ function tarjetaEjercicio(eDef, sa) {
   ]));
   card.appendChild(el('p', { class: 'mini', text:
     `${eDef.series}×${eDef.reps} · RIR ${eDef.rirObjetivo} · descanso ${eDef.descansoSeg}s` }));
+  // F4: la instruccion de "primera vez" (RPE ≤6) ya no se repite aqui: vive en la
+  // nota de la sesion-dia. Solo se muestra el dato util por ejercicio: la ultima vez.
   card.appendChild(el('p', { class: 'mini', text: prev
     ? `Ultima vez: ${prev.peso ?? '—'} kg × ${prev.reps ?? '—'}${typeof prev.rir === 'number' ? ' @RIR' + prev.rir : ''}`
-    : 'Primera vez: elige un peso comodo (RPE ≤6).' }));
+    : 'Primera vez con este ejercicio.' }));
 
   // gancho S3: sugerencia subir/mantener/bajar
   const sug = typeof renderSugerencia === 'function' ? renderSugerencia(eDef) : null;
   if (sug) card.appendChild(sug);
 
+  const enlaces = el('div', { class: 'fila-enlaces' });
   if (FICHAS[eDef.id]) {
-    const link = el('button', { class: 'ficha-link', text: 'Ver ficha del ejercicio ›' });
+    const link = el('button', { class: 'ficha-link', text: 'Ver ficha ›' });
     link.addEventListener('click', () => abrirFicha(eDef.id));
-    card.appendChild(link);
+    enlaces.appendChild(link);
   }
+  // F3: histórico por ejercicio (memoria de trabajo: qué puse las veces pasadas)
+  const linkHist = el('button', { class: 'ficha-link', text: 'Ver histórico ›' });
+  linkHist.addEventListener('click', () => abrirHistorico(eDef.id, eDef.nombre));
+  enlaces.appendChild(linkHist);
+  card.appendChild(enlaces);
 
   est.series.forEach((serie, i) => card.appendChild(filaSerie(eDef, est, serie, i)));
+
+  // F1: nota libre por ejercicio (persistida en el log e incluida en el resumen)
+  const ta = el('textarea', {
+    class: 'nota-ej-input', rows: '2',
+    placeholder: 'Nota (opcional): sensaciones, ajustes, molestias…',
+  });
+  if (est.notas) ta.value = est.notas;
+  ta.addEventListener('input', () => { est.notas = ta.value; persistir(); });
+  card.appendChild(ta);
   return card;
 }
 
@@ -414,17 +473,23 @@ export function finalizarSesion() {
     // cap a 6h: una sesion reanudada al dia siguiente no debe reportar horas al entrenador
     duracionSeg: Math.min(6 * 3600, Math.max(0, Math.round((Date.now() - (sa.inicioMs || Date.now())) / 1000))),
     ejercicios: sa.ejercicios
-      .map((e) => ({
-        ejercicioId: e.ejercicioId,
-        // Solo se guardan las series REALIZADAS: marcada (hecha) o con RIR introducido.
-        // Los valores precargados (peso/reps de la ultima vez, sin tocar) NO cuentan,
-        // asi los ejercicios ocultos en "voy justo" o las series no hechas no ensucian
-        // el historial ni la progresion/adherencia.
-        series: e.series
-          .filter((s) => s.hecha || typeof s.rir === 'number')
-          .map((s) => ({ peso: s.peso ?? null, reps: s.reps ?? null, rir: s.rir ?? null })),
-      }))
-      .filter((e) => e.series.length),
+      .map((e) => {
+        const nota = (e.notas || '').trim();
+        return {
+          ejercicioId: e.ejercicioId,
+          // Solo se guardan las series REALIZADAS: marcada (hecha) o con RIR introducido.
+          // Los valores precargados (peso/reps de la ultima vez, sin tocar) NO cuentan,
+          // asi los ejercicios ocultos en "voy justo" o las series no hechas no ensucian
+          // el historial ni la progresion/adherencia.
+          series: e.series
+            .filter((s) => s.hecha || typeof s.rir === 'number')
+            .map((s) => ({ peso: s.peso ?? null, reps: s.reps ?? null, rir: s.rir ?? null })),
+          // F1: nota libre del ejercicio (solo si el usuario escribio algo).
+          ...(nota ? { notas: nota } : {}),
+        };
+      })
+      // Se conserva el ejercicio si tiene series realizadas o una nota escrita.
+      .filter((e) => e.series.length || e.notas),
     dolor: sa.dolor || { post: {}, h24: {} },
     fatiga: typeof sa.fatiga === 'number' ? sa.fatiga : null,
     notas: sa.notas || '',
@@ -467,6 +532,12 @@ function pantallaResumen(registro) {
   });
   const btnCompartir = el('button', { class: 'btn btn-primario', text: 'Copiar / compartir para el entrenador' });
   btnCompartir.addEventListener('click', () => compartirTexto(md, btnCompartir));
+  // F2: exportar SOLO esta sesion como JSON (ademas del texto para el entrenador).
+  const btnExpSesion = el('button', { class: 'btn btn-fantasma', text: 'Exportar esta sesion (JSON)' });
+  btnExpSesion.addEventListener('click', () => {
+    const texto = almacen.exportarSesion(registro.fecha, registro.sesionId);
+    if (texto) descargarTexto(texto, `power-sesion-${registro.fecha}-${registro.sesionId}.json`);
+  });
 
   cont.appendChild(el('div', { class: 'pila' }, [
     el('div', { class: 'exito' }, [el('strong', { text: '✓ Sesion registrada. Presentarte es la victoria.' })]),
@@ -475,6 +546,7 @@ function pantallaResumen(registro) {
       el('p', { class: 'mini', text: 'Pega esto en la conversacion con el entrenador para la revision.' }),
       pre,
       btnCompartir,
+      btnExpSesion,
     ]),
     el('button', { class: 'btn btn-fantasma', text: 'Ver adherencia', onclick: () => navegar('adherencia') }),
   ]));
@@ -729,8 +801,9 @@ function vistaPlan() {
 }
 
 // Contenido de una ficha (reutilizado por la sub-vista Ejercicios y el modal).
-function contenidoFicha(f) {
-  return [
+// Si se pasa `id`, añade el enlace al histórico del ejercicio (F3).
+function contenidoFicha(f, id) {
+  const arr = [
     el('h3', { text: f.nombre }),
     el('div', { class: 'esquema-wrap', html: esquemaSVG(f.patron) }),
     el('p', { class: 'ficha-tit', text: 'Claves' }),
@@ -738,6 +811,12 @@ function contenidoFicha(f) {
     f.evita && f.evita.length ? el('p', { class: 'ficha-tit', text: 'Evita' }) : null,
     f.evita && f.evita.length ? el('ul', { class: 'ficha-lista evita' }, f.evita.map((c) => el('li', { text: c }))) : null,
   ];
+  if (id) {
+    const b = el('button', { class: 'ficha-link', text: 'Ver histórico ›' });
+    b.addEventListener('click', () => abrirHistorico(id, f.nombre));
+    arr.push(b);
+  }
+  return arr;
 }
 
 // Sub-vista Ejercicios: ficha breve (esquema + claves + evita) de cada ejercicio del bloque.
@@ -749,7 +828,7 @@ function planEjercicios() {
   for (const id of ids) {
     const f = FICHAS[id];
     if (!f) continue;
-    wrap.appendChild(el('div', { class: 'tarjeta ficha', id: 'ficha-' + id }, contenidoFicha(f)));
+    wrap.appendChild(el('div', { class: 'tarjeta ficha', id: 'ficha-' + id }, contenidoFicha(f, id)));
   }
   return wrap;
 }
@@ -762,7 +841,47 @@ function abrirFicha(id) {
   const overlay = el('div', { class: 'overlay-ficha' });
   const cerrar = () => overlay.remove();
   overlay.appendChild(el('div', { class: 'tarjeta ficha modal-ficha' }, [
-    ...contenidoFicha(f),
+    ...contenidoFicha(f, id),
+    el('button', { class: 'btn btn-fantasma', text: 'Cerrar', onclick: cerrar }),
+  ]));
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) cerrar(); });
+  document.body.appendChild(overlay);
+}
+
+// F3: histórico por ejercicio. Modal con tabla fecha/peso/reps/RIR de cada sesion
+// pasada. Memoria de trabajo (saber qué puse), no stats de vanidad: sin graficas ni PRs.
+function abrirHistorico(id, nombre) {
+  const hist = almacen.historialEjercicio(id);
+  const overlay = el('div', { class: 'overlay-ficha' });
+  const cerrar = () => overlay.remove();
+
+  let cuerpo;
+  if (!hist.length) {
+    cuerpo = el('p', { class: 'mini', text: 'Aun no hay registros de este ejercicio.' });
+  } else {
+    const filas = [];
+    for (const s of hist) {
+      s.series.forEach((serie, i) => {
+        filas.push(el('tr', {}, [
+          el('td', { class: 'td-fecha', text: i === 0 ? s.fecha : '' }),
+          el('td', { text: serie.peso == null ? '—' : String(serie.peso) }),
+          el('td', { text: serie.reps == null ? '—' : String(serie.reps) }),
+          el('td', { text: typeof serie.rir === 'number' ? String(serie.rir) : '—' }),
+        ]));
+      });
+    }
+    cuerpo = el('table', { class: 'tabla-hist' }, [
+      el('thead', {}, [el('tr', {}, [
+        el('th', { text: 'Fecha' }), el('th', { text: 'kg' }), el('th', { text: 'reps' }), el('th', { text: 'RIR' }),
+      ])]),
+      el('tbody', {}, filas),
+    ]);
+  }
+
+  overlay.appendChild(el('div', { class: 'tarjeta ficha modal-ficha' }, [
+    el('h3', { text: nombre }),
+    el('p', { class: 'mini', text: 'Histórico: qué pusiste en sesiones anteriores.' }),
+    cuerpo,
     el('button', { class: 'btn btn-fantasma', text: 'Cerrar', onclick: cerrar }),
   ]));
   overlay.addEventListener('click', (e) => { if (e.target === overlay) cerrar(); });
@@ -841,16 +960,49 @@ function vistaAjustes() {
     areaImport,
     btnImport,
   ]);
-  return el('div', { class: 'pila' }, [info, acciones]);
+  return el('div', { class: 'pila' }, [info, tarjetaExportSesion(), acciones]);
 }
 
-// Descarga el historial como fichero .json (con fallback a compartir/copiar).
-function descargarJSON() {
-  const texto = almacen.exportarJSON();
+// F2: exportar una sesion suelta (elegida de las registradas), ademas del historial completo.
+function tarjetaExportSesion() {
+  const lista = almacen.listaSesiones().slice().reverse(); // mas reciente primero
+  if (!lista.length) {
+    return el('div', { class: 'tarjeta pila' }, [
+      el('h3', { text: 'Exportar una sesion' }),
+      el('p', { class: 'mini', text: 'Aun no hay sesiones registradas.' }),
+    ]);
+  }
+  const sel = el('select', { class: 'sel-sesion' });
+  lista.forEach((s, i) => {
+    const nombre = defSesion(s.sesionId)?.nombre || s.sesionId;
+    sel.appendChild(el('option', { value: String(i), text: `${s.fecha} · ${nombre}` }));
+  });
+  const sesionDe = () => lista[Number(sel.value) || 0];
+  const btnDesc = el('button', { class: 'btn btn-fantasma', text: 'Exportar sesion (JSON)' });
+  btnDesc.addEventListener('click', () => {
+    const s = sesionDe();
+    const texto = almacen.exportarSesion(s.fecha, s.sesionId);
+    if (texto) descargarTexto(texto, `power-sesion-${s.fecha}-${s.sesionId}.json`);
+  });
+  const btnCopiar = el('button', { class: 'btn btn-fantasma', text: 'Copiar sesion' });
+  btnCopiar.addEventListener('click', () => {
+    const s = sesionDe();
+    const texto = almacen.exportarSesion(s.fecha, s.sesionId);
+    if (texto) compartirTexto(texto, btnCopiar);
+  });
+  return el('div', { class: 'tarjeta pila' }, [
+    el('h3', { text: 'Exportar una sesion' }),
+    el('p', { class: 'mini', text: 'Exporta una sesion concreta como JSON (ademas del historial completo).' }),
+    sel, btnDesc, btnCopiar,
+  ]);
+}
+
+// Descarga un texto como fichero .json (con fallback a compartir/copiar).
+function descargarTexto(texto, nombre) {
   try {
     const blob = new Blob([texto], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-    const a = el('a', { href: url, download: `power-historial-${hoyISO()}.json` });
+    const a = el('a', { href: url, download: nombre });
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -858,6 +1010,11 @@ function descargarJSON() {
   } catch {
     compartirTexto(texto);
   }
+}
+
+// Descarga el historial completo como fichero .json.
+function descargarJSON() {
+  descargarTexto(almacen.exportarJSON(), `power-historial-${hoyISO()}.json`);
 }
 
 // ---- arranque ----
@@ -897,8 +1054,12 @@ async function init() {
   conectarTabs();
   await iniciarBloque();
   try { estado.hitos = await almacen.cargarHitos(); } catch { estado.hitos = null; }
-  const borrador = almacen.getBorrador();
-  if (borrador && estado.bloque && defSesion(borrador.sesionId)) estado.sesionActiva = borrador;
+  // B1: NO se auto-abre el borrador al arrancar. Antes, un borrador a medias tapaba
+  // el bloque en "Hoy" (aparecia la pantalla de registro en su lugar). Ahora se
+  // aterriza siempre en el resumen del bloque; la sesion a medias se reanuda desde
+  // su tarjeta ("Reanudar sesion") o desde el aviso superior.
+  estado.sesionActiva = null;
+  timer.restaurar(); // B2: si habia un descanso en curso, retoma la barra flotante
   navegar('hoy');
 }
 

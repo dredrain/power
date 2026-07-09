@@ -43,10 +43,24 @@ El bloque vigente. Se sirve por GitHub Pages (network-first con fallback a cach�
   "diaSugerido": "lunes",            // orientativo; el usuario entrena cuando puede
   "duracionCompletaMin": 70,         // estimación versión completa
   "duracionMinimaMin": 42,           // estimación versión mínima ("voy justo")
+  "notaPrimeraVez": "Elige…",        // opcional; ver "Notas por sesión-día" abajo
+  "notaSesion": "Estirar al acabar", // opcional; ver "Notas por sesión-día" abajo
   "calentamiento": Calentamiento,    // opcional; se muestra al empezar la sesión
   "ejercicios": [ Ejercicio, … ]
 }
 ```
+
+#### Notas por sesión-día (`notaPrimeraVez`, `notaSesion`)
+
+Ambas **opcionales**. Alojan las instrucciones puntuales de esa sesión/semana (p. ej.
+"primera vez: elige peso con RPE ≤6", "estirar al acabar") en la **particularidad de la
+sesión**, no en las `notas` generales de cada ejercicio —que se repetirían en cada tarjeta.
+Se muestran una sola vez, en una tarjeta destacada al abrir la sesión:
+
+| Campo | Cuándo se muestra |
+|-------|-------------------|
+| `notaPrimeraVez` | Sólo la **primera vez** que se hace esa sesión-día (no hay ningún registro suyo en el historial). Reemplaza al antiguo texto fijo "primera vez: elige un peso cómodo (RPE ≤6)" que aparecía repetido en todos los ejercicios. |
+| `notaSesion` | **Siempre** que se abre la sesión (recordatorio permanente del día). |
 
 ### `Calentamiento` (opcional en `Sesion`)
 
@@ -161,13 +175,17 @@ Offline-first. El historial es la fuente de verdad para la progresión y la adhe
   "series": [
     { "peso": 60, "reps": 5, "rir": 3 },   // una entrada por serie de trabajo
     { "peso": 60, "reps": 5, "rir": 2 }
-  ]
+  ],
+  "notas": "hoy la rodilla mejor"    // opcional (F1): nota libre por ejercicio; ausente si vacía
 }
 ```
 
 - Cada serie: `peso` (kg, número), `reps` (número), `rir` (0–10 o `null` si no se registró).
 - Precarga: al abrir el ejercicio, los campos se rellenan con los valores de la **última
   vez** que se hizo (misma `ejercicioId`, sesión más reciente del historial).
+- `notas` (F1): texto libre que el usuario escribe por ejercicio durante la sesión. Sólo se
+  guarda si no está vacío. Se incluye en el resumen del entrenador. Un ejercicio con nota
+  pero **sin** series registradas también se conserva (para no perder la observación).
 
 ---
 

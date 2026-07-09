@@ -38,6 +38,14 @@ test('resumenSesion incluye nombre, series, dolor, 24h, fatiga', () => {
   assert.match(md, /buen dia/);
 });
 
+test('resumenSesion incluye la nota por ejercicio (F1)', () => {
+  const r = { ...registro, ejercicios: [
+    { ejercicioId: 'sentadilla', series: [{ peso: 60, reps: 5, rir: 3 }], notas: 'rodilla ok, sin molestias' },
+  ] };
+  const md = resumenSesion(r, bloque);
+  assert.match(md, /Sentadilla: 60×5@RIR3 — rodilla ok, sin molestias/);
+});
+
 test('resumenSesion tolera series con nulos', () => {
   const r = { ...registro, ejercicios: [{ ejercicioId: 'sentadilla', series: [{ peso: null, reps: null, rir: null }] }], dolor: { post: {}, h24: {} }, fatiga: null };
   const md = resumenSesion(r, bloque);
