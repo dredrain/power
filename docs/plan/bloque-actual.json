@@ -38,7 +38,12 @@
           "recortable": false,
           "zonas": ["rodilla", "lumbar"],
           "notas": "Basico primero. Tempo controlado en la bajada. Semana 1: RIR 5-6; a partir de ahi baja hasta RIR 4 y no menos, sin fallo ni singles pesados. La 4a serie se gana desde la semana 3 solo si la 3a termino con el RIR objetivo, tecnica limpia y lumbar en baseline; si no, cierra en 3. Si la lumbar sube: belt squat (ideal) > hack/prensa; NO front squat (agrava lumbar y muneca).",
-          "progresion": { "regla": "rir", "incrementoKg": 5, "cargaInicial": null }
+          "progresion": { "regla": "rir", "incrementoKg": 5, "cargaInicial": null },
+          "correctivo": {
+            "nombre": "Face pull o dead bug",
+            "detalle": "1 serie en el hueco del descanso de la sentadilla (180s da margen); no compite con el basico (piernas)",
+            "zona": null
+          }
         },
         {
           "id": "press-banca-secundario",
@@ -77,12 +82,7 @@
           "recortable": true,
           "zonas": ["hombro", "trapecio"],
           "notas": "Espalda alta, equilibra el empuje del dia y cuida el hombro. RIR 2-3: accesorio 'seguro', aqui acercarte al fallo es el beneficio.",
-          "progresion": { "regla": "rir", "incrementoKg": 2.5, "cargaInicial": null },
-          "correctivo": {
-            "nombre": "Face pull o dead bug",
-            "detalle": "1 serie en el hueco del descanso del remo; no compite con el basico (piernas)",
-            "zona": null
-          }
+          "progresion": { "regla": "rir", "incrementoKg": 2.5, "cargaInicial": null }
         }
       ]
     },
@@ -117,7 +117,12 @@
           "recortable": false,
           "zonas": ["hombro"],
           "notas": "Basico primero. Agarre medio, sin rango extremo (hombro). Semana 1: RIR 5-6; baja hasta RIR 4 y no menos.",
-          "progresion": { "regla": "rir", "incrementoKg": 2.5, "cargaInicial": null }
+          "progresion": { "regla": "rir", "incrementoKg": 2.5, "cargaInicial": null },
+          "correctivo": {
+            "nombre": "Rueda abdominal (ROM parcial -> completo)",
+            "detalle": "1 serie en el hueco del descanso de la banca (180s da margen); anti-extension de core",
+            "zona": "lumbar"
+          }
         },
         {
           "id": "peso-muerto-rumano",
@@ -169,12 +174,7 @@
           "recortable": true,
           "zonas": ["hombro", "trapecio"],
           "notas": "Deltoide posterior/rotadores cargados. RIR 2-3. Alternativa: press militar ligero.",
-          "progresion": { "regla": "rir", "incrementoKg": 1, "cargaInicial": null },
-          "correctivo": {
-            "nombre": "Rueda abdominal (ROM parcial -> completo)",
-            "detalle": "1 serie en el hueco del descanso; anti-extension de core",
-            "zona": "lumbar"
-          }
+          "progresion": { "regla": "rir", "incrementoKg": 1, "cargaInicial": null }
         }
       ]
     },
@@ -209,7 +209,12 @@
           "recortable": false,
           "zonas": ["lumbar"],
           "notas": "Basico primero. Sin singles. Corta la serie si se rompe la tecnica. Semana 1: RIR 5-6; baja hasta RIR 4 y no menos. Si la lumbar viene cargada del dia 1 o de estar sentado, baja carga o rango antes que saltarlo.",
-          "progresion": { "regla": "rir", "incrementoKg": 5, "cargaInicial": null }
+          "progresion": { "regla": "rir", "incrementoKg": 5, "cargaInicial": null },
+          "correctivo": {
+            "nombre": "Core suave / respiracion",
+            "detalle": "1 serie en el hueco del descanso del peso muerto (210s da margen); nada agresivo de lumbar hoy",
+            "zona": "lumbar"
+          }
         },
         {
           "id": "bulgara",
@@ -248,12 +253,7 @@
           "recortable": true,
           "zonas": ["hombro", "trapecio"],
           "notas": "Espalda alta. RIR 2-3.",
-          "progresion": { "regla": "rir", "incrementoKg": 2.5, "cargaInicial": null },
-          "correctivo": {
-            "nombre": "Core suave / respiracion",
-            "detalle": "1 serie en el hueco del descanso; nada agresivo de lumbar hoy",
-            "zona": "lumbar"
-          }
+          "progresion": { "regla": "rir", "incrementoKg": 2.5, "cargaInicial": null }
         }
       ]
     },

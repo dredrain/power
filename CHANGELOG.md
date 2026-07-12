@@ -38,6 +38,15 @@ por sprints anteriores; se verificó cada uno contra el código antes de tocar n
   no hace falta responder dos veces la misma pregunta.
 - SW: `power-v10` → `power-v11`.
 
+**Corrección posterior en `bloque-actual.json` (mismo día, no cambia versión de
+app):** el correctivo entre series (v1.6.0) colgaba del último accesorio de
+cada día (remo, face-pull, remo-mancuerna), copiando el orden de la tabla de
+`bloque1_powerlifting.md`. El documento dice explícitamente "el descanso del
+básico ES el hueco" — va en los descansos del básico (180-210s), no del
+accesorio (60-90s, mucho menos margen real). Movido a sentadilla / press
+banca / peso muerto. Efecto bueno: al colgar de un ejercicio no recortable,
+ahora también sobrevive a "voy justo".
+
 ## 1.6.0 — 2026-07-12
 
 - **Bug (progresión sesgada)**: el ejercicio `press-banca` del Día 1 (secundario,
