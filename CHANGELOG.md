@@ -1,5 +1,26 @@
 # Registro de versiones — Power Tracker
 
+## 1.8.0 — 2026-07-12
+
+Persistir la sugerencia de carga (subir/mantener/bajar) por ejercicio, para que
+la discrepancia con lo que se hizo de verdad no se pierda antes de la revisión
+semanal.
+
+- **Sugerencia guardada junto al registro del ejercicio**: `sugerirCarga()`
+  seguía usándose solo para pintar el chip en pantalla; ahora su resultado
+  (`accion` + `motivo` + peso de la última vez) se guarda en el borrador al
+  abrir el ejercicio y viaja con la sesión al historial y al export JSON
+  (`sugerencia: {accion, motivo, pesoAnterior}`). La app sigue sin tocar el
+  peso — lo escribe el usuario a mano — esto es solo un registro de qué se
+  sugirió y por qué.
+- **Resumen de sesión marca lo accionable**: `resumenSesion()` añade una línea
+  `⚠` por ejercicio solo cuando la sugerencia fue "bajar" (se activó algún
+  gate, típicamente la regla de las 24h) o cuando lo hecho contradice la
+  sugerencia (sugirió mantener y se subió). Los casos coherentes (mantuvo tras
+  "mantener", subió tras "subir") no se marcan. Se ve tanto en el texto para
+  pegar al entrenador como en el JSON exportable.
+- SW: `power-v11` → `power-v12`.
+
 Registro de cambios notables de la app (`docs/`). No incluye el proyecto de
 entreno (`tareas.md`) ni el bloque en sí (`docs/plan/bloque-actual.json`
 cambia con frecuencia según la revisión semanal — eso no genera versión

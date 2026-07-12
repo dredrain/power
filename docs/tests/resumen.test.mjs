@@ -53,6 +53,47 @@ test('resumenSesion tolera series con nulos', () => {
   assert.match(md, /Dolor \(0-10\)\*\*: sin registro/);
 });
 
+test('resumenSesion marca sugerencia de bajar por regla 24h aunque se cargue igual', () => {
+  const r = { ...registro, ejercicios: [
+    { ejercicioId: 'sentadilla', series: [{ peso: 75, reps: 5, rir: 3 }],
+      sugerencia: { accion: 'bajar', motivo: 'Una zona empeoró a 24h: baja carga o rango en este ejercicio (regla de las 24h).', pesoAnterior: 75 } },
+  ] };
+  const md = resumenSesion(r, bloque);
+  assert.match(md, /⚠ sugería bajar \(regla 24h\) · hiciste 75kg \(=última sesión\)/);
+});
+
+test('resumenSesion marca contradiccion: sugirio mantener y se subio', () => {
+  const r = { ...registro, ejercicios: [
+    { ejercicioId: 'sentadilla', series: [{ peso: 80, reps: 5, rir: 3 }],
+      sugerencia: { accion: 'mantener', motivo: 'En el objetivo (RIR 3 = 3): mantén el peso.', pesoAnterior: 75 } },
+  ] };
+  const md = resumenSesion(r, bloque);
+  assert.match(md, /⚠ sugería mantener .* · hiciste 80kg \(\+5\)/);
+});
+
+test('resumenSesion NO marca lo coherente: sugirio subir y se subio', () => {
+  const r = { ...registro, ejercicios: [
+    { ejercicioId: 'sentadilla', series: [{ peso: 80, reps: 5, rir: 4 }],
+      sugerencia: { accion: 'subir', motivo: 'Se quedó fácil (RIR 4 > objetivo 3): sube +2.5 kg.', pesoAnterior: 75 } },
+  ] };
+  const md = resumenSesion(r, bloque);
+  assert.doesNotMatch(md, /⚠/);
+});
+
+test('resumenSesion NO marca lo coherente: sugirio mantener y se mantuvo', () => {
+  const r = { ...registro, ejercicios: [
+    { ejercicioId: 'sentadilla', series: [{ peso: 75, reps: 5, rir: 3 }],
+      sugerencia: { accion: 'mantener', motivo: 'En el objetivo (RIR 3 = 3): mantén el peso.', pesoAnterior: 75 } },
+  ] };
+  const md = resumenSesion(r, bloque);
+  assert.doesNotMatch(md, /⚠/);
+});
+
+test('resumenSesion sin sugerencia guardada no rompe (compat hacia atras)', () => {
+  const md = resumenSesion(registro, bloque);
+  assert.doesNotMatch(md, /⚠/);
+});
+
 test('resumenSemana agrega adherencia y dolor maximo', () => {
   const HOY = new Date(2026, 6, 9); // misma semana que 2026-07-08
   const md = resumenSemana([registro], bloque, HOY);

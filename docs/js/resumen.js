@@ -26,6 +26,46 @@ function fmtDolor(dolor) {
   return zonas.map((z) => `${z} ${post[z]}`).join(', ');
 }
 
+// Ultimo peso con dato numerico de las series REALMENTE hechas esta sesion.
+function pesoHecho(series) {
+  const s = (series || []).slice().reverse().find((x) => typeof x?.peso === 'number');
+  return s ? s.peso : null;
+}
+
+// Extrae una etiqueta corta del motivo (frase de sugerirCarga anterior a ":").
+// La regla de las 24h se destaca aparte porque es la senal de dolor a vigilar.
+function motivoCorto(motivo) {
+  if (typeof motivo !== 'string' || !motivo) return '';
+  if (motivo.includes('24h')) return 'regla 24h';
+  const i = motivo.indexOf(':');
+  return i > 0 ? motivo.slice(0, i) : motivo;
+}
+
+function fmtComparacion(pesoReal, pesoAnterior) {
+  if (typeof pesoReal !== 'number' || typeof pesoAnterior !== 'number') return '';
+  const diff = +(pesoReal - pesoAnterior).toFixed(2);
+  if (diff === 0) return ' (=última sesión)';
+  return diff > 0 ? ` (+${diff})` : ` (${diff})`;
+}
+
+// Linea de aviso solo para lo accionable: la sugerencia fue bajar (se activo el
+// gate de dolor, cualquiera que sea lo que se hizo despues), o lo hecho
+// contradice la sugerencia (sugirio bajar y no se bajo, o sugirio mantener y
+// se subio). "Sugirio mantener y mantuvo" / "sugirio subir y subio" son
+// coherentes y no se marcan: la app SUGIERE, el peso lo escribe el usuario.
+function marcaSugerencia(e) {
+  const sug = e.sugerencia;
+  if (!sug) return null;
+  const pesoReal = pesoHecho(e.series);
+  const subio = typeof pesoReal === 'number' && typeof sug.pesoAnterior === 'number'
+    && pesoReal > sug.pesoAnterior;
+  const accionable = sug.accion === 'bajar' || (sug.accion === 'mantener' && subio);
+  if (!accionable) return null;
+  const motivo = motivoCorto(sug.motivo);
+  const pesoTxt = pesoReal == null ? 'sin peso registrado' : `hiciste ${pesoReal}kg`;
+  return `  ⚠ sugería ${sug.accion}${motivo ? ` (${motivo})` : ''} · ${pesoTxt}${fmtComparacion(pesoReal, sug.pesoAnterior)}`;
+}
+
 function fmtDolor24h(dolor) {
   const post = dolor?.post || {};
   const h24 = dolor?.h24 || {};
@@ -51,6 +91,8 @@ export function resumenSesion(registro, bloque) {
     // F1: nota libre del ejercicio, si la hay.
     const nota = e.notas ? ` — ${e.notas}` : '';
     L.push(`- ${nombreEjercicio(bloque, registro.sesionId, e.ejercicioId)}: ${series || '—'}${nota}`);
+    const marca = marcaSugerencia(e);
+    if (marca) L.push(marca);
   }
   L.push('');
   L.push(`**Dolor (0-10)**: ${fmtDolor(registro.dolor)}`);

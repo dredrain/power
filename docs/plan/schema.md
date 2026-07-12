@@ -195,7 +195,12 @@ Offline-first. El historial es la fuente de verdad para la progresión y la adhe
     { "peso": 60, "reps": 5, "rir": 3 },   // una entrada por serie de trabajo
     { "peso": 60, "reps": 5, "rir": 2 }
   ],
-  "notas": "hoy la rodilla mejor"    // opcional (F1): nota libre por ejercicio; ausente si vacía
+  "notas": "hoy la rodilla mejor",   // opcional (F1): nota libre por ejercicio; ausente si vacía
+  "sugerencia": {                    // opcional: lo que sugirió sugirirCarga() al abrir el ejercicio
+    "accion": "bajar",               // 'subir' | 'mantener' | 'bajar' | 'estimar'
+    "motivo": "Una zona empeoró a 24h: baja carga o rango en este ejercicio (regla de las 24h).",
+    "pesoAnterior": 75               // peso de la última vez, para comparar con lo hecho de verdad
+  }
 }
 ```
 
@@ -205,6 +210,15 @@ Offline-first. El historial es la fuente de verdad para la progresión y la adhe
 - `notas` (F1): texto libre que el usuario escribe por ejercicio durante la sesión. Sólo se
   guarda si no está vacío. Se incluye en el resumen del entrenador. Un ejercicio con nota
   pero **sin** series registradas también se conserva (para no perder la observación).
+- `sugerencia`: captura de la salida de `sugerirCarga()` en el momento de abrir el
+  ejercicio (chip ▲/＝/▼/◆). La app **nunca** modifica el peso — lo escribe el usuario a
+  mano — así que esto es solo un registro de qué se sugirió y por qué, para poder
+  contrastarlo con `series` en la revisión semanal. Se guarda aunque el usuario no siga la
+  sugerencia. `resumenSesion()` solo lo señala en el texto cuando es accionable: la
+  sugerencia fue "bajar" (se activó algún gate, típicamente la regla de las 24h), o lo
+  hecho contradice la sugerencia (sugirió bajar y no se bajó, o sugirió mantener y se
+  subió). "Sugirió mantener y mantuvo" / "sugirió subir y subió" son coherentes y no se
+  marcan.
 
 ---
 

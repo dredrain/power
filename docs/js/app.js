@@ -11,7 +11,7 @@ import { ACLARACIONES, FICHAS, esquemaSVG } from './guia.js';
 
 // Version legible de la app (para el usuario, en Ajustes). Ver CHANGELOG.md
 // en la raiz del repo. Sube esto (y CHANGELOG.md) en cada cambio notable.
-const APP_VERSION = '1.7.0';
+const APP_VERSION = '1.8.0';
 
 const ZONAS = [
   { id: 'lumbar', nombre: 'Lumbar' },
@@ -495,7 +495,7 @@ function tarjetaEjercicio(eDef, sa) {
     : 'Primera vez con este ejercicio.' }));
 
   // gancho S3: sugerencia subir/mantener/bajar
-  const sug = typeof renderSugerencia === 'function' ? renderSugerencia(eDef) : null;
+  const sug = typeof renderSugerencia === 'function' ? renderSugerencia(eDef, est) : null;
   if (sug) card.appendChild(sug);
 
   const enlaces = el('div', { class: 'fila-enlaces' });
@@ -636,6 +636,8 @@ export function finalizarSesion() {
             .map((s) => ({ peso: s.peso ?? null, reps: s.reps ?? null, rir: s.rir ?? null })),
           // F1: nota libre del ejercicio (solo si el usuario escribio algo).
           ...(nota ? { notas: nota } : {}),
+          // Sugerencia de carga capturada al abrir el ejercicio (ver renderSugerencia).
+          ...(e.sugerencia ? { sugerencia: e.sugerencia } : {}),
         };
       })
       // Se conserva el ejercicio si tiene series realizadas o una nota escrita.
@@ -803,9 +805,28 @@ function celebrar(hito) {
 }
 
 // ---- S3: sugerencia de carga al abrir cada ejercicio ----
-function renderSugerencia(eDef) {
+// La sugerencia solo pinta el chip: la app nunca toca el peso, eso lo escribe
+// el usuario a mano. Pero se guarda junto al registro del ejercicio (accion +
+// motivo + peso de la ultima vez) para poder contrastarla luego con lo que se
+// hizo de verdad en resumenSesion() — sin eso, la discrepancia "sugirio bajar
+// y cargue igual" se perdia y no llegaba a la revision semanal.
+function renderSugerencia(eDef, est) {
   const reg = almacen.ultimoRegistroEjercicio(eDef.id);
   const s = sugerirCarga(eDef, reg);
+  if (est) {
+    const prev = almacen.ultimosValores(eDef.id);
+    const sugerencia = {
+      accion: s.accion,
+      motivo: s.mensaje,
+      pesoAnterior: prev && typeof prev.peso === 'number' ? prev.peso : null,
+    };
+    const anterior = est.sugerencia;
+    if (!anterior || anterior.accion !== sugerencia.accion || anterior.motivo !== sugerencia.motivo
+      || anterior.pesoAnterior !== sugerencia.pesoAnterior) {
+      est.sugerencia = sugerencia;
+      persistir();
+    }
+  }
   const claseChip = {
     [ACCIONES.SUBIR]: 'chip-subir',
     [ACCIONES.MANTENER]: 'chip-mantener',
