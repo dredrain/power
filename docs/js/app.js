@@ -11,7 +11,7 @@ import { ACLARACIONES, FICHAS, esquemaSVG } from './guia.js';
 
 // Version legible de la app (para el usuario, en Ajustes). Ver CHANGELOG.md
 // en la raiz del repo. Sube esto (y CHANGELOG.md) en cada cambio notable.
-const APP_VERSION = '1.6.0';
+const APP_VERSION = '1.7.0';
 
 const ZONAS = [
   { id: 'lumbar', nombre: 'Lumbar' },
@@ -99,9 +99,6 @@ function vistaHoy() {
   if (estado.sesionActiva) return renderSesionActiva();
 
   const frag = el('div', { class: 'pila' });
-  // gancho S3: pregunta de 24h sobre la sesion anterior
-  const banner24h = typeof render24h === 'function' ? render24h() : null;
-  if (banner24h) frag.appendChild(banner24h);
 
   // B1: aviso de sesion sin terminar (en vez de abrirla por encima del bloque).
   const avisoReanudar = bannerReanudar();
@@ -150,60 +147,87 @@ function bannerReanudar() {
   ]);
 }
 
-// Check-in de dolor sin sesion: nota rapida de "como estoy hoy" por zona
-// (incluye trapecio), independiente de entrenar. Vive un solo dia (ver
-// almacen.getCheckinHoy). No sustituye el dolor de cierre de sesion; es para
-// cuando algo esta cargado y no vas a entrenar ahora mismo.
+// Check-in de dolor sin sesion: nota rapida de "como estoy hoy" por las 4 zonas
+// (lumbar, rodilla, hombro, trapecio) + notas libres, independiente de entrenar.
+// Vive un solo dia (ver almacen.getCheckinHoy). Colapsado por defecto (como el
+// calentamiento) para no ocupar sitio si no hace falta tocarlo.
+//
+// Fusiona lo que antes eran dos tarjetas redundantes ("Como sigues hoy" +
+// "Molestias de hoy"): si hay una pregunta de 24h pendiente sobre la sesion
+// anterior (zonas que dolieron al cerrarla), este mismo check-in la responde
+// con los mismos valores — no hace falta pedirlos dos veces. Esa respuesta SI
+// alimenta el gate de progresion (regla de las 24h); el resto del check-in es
+// solo para la revision semanal y no afecta a la carga.
 function tarjetaCheckinDolor() {
-  const cont = el('div', { class: 'tarjeta' });
+  const cont = el('div', {});
+  const pend = almacen.sesionPendiente24h();
+  const zonasPend = pend ? ZONAS.filter((z) => (pend.dolor?.post?.[z.id] || 0) > 0) : [];
 
-  const pintarResumen = () => {
-    cont.innerHTML = '';
-    const c = almacen.getCheckinHoy();
-    const conDolor = c ? ZONAS.filter((z) => (c.zonas[z.id] || 0) > 0) : [];
-    cont.appendChild(el('div', { class: 'fila-sep' }, [
-      el('span', {}, [
-        el('strong', { text: 'Molestias de hoy' }),
-        el('div', {
-          class: 'mini',
-          text: conDolor.length
-            ? conDolor.map((z) => `${z.nombre} ${c.zonas[z.id]}`).join(', ')
-            : (c ? 'Sin molestias' : 'Anota si algo te duele o esta cargado, sin necesidad de entrenar.'),
-        }),
-      ]),
-      el('button', { class: 'btn btn-fantasma btn-compacto', text: c ? 'Editar' : 'Anotar', onclick: pintarForm }),
-    ]));
-  };
-
-  const pintarForm = () => {
+  const pintar = () => {
     cont.innerHTML = '';
     const c = almacen.getCheckinHoy();
     const zonas = { ...(c?.zonas || {}) };
+    // Sin check-in de hoy, la zona pendiente de 24h arranca en el valor de la
+    // ultima sesion (no en 0): el default debe leerse como "sin cambios", no
+    // como "se curo del todo", o el gate de progresion se falsea por omision.
+    if (!c) for (const z of zonasPend) zonas[z.id] = pend.dolor.post[z.id];
+    const conDolor = c ? ZONAS.filter((z) => (c.zonas[z.id] || 0) > 0) : [];
+
+    const det = el('details', { class: 'tarjeta calent' });
+    det.open = zonasPend.length > 0;
+
+    const resumenTxt = conDolor.length
+      ? conDolor.map((z) => `${z.nombre} ${c.zonas[z.id]}`).join(', ')
+      : (c ? 'Sin molestias' : 'Anota si algo te duele o esta cargado');
+    det.appendChild(el('summary', { class: 'calent-sum' }, [
+      el('span', { text: 'Molestias de hoy' }),
+      el('span', { class: 'mini', text: resumenTxt }),
+    ]));
+
+    det.appendChild(el('p', {
+      class: 'mini', style: 'margin:8px 0',
+      text: zonasPend.length
+        ? `Incluye como sigue tu ${zonasPend.map((z) => z.nombre).join(', ')} desde la última sesión: si algo empeoró, la app baja la carga la próxima vez.`
+        : 'Sin necesidad de entrenar. Se usa en la revisión semanal con el entrenador.',
+    }));
+
     const filas = ZONAS.map((z) => {
       const actual = zonas[z.id] || 0;
       const val = el('span', { class: 'dolor-val', text: String(actual) });
       const rng = el('input', { type: 'range', min: '0', max: '10', step: '1', value: String(actual) });
       rng.addEventListener('input', () => { zonas[z.id] = Number(rng.value); val.textContent = rng.value; });
+      const esPendiente = zonasPend.some((zp) => zp.id === z.id);
       return el('div', { class: 'dolor-fila' }, [
-        el('label', {}, [el('span', { text: z.nombre }), val]),
+        el('label', {}, [el('span', { text: esPendiente ? `${z.nombre} (última sesión ${pend.dolor.post[z.id]}/10)` : z.nombre }), val]),
         rng,
       ]);
     });
-    cont.appendChild(el('div', {}, [
-      el('strong', { text: 'Molestias de hoy' }),
-      el('p', { class: 'mini', text: 'Sin necesidad de entrenar. Se usa en la revision semanal con el entrenador.' }),
-      ...filas,
-      el('div', { class: 'fila-sep', style: 'margin-top:8px;gap:8px' }, [
-        el('button', { class: 'btn btn-fantasma btn-compacto', text: 'Cancelar', onclick: pintarResumen }),
-        el('button', {
-          class: 'btn btn-primario btn-compacto', text: 'Guardar',
-          onclick: () => { almacen.guardarCheckinHoy(zonas); pintarResumen(); },
-        }),
-      ]),
-    ]));
+    filas.forEach((f) => det.appendChild(f));
+
+    const nota = el('textarea', {
+      class: 'nota-ej-input', rows: '2',
+      placeholder: 'Nota (opcional): qué te duele, desde cuándo, contexto…',
+    });
+    if (c?.nota) nota.value = c.nota;
+    det.appendChild(nota);
+
+    det.appendChild(el('button', {
+      class: 'btn btn-primario btn-compacto', style: 'margin-top:8px', text: 'Guardar',
+      onclick: () => {
+        almacen.guardarCheckinHoy(zonas, nota.value);
+        if (zonasPend.length) {
+          const respuesta = {};
+          for (const z of zonasPend) respuesta[z.id] = zonas[z.id] || 0;
+          almacen.responder24h(pend.fecha, pend.sesionId, respuesta);
+        }
+        render();
+      },
+    }));
+
+    cont.appendChild(det);
   };
 
-  pintarResumen();
+  pintar();
   return cont;
 }
 
@@ -288,7 +312,6 @@ function construirSesion(def) {
     sesionId: def.id,
     version: 'completa',
     completada: false,
-    inicioMs: Date.now(),
     ejercicios,
     calentamiento: (def.calentamiento?.items || []).map(() => false),
     dolor: { post: {}, h24: {} },
@@ -599,8 +622,6 @@ export function finalizarSesion() {
     sesionId: sa.sesionId,
     version: sa.version,
     completada: true,
-    // cap a 6h: una sesion reanudada al dia siguiente no debe reportar horas al entrenador
-    duracionSeg: Math.min(6 * 3600, Math.max(0, Math.round((Date.now() - (sa.inicioMs || Date.now())) / 1000))),
     ejercicios: sa.ejercicios
       .map((e) => {
         const nota = (e.notas || '').trim();
@@ -803,38 +824,6 @@ function renderSugerencia(eDef) {
   ]);
 }
 
-// ---- S3: pregunta de 24h sobre la sesion anterior (al abrir la siguiente) ----
-function render24h() {
-  const pend = almacen.sesionPendiente24h();
-  if (!pend) return null;
-  const post = pend.dolor?.post || {};
-  const zonas = ZONAS.filter((z) => post[z.id] > 0); // solo zonas con dolor real
-  if (!zonas.length) return null;
-
-  const respuestas = {};
-  const filas = zonas.map((z) => {
-    respuestas[z.id] = post[z.id];
-    const val = el('span', { class: 'dolor-val', text: String(post[z.id]) });
-    const rng = el('input', { type: 'range', min: '0', max: '10', step: '1' });
-    rng.value = post[z.id];
-    rng.addEventListener('input', () => { respuestas[z.id] = Number(rng.value); val.textContent = rng.value; });
-    return el('div', { class: 'dolor-fila' }, [
-      el('label', {}, [el('span', { text: `${z.nombre} (ultima sesion ${post[z.id]}/10)` }), val]),
-      rng,
-    ]);
-  });
-
-  return el('div', { class: 'tarjeta' }, [
-    el('h2', { text: 'Como sigues hoy' }),
-    el('p', { class: 'mini', text: '¿Como estan hoy las zonas de la ultima sesion? Si algo empeoro, la app baja la carga.' }),
-    ...filas,
-    el('button', {
-      class: 'btn btn-primario', text: 'Guardar y continuar',
-      onclick: () => { almacen.responder24h(pend.fecha, pend.sesionId, respuestas); render(); },
-    }),
-  ]);
-}
-
 // ---- S3: check de dolor al cerrar sesion (reemplaza el cierre directo) ----
 function pantallaDolor(sa) {
   const respuestas = {};
@@ -1016,6 +1005,12 @@ function abrirHistorico(id, nombre) {
           el('td', { text: typeof serie.rir === 'number' ? String(serie.rir) : '—' }),
         ]));
       });
+      // F1/F3: la nota de esa sesion, visible al revisar el historico despues.
+      if (s.notas) {
+        filas.push(el('tr', {}, [
+          el('td', { colspan: '4', class: 'mini nota-hist', text: `📝 ${s.notas}` }),
+        ]));
+      }
     }
     cuerpo = el('table', { class: 'tabla-hist' }, [
       el('thead', {}, [el('tr', {}, [

@@ -43,8 +43,7 @@ function fmtDolor24h(dolor) {
 export function resumenSesion(registro, bloque) {
   const L = [];
   L.push(`## ${nombreSesion(bloque, registro.sesionId)}`);
-  const min = Math.round((registro.duracionSeg || 0) / 60);
-  L.push(`${registro.fecha} · versión ${registro.version} · ${min} min · bloque ${registro.bloque}`);
+  L.push(`${registro.fecha} · versión ${registro.version} · bloque ${registro.bloque}`);
   L.push('');
   L.push('**Ejercicios**');
   for (const e of registro.ejercicios || []) {

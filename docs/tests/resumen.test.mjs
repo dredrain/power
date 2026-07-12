@@ -16,7 +16,7 @@ const bloque = {
 };
 
 const registro = {
-  fecha: '2026-07-08', bloque: 1, sesionId: 'A', version: 'completa', completada: true, duracionSeg: 3480,
+  fecha: '2026-07-08', bloque: 1, sesionId: 'A', version: 'completa', completada: true,
   ejercicios: [
     { ejercicioId: 'sentadilla', series: [{ peso: 60, reps: 5, rir: 4 }, { peso: 60, reps: 5, rir: 3 }] },
     { ejercicioId: 'rdl', series: [{ peso: 50, reps: 8, rir: 3 }] },

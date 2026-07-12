@@ -462,6 +462,7 @@ details[open] summary.calent-sum::after { content: "▴"; }
   color: var(--txt-tenue); font-weight: 700;
 }
 .tabla-hist .td-fecha { text-align: left; color: var(--txt-tenue); white-space: nowrap; }
+.tabla-hist .nota-hist { text-align: left; font-variant-numeric: normal; white-space: normal; padding-top: 0; padding-bottom: 10px; }
 
 /* F2: selector de sesion a exportar */
 .sel-sesion {

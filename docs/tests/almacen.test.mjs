@@ -39,6 +39,12 @@ test('historialEjercicio devuelve sesiones de mas reciente a mas antigua (F3)', 
   assert.equal(h[1].fecha, '2026-07-01');
 });
 
+test('historialEjercicio incluye la nota del ejercicio si la hay', () => {
+  const h = almacen.historialEjercicio('sentadilla');
+  assert.equal(h[0].notas, 'subio bien');
+  assert.equal(h[1].notas, '');
+});
+
 test('historialEjercicio vacio para un ejercicio nunca hecho', () => {
   assert.deepEqual(almacen.historialEjercicio('no-existe'), []);
 });

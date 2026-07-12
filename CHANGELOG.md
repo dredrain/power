@@ -9,6 +9,35 @@ La versión se muestra en la app en **Ajustes** (`Version X.Y.Z`). Compárala
 aquí si algo no se ve como esperas — y usa el botón **"Comprobar
 actualizaciones"** en Ajustes para forzar la recarga del service worker.
 
+## 1.7.0 — 2026-07-12
+
+Cierre de los issues P2 del backlog de bugs/fricción. Varios ya estaban resueltos
+por sprints anteriores; se verificó cada uno contra el código antes de tocar nada.
+
+- **Nota por ejercicio ahora visible al revisar después**: la nota (F1) se
+  guardaba pero `historialEjercicio`/"Ver histórico" no la mostraba — sólo
+  aparecía en el resumen justo al cerrar la sesión. Ahora se ve también al
+  volver semanas después.
+- **Timer de descanso**: verificado en vivo (cambio de pestaña + recarga de
+  página) — ya funcionaba correctamente desde B2 (v1.2.0). Sin cambios.
+- **Textos instructivos repetidos**: verificado — F4 (v1.2.0) ya centraliza el
+  texto de "primera vez" a nivel de sesión; lo que aparece por ejercicio es la
+  sugerencia de carga real (dato calculado, no texto genérico). Sin cambios.
+- **Duración de sesión eliminada** (rama A del issue): no aportaba al único
+  KPI (sesiones/semana), un cronómetro ingenuo cuenta tiempo en
+  background/días si la sesión queda a medias (de ahí los "360 min" falsos:
+  el cap de seguridad, no un tiempo real), y el propio diseño de fase 1 es
+  "cero métricas de vanidad". Se quita `duracionSeg` del registro y de los
+  resúmenes.
+- **"Cómo sigues hoy" fusionado con "Molestias de hoy"**: eran dos tarjetas
+  con sliders de dolor casi idénticos. Ahora es una sola, colapsada por
+  defecto (como el calentamiento), con las 4 zonas (lumbar, rodilla, hombro,
+  trapecio) y una caja de notas. Si hay una pregunta de 24h pendiente sobre la
+  última sesión, la misma tarjeta se abre automáticamente y esos valores
+  también resuelven el gate de seguridad de progresión (regla de las 24h) —
+  no hace falta responder dos veces la misma pregunta.
+- SW: `power-v10` → `power-v11`.
+
 ## 1.6.0 — 2026-07-12
 
 - **Bug (progresión sesgada)**: el ejercicio `press-banca` del Día 1 (secundario,

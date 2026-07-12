@@ -164,7 +164,6 @@ Offline-first. El historial es la fuente de verdad para la progresión y la adhe
   "sesionId": "A",                   // casa con Sesion.id del bloque
   "version": "completa",             // "completa" | "minima"
   "completada": true,                // true si se cerró (mínima cuenta como completada)
-  "duracionSeg": 3480,
   "ejercicios": [ RegistroEjercicio, … ],
   "dolor": {                         // check de dolor por zona, 0–10
     "post":  { "lumbar": 2, "rodilla": 1, "hombro": 0, "trapecio": 0 },   // al cerrar ESTA sesión
@@ -181,6 +180,11 @@ Offline-first. El historial es la fuente de verdad para la progresión y la adhe
   al algoritmo saber si una zona **empeoró a 24h** (`h24[z] > post[z]`).
 - `completada: false` sólo si el usuario abandona sin cerrar (queda en `power:borrador`,
   no entra al historial). Para adherencia, todo lo que está en `power:historial` cuenta.
+- **No se mide `duracionSeg`** (deliberado): el único KPI de fase 1 es sesiones/semana, y
+  un reloj de pared entre "abrir" y "cerrar" sesión cuenta tiempo en background/días si la
+  sesión queda a medias — dato falso, no vanidad útil. Si algún día se quiere de verdad,
+  hace falta la Page Visibility API para descontar el tiempo fuera de foco, no solo un
+  cronómetro ingenuo.
 
 ### `RegistroEjercicio`
 

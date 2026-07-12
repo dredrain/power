@@ -110,7 +110,7 @@ export function historialEjercicio(ejercicioId) {
     const s = h[i];
     const ej = (s.ejercicios || []).find((e) => e.ejercicioId === ejercicioId);
     if (ej && Array.isArray(ej.series) && ej.series.length) {
-      out.push({ fecha: s.fecha, iso: s.iso, sesionId: s.sesionId, series: ej.series });
+      out.push({ fecha: s.fecha, iso: s.iso, sesionId: s.sesionId, series: ej.series, notas: ej.notas || '' });
     }
   }
   return out;
@@ -154,8 +154,8 @@ export function getCheckinHoy(hoy = hoyStr()) {
   const c = leer(K.checkinHoy, null);
   return c && c.fecha === hoy ? c : null;
 }
-export function guardarCheckinHoy(zonas, hoy = hoyStr()) {
-  const c = { fecha: hoy, zonas, ts: new Date().toISOString() };
+export function guardarCheckinHoy(zonas, nota = '', hoy = hoyStr()) {
+  const c = { fecha: hoy, zonas, nota, ts: new Date().toISOString() };
   escribir(K.checkinHoy, c);
   return c;
 }
