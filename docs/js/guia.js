@@ -325,6 +325,11 @@ export const FICHAS = {
     claves: ['Basico del dia: va primero.', 'Agarre no muy ancho y ROM comodo al inicio (hombro).', 'Baja controlado, sin rebote.'],
     evita: ['Arco extremo y agarre muy abierto al principio.'],
   },
+  'press-banca-secundario': {
+    nombre: 'Press banca', patron: 'empuje',
+    claves: ['Secundario del dia (va tras la sentadilla): mas ligero que el dia 2.', 'Agarre no muy ancho y ROM comodo al inicio (hombro).', 'Baja controlado, sin rebote.'],
+    evita: ['Arco extremo y agarre muy abierto al principio.'],
+  },
   'press-inclinado-mancuerna': {
     nombre: 'Press militar de pie (o incline con mancuernas)', patron: 'empuje',
     claves: ['Empuje vertical amable con el hombro.', 'La mancuerna deja elegir un ROM comodo si haces la variante inclinada.', 'RIR 3-4, nunca por debajo de 3.'],

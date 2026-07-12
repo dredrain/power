@@ -11,7 +11,7 @@ import { ACLARACIONES, FICHAS, esquemaSVG } from './guia.js';
 
 // Version legible de la app (para el usuario, en Ajustes). Ver CHANGELOG.md
 // en la raiz del repo. Sube esto (y CHANGELOG.md) en cada cambio notable.
-const APP_VERSION = '1.5.0';
+const APP_VERSION = '1.6.0';
 
 const ZONAS = [
   { id: 'lumbar', nombre: 'Lumbar' },
@@ -489,6 +489,11 @@ function tarjetaEjercicio(eDef, sa) {
 
   est.series.forEach((serie, i) => card.appendChild(filaSerie(eDef, est, serie, i)));
 
+  // Correctivo entre series: anidado bajo el ejercicio cuyo descanso ocupa (no un
+  // bloque aparte al final de la sesion — ver bloque1_powerlifting.md). Checklist
+  // como el calentamiento: no entra al historial ni al KPI.
+  if (eDef.correctivo) card.appendChild(filaCorrectivo(eDef.correctivo, est));
+
   // F1: nota libre por ejercicio (persistida en el log e incluida en el resumen)
   const ta = el('textarea', {
     class: 'nota-ej-input', rows: '2',
@@ -498,6 +503,27 @@ function tarjetaEjercicio(eDef, sa) {
   ta.addEventListener('input', () => { est.notas = ta.value; persistir(); });
   card.appendChild(ta);
   return card;
+}
+
+// Fila del correctivo entre series, anidada dentro de la tarjeta de su ejercicio
+// ancla. `est.correctivoHecho` vive en el borrador (igual que el calentamiento).
+function filaCorrectivo(c, est) {
+  const check = el('span', { class: 'correctivo-check', text: est.correctivoHecho ? '✓' : '' });
+  const fila = el('div', { class: 'correctivo-entre' + (est.correctivoHecho ? ' hecho' : '') }, [
+    check,
+    el('span', { class: 'correctivo-txt' }, [
+      el('div', { class: 'correctivo-etiqueta', text: 'Correctivo · en el hueco del descanso' }),
+      el('div', { class: 'correctivo-nom', text: c.nombre }),
+      c.detalle ? el('div', { class: 'correctivo-det', text: c.detalle }) : null,
+    ]),
+  ]);
+  fila.addEventListener('click', () => {
+    est.correctivoHecho = !est.correctivoHecho;
+    fila.classList.toggle('hecho', est.correctivoHecho);
+    check.textContent = est.correctivoHecho ? '✓' : '';
+    persistir();
+  });
+  return fila;
 }
 
 function campoNum(label, valor, onInput) {
@@ -881,15 +907,19 @@ function vistaPlan() {
   for (const sesion of estado.bloque.sesiones) {
     const cal = sesion.calentamiento;
     const items = sesion.ejercicios.map((e) => {
-      const fila = el('li', { class: 'fila-sep', style: 'padding:8px 0;border-bottom:1px solid var(--borde)' }, [
-        el('span', {}, [
-          el('strong', { text: e.nombre }),
-          el('span', { class: 'mini', text: ` ${e.series}×${e.reps} · RIR ${e.rirObjetivo}` }),
-          FICHAS[e.id] ? el('span', { class: 'info-i', text: ' ⓘ' }) : null,
+      const fila = el('li', { style: 'padding:8px 0;border-bottom:1px solid var(--borde)' }, [
+        el('div', { class: 'fila-sep' }, [
+          el('span', {}, [
+            el('strong', { text: e.nombre }),
+            el('span', { class: 'mini', text: ` ${e.series}×${e.reps} · RIR ${e.rirObjetivo}` }),
+            FICHAS[e.id] ? el('span', { class: 'info-i', text: ' ⓘ' }) : null,
+          ]),
+          e.recortable ? el('span', { class: 'mini', text: 'recortable' }) : el('span', { class: 'chip chip-subir', text: 'fijo' }),
         ]),
-        e.recortable ? el('span', { class: 'mini', text: 'recortable' }) : el('span', { class: 'chip chip-subir', text: 'fijo' }),
+        // Correctivo entre series: anidado bajo su ejercicio ancla, no en bloque aparte.
+        e.correctivo ? el('p', { class: 'mini', style: 'margin:6px 0 0 12px;border-left:2px solid var(--borde);padding-left:8px', text: `↳ entre series: ${e.correctivo.nombre}` }) : null,
       ]);
-      if (FICHAS[e.id]) { fila.style.cursor = 'pointer'; fila.addEventListener('click', () => abrirFicha(e.id)); }
+      if (FICHAS[e.id]) { fila.querySelector('.fila-sep').style.cursor = 'pointer'; fila.querySelector('.fila-sep').addEventListener('click', () => abrirFicha(e.id)); }
       return fila;
     });
     frag.appendChild(el('div', { class: 'tarjeta' }, [

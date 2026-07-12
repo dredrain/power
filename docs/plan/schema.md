@@ -104,15 +104,30 @@ prehab va en el calentamiento y entre series, no como bloque aparte que se recor
     "regla": "rir",                  // "rir" (autorregulado) por defecto en fase 1
     "incrementoKg": 2.5,             // 2.5 básicos; 1–2.5 accesorios
     "cargaInicial": null             // null = "a rellenar en 1ª sesión con RPE ≤6"
+  },
+  "correctivo": {                    // opcional; ver "Correctivo entre series" abajo
+    "nombre": "Face pull o dead bug",
+    "detalle": "1 serie en el hueco del descanso; no compite con el básico",
+    "zona": null                     // zona protegida, o null
   }
 }
 ```
+
+#### `correctivo` (opcional en `Ejercicio`)
+
+El trabajo correctivo que se hace **en el hueco del descanso** de este ejercicio (no
+del calentamiento). Se ancla al ejercicio cuya serie precede el hueco — normalmente el
+último accesorio del día — y la app lo renderiza **anidado dentro de esa misma
+tarjeta**, nunca como bloque aparte al final de la sesión (`bloque1_powerlifting.md`:
+"el descanso del básico ES el hueco… el filler no compite con el básico"). Es un
+checklist como el del calentamiento: el estado (`correctivoHecho`) vive en el borrador
+y no entra al historial ni al KPI.
 
 **Campos clave y por qué:**
 
 | Campo | Uso |
 |-------|-----|
-| `id` | Casa el ejercicio con su historial en `localStorage` entre sesiones. **No cambiar** dentro de un bloque. |
+| `id` | Casa el ejercicio con su historial en `localStorage` entre sesiones. **No cambiar** dentro de un bloque. **No reutilizar** el mismo `id` en dos ejercicios con `series`/`reps`/`rirObjetivo` distintos (p. ej. el mismo movimiento como básico un día y accesorio otro): la progresión compara la última serie registrada contra el `reps`/`rirObjetivo` del ejercicio que se está abriendo, así que un `id` compartido con esquemas distintos sesga "subir/bajar" con datos de la sesión equivocada. Si el movimiento se repite con otro esquema, usa un `id` distinto (p. ej. `press-banca-secundario`). |
 | `reps` como *string* | Permite reps fijas (`"5"`), rango (`"8-10"`) o `"AMRAP"`. El algoritmo extrae el mínimo del rango. |
 | `rirObjetivo` | Núcleo de la progresión autorregulada: la carga sube cuando el RIR real supera al objetivo (el peso "se quedó fácil"). |
 | `recortable` | `false` en el básico y en el trabajo correctivo no negociable; esos sobreviven a la versión mínima. |

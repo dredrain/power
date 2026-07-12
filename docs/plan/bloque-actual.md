@@ -55,6 +55,7 @@ Material: goma ligera (rotadores) · goma fuerte (abducción de cadera).
 
 Correctivo en calentamiento: rotación externa de hombro con goma, abducción de cadera con
 goma. Swap si la lumbar sube: belt squat > hack/prensa; **NO front squat**.
+Correctivo entre series (en el hueco del remo): face pull o dead bug.
 
 ### Día 2 — Press banca + peso muerto rumano (miércoles)
 
@@ -69,6 +70,7 @@ Material: goma ligera (rotadores) · goma pull-apart · rueda abdominal.
 | Face pull (o press militar ligero) | 3×10-12 | 2-3 | 60s | ✅ | hombro |
 
 RDL genuinamente ligero: no compite con el peso muerto del día 3.
+Correctivo entre series (en el hueco del face pull): rueda abdominal (ROM parcial→completo).
 
 ### Día 3 — Peso muerto + pierna unilateral (viernes)
 
@@ -83,6 +85,7 @@ Material: goma fuerte (abducción con carga) · goma ligera (rotadores).
 
 Día de más carga lumbar: si vienes cargado del día 1 o de estar sentado, baja carga o
 rango antes que saltarlo.
+Correctivo entre series (en el hueco del remo): core suave / respiración.
 
 ### Día opcional en casa (sábado) — NO cuenta como fallo si se salta
 

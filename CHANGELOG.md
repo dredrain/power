@@ -9,6 +9,24 @@ La versión se muestra en la app en **Ajustes** (`Version X.Y.Z`). Compárala
 aquí si algo no se ve como esperas — y usa el botón **"Comprobar
 actualizaciones"** en Ajustes para forzar la recarga del service worker.
 
+## 1.6.0 — 2026-07-12
+
+- **Bug (progresión sesgada)**: el ejercicio `press-banca` del Día 1 (secundario,
+  3×6-8) compartía `id` con el del Día 2 (básico, 4×5-6). Como la sugerencia de
+  carga compara la última serie registrada contra el rango de reps del ejercicio
+  que abres, una sesión de Día 2 completada a 5 reps (su objetivo, 5-6) se leía en
+  el Día 1 como "no completaste las reps (5/6)" y sugería bajar peso sin motivo.
+  Se le da un `id` propio (`press-banca-secundario`) para que cada esquema
+  progrese con sus propios datos. Reproducido y verificado con Playwright antes y
+  después del fix (ver `schema.md` para la regla general).
+- **Correctivos "entre series" ausentes**: face pull/dead bug (Día 1), rueda
+  abdominal (Día 2) y core suave/respiración (Día 3) no existían en
+  `bloque-actual.json` — no se mostraban en ningún sitio, ni siquiera como bloque
+  aparte. Se añaden y se renderizan anidados dentro de la tarjeta del ejercicio
+  cuyo descanso ocupan (no como lista separada al final de la sesión), tanto en
+  el registro en vivo como en Plan → Sesiones.
+- SW: `power-v9` → `power-v10`.
+
 ## 1.5.0 — 2026-07-09
 
 - **Check-in de dolor sin sesión**: nueva tarjeta arriba de todo en "Hoy"

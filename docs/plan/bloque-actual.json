@@ -41,7 +41,7 @@
           "progresion": { "regla": "rir", "incrementoKg": 5, "cargaInicial": null }
         },
         {
-          "id": "press-banca",
+          "id": "press-banca-secundario",
           "nombre": "Press banca",
           "tipo": "accesorio",
           "series": 3,
@@ -77,7 +77,12 @@
           "recortable": true,
           "zonas": ["hombro", "trapecio"],
           "notas": "Espalda alta, equilibra el empuje del dia y cuida el hombro. RIR 2-3: accesorio 'seguro', aqui acercarte al fallo es el beneficio.",
-          "progresion": { "regla": "rir", "incrementoKg": 2.5, "cargaInicial": null }
+          "progresion": { "regla": "rir", "incrementoKg": 2.5, "cargaInicial": null },
+          "correctivo": {
+            "nombre": "Face pull o dead bug",
+            "detalle": "1 serie en el hueco del descanso del remo; no compite con el basico (piernas)",
+            "zona": null
+          }
         }
       ]
     },
@@ -164,7 +169,12 @@
           "recortable": true,
           "zonas": ["hombro", "trapecio"],
           "notas": "Deltoide posterior/rotadores cargados. RIR 2-3. Alternativa: press militar ligero.",
-          "progresion": { "regla": "rir", "incrementoKg": 1, "cargaInicial": null }
+          "progresion": { "regla": "rir", "incrementoKg": 1, "cargaInicial": null },
+          "correctivo": {
+            "nombre": "Rueda abdominal (ROM parcial -> completo)",
+            "detalle": "1 serie en el hueco del descanso; anti-extension de core",
+            "zona": "lumbar"
+          }
         }
       ]
     },
@@ -238,7 +248,12 @@
           "recortable": true,
           "zonas": ["hombro", "trapecio"],
           "notas": "Espalda alta. RIR 2-3.",
-          "progresion": { "regla": "rir", "incrementoKg": 2.5, "cargaInicial": null }
+          "progresion": { "regla": "rir", "incrementoKg": 2.5, "cargaInicial": null },
+          "correctivo": {
+            "nombre": "Core suave / respiracion",
+            "detalle": "1 serie en el hueco del descanso; nada agresivo de lumbar hoy",
+            "zona": "lumbar"
+          }
         }
       ]
     },
