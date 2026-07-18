@@ -11,7 +11,7 @@ import { ACLARACIONES, FICHAS, esquemaSVG } from './guia.js';
 
 // Version legible de la app (para el usuario, en Ajustes). Ver CHANGELOG.md
 // en la raiz del repo. Sube esto (y CHANGELOG.md) en cada cambio notable.
-const APP_VERSION = '1.8.0';
+const APP_VERSION = '1.9.0';
 
 const ZONAS = [
   { id: 'lumbar', nombre: 'Lumbar' },

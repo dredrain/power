@@ -94,6 +94,21 @@ cadera con goma fuerte (3×15), good morning con goma o band pull-through (3×15
 abdominal (3×ROM controlado), face pull/pull-apart con goma (3×20). El rulo y la pelota
 miofascial son extra de bajo valor, no el contenido.
 
+### Sesión "Torso alto (extra)" — fuera del ciclo D1/D2/D3
+
+Sesión puntual (`opcional: true`, igual que el día de casa): no sustituye ninguna sesión
+del bloque, no cuenta para el núcleo semanal de adherencia (cuenta como extra) y no
+interfiere con la progresión de sentadilla/banca de Día 1 (ids distintos). El jalón
+reutiliza el `id` `jalon-dominada` de Día 2 porque es el mismo ejercicio con el mismo
+esquema (3×8-12 @RIR2-3): comparten historial y progresión a propósito.
+
+| Ejercicio | Series×reps | RIR | Descanso | Zona |
+|-----------|-------------|-----|----------|------|
+| Jalón al pecho o remo con polea | 3×8-12 | 2-3 | 90s | hombro, trapecio |
+| Curl de bíceps (barra o mancuerna) | 3×8-12 | 2-3 | 60s | — |
+| Press francés / extensión tríceps polea | 3×10-12 | 2-3 | 60s | hombro |
+| Curl martillo o curl inclinado | 2×10-12 | 2-3 | 60s | — |
+
 ## Cuándo subir carga (lo hace la app, pero para que lo entiendas)
 
 - Completaste todas las series al tope de reps dejando **al menos el RIR objetivo** y sin

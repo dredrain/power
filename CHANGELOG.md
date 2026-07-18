@@ -1,5 +1,31 @@
 # Registro de versiones — Power Tracker
 
+## 1.9.0 — 2026-07-18
+
+Sesión suelta "Torso alto (extra)", fuera del ciclo D1/D2/D3, para registrar
+entrenos puntuales sin tocar la rotación del bloque.
+
+- **Nueva sesión E — "Torso alto (extra)"** en `bloque-actual.json`:
+  jalón al pecho/remo con polea (3×8-12), curl de bíceps (3×8-12), press
+  francés/extensión de tríceps en polea (3×10-12) y curl martillo/inclinado
+  (2×10-12), todos @RIR2-3. Marcada `opcional: true` (mismo campo que el día
+  de casa): no cuenta para el núcleo semanal de adherencia (cuenta como
+  extra) y, al tener ids propios, no interfiere con `sugerirCarga()` de
+  sentadilla/press banca de Día 1. El jalón reutiliza a propósito el `id`
+  `jalon-dominada` de Día 2 (mismo esquema exacto, 3×8-12 @RIR2-3): comparten
+  historial y progresión porque es el mismo ejercicio.
+- **3 ejercicios nuevos** (curl de bíceps, press francés/extensión de tríceps
+  en polea, curl martillo) con ficha (`FICHAS`) para que aparezcan con guía
+  en el selector de "Plan → Ejercicios".
+- Dolor por zona y fatiga general se registran igual que en cualquier otra
+  sesión (mismo formulario de cierre); nada nuevo que aprender.
+- Auditoría de datos: verificado que no hay ids de ejercicio duplicados con
+  esquemas distintos en ninguna sesión del bloque, ni nombres de
+  calentamiento repetidos dentro de una misma sesión. El calentamiento sigue
+  sin entrar al historial por diseño (no es KPI); los ejercicios del día sí
+  entran siempre que tengan alguna serie marcada o RIR registrado.
+- SW: `power-v12` → `power-v13`.
+
 ## 1.8.0 — 2026-07-12
 
 Persistir la sugerencia de carga (subir/mantener/bajar) por ejercicio, para que

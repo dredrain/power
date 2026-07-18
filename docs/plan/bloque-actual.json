@@ -340,6 +340,68 @@
           "progresion": { "regla": "rir", "incrementoKg": 0, "cargaInicial": 0 }
         }
       ]
+    },
+    {
+      "id": "E",
+      "nombre": "Torso alto (extra)",
+      "opcional": true,
+      "duracionCompletaMin": 30,
+      "duracionMinimaMin": 20,
+      "notaSesion": "Sesion extra fuera del ciclo D1/D2/D3: no sustituye ninguna sesion del bloque ni cuenta para el nucleo semanal de adherencia (cuenta como extra, igual que el dia de casa).",
+      "ejercicios": [
+        {
+          "id": "jalon-dominada",
+          "nombre": "Jalon al pecho o remo con polea",
+          "tipo": "accesorio",
+          "series": 3,
+          "reps": "8-12",
+          "rirObjetivo": 2,
+          "descansoSeg": 90,
+          "recortable": true,
+          "zonas": ["hombro", "trapecio"],
+          "notas": "Mismo id y esquema que el jalon del dia 2 (3x8-12 @RIR2-3): comparten historial y progresion a proposito, es el mismo ejercicio.",
+          "progresion": { "regla": "rir", "incrementoKg": 2.5, "cargaInicial": null }
+        },
+        {
+          "id": "curl-biceps",
+          "nombre": "Curl de biceps (barra o mancuerna)",
+          "tipo": "accesorio",
+          "series": 3,
+          "reps": "8-12",
+          "rirObjetivo": 2,
+          "descansoSeg": 60,
+          "recortable": true,
+          "zonas": [],
+          "notas": "Biceps aislado. RIR 2-3: accesorio seguro, acercarte al fallo es el beneficio.",
+          "progresion": { "regla": "rir", "incrementoKg": 1, "cargaInicial": null }
+        },
+        {
+          "id": "triceps-polea",
+          "nombre": "Press frances o extension de triceps en polea",
+          "tipo": "accesorio",
+          "series": 3,
+          "reps": "10-12",
+          "rirObjetivo": 2,
+          "descansoSeg": 60,
+          "recortable": true,
+          "zonas": ["hombro"],
+          "notas": "Triceps aislado. La extension por encima de la cabeza carga algo el hombro: controla el rango si molesta.",
+          "progresion": { "regla": "rir", "incrementoKg": 1, "cargaInicial": null }
+        },
+        {
+          "id": "curl-martillo",
+          "nombre": "Curl martillo o curl inclinado",
+          "tipo": "accesorio",
+          "series": 2,
+          "reps": "10-12",
+          "rirObjetivo": 2,
+          "descansoSeg": 60,
+          "recortable": true,
+          "zonas": [],
+          "notas": "Braquial/antebrazo, agarre neutro.",
+          "progresion": { "regla": "rir", "incrementoKg": 1, "cargaInicial": null }
+        }
+      ]
     }
   ]
 }

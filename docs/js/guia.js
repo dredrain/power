@@ -390,4 +390,19 @@ export const FICHAS = {
     claves: ['Tension de goma progresable (goma mas dura = mas carga).', 'Deltoide posterior y rotadores.'],
     evita: ['Perder tension al volver.'],
   },
+  'curl-biceps': {
+    nombre: 'Curl de biceps (barra o mancuerna)', patron: 'generico',
+    claves: ['Codos pegados al cuerpo, sin balanceo.', 'RIR 2-3: accesorio seguro, acercarte al fallo es el beneficio.'],
+    evita: ['Impulsarte con la cadera/espalda para subir el peso.'],
+  },
+  'triceps-polea': {
+    nombre: 'Press frances o extension de triceps en polea', patron: 'generico',
+    claves: ['Codos fijos, el movimiento es solo del antebrazo.', 'Controla el rango si la extension por encima de la cabeza carga el hombro.'],
+    evita: ['Abrir los codos hacia fuera.'],
+  },
+  'curl-martillo': {
+    nombre: 'Curl martillo o curl inclinado', patron: 'generico',
+    claves: ['Agarre neutro (palmas encaradas).', 'Braquial/antebrazo: complementa el curl de biceps.'],
+    evita: ['Balancear el tronco para completar la rep.'],
+  },
 };
